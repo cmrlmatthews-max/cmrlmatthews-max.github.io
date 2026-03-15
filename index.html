@@ -685,22 +685,6 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   letter-spacing: 0.05em;
 }
 
-.projects-filter {
-  display: flex;
-  gap: 24px;
-}
-
-.projects-filter button {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--light);
-  transition: color 0.3s ease;
-}
-
-.projects-filter button:hover,
-.projects-filter button.active { color: var(--ink); }
 
 .project-list {
   border-top: 1px solid rgba(200,199,194,0.4);
@@ -749,28 +733,152 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   text-align: right;
 }
 
-.project-preview {
+.project-lightbox {
   position: fixed;
-  width: 380px;
-  height: 260px;
+  inset: 0;
+  background: rgba(17,17,16,0.92);
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  opacity: 0;
   pointer-events: none;
-  z-index: 900;
   opacity: 0;
   transform: scale(0.92);
-  transition: opacity 0.35s cubic-bezier(.23,1,.32,1),
-              transform 0.35s cubic-bezier(.23,1,.32,1);
-  overflow: hidden;
+  transition: opacity 0.3s ease;
 }
 
-.project-preview.visible {
+.project-lightbox.visible {
   opacity: 1;
-  transform: scale(1);
+  pointer-events: all;
 }
 
-.project-preview img {
+.project-lightbox img {
+  max-width: 90vw;
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  font-size: 28px;
+  color: var(--white);
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  z-index: 951;
+}
+
+.lightbox-close:hover { opacity: 1; }
+
+/* ── PDF Viewer ── */
+.pdf-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17,17,16,0.96);
+  z-index: 960;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.pdf-viewer-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.pdf-viewer-shell {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+}
+
+.pdf-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.pdf-toolbar-left,
+.pdf-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pdf-btn {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--white);
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  line-height: 1;
+}
+
+.pdf-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.pdf-page-info,
+.pdf-zoom-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.08em;
+  min-width: 60px;
+  text-align: center;
+}
+
+.pdf-close-btn {
+  margin-left: 12px;
+  border-color: rgba(232,80,122,0.4);
+  color: var(--accent);
+}
+
+.pdf-close-btn:hover {
+  background: rgba(232,80,122,0.15);
+  border-color: var(--accent);
+}
+
+.pdf-canvas-wrap {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+#pdfCanvas {
+  box-shadow: 0 8px 48px rgba(0,0,0,0.6);
+  display: block;
 }
 
 /* ═══════════════════════════════════════════
@@ -1301,9 +1409,32 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 <!-- Section Flash -->
 <div class="section-flash" id="sectionFlash"></div>
 
-<!-- Hover Preview Image -->
-<div class="project-preview" id="projectPreview">
+<!-- Lightbox -->
+<div class="project-lightbox" id="projectLightbox" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close image">&#x2715;</button>
   <img src="" alt="" id="previewImg">
+</div>
+
+<!-- PDF Viewer -->
+<div class="pdf-viewer-overlay" id="pdfViewerOverlay" role="dialog" aria-modal="true">
+  <div class="pdf-viewer-shell">
+    <div class="pdf-toolbar">
+      <div class="pdf-toolbar-left">
+        <button class="pdf-btn" id="pdfPrevPage" title="Previous page">&#8592;</button>
+        <span class="pdf-page-info"><span id="pdfPageNum">1</span> / <span id="pdfPageCount">—</span></span>
+        <button class="pdf-btn" id="pdfNextPage" title="Next page">&#8594;</button>
+      </div>
+      <div class="pdf-toolbar-right">
+        <button class="pdf-btn" id="pdfZoomOut" title="Zoom out">&#8722;</button>
+        <span class="pdf-zoom-label" id="pdfZoomLabel">100%</span>
+        <button class="pdf-btn" id="pdfZoomIn" title="Zoom in">&#43;</button>
+        <button class="pdf-btn pdf-close-btn" id="pdfClose" title="Close">&#x2715;</button>
+      </div>
+    </div>
+    <div class="pdf-canvas-wrap" id="pdfCanvasWrap">
+      <canvas id="pdfCanvas"></canvas>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════════════════════════════════
@@ -1376,7 +1507,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
       balancing <strong class="accent-bold">rigorous precision</strong> with an intuitive sense of place.
     </p>
     <a href="#projects" class="hero-cta reveal reveal-delay-3">
-      View Selected Work
+      View LA TECH Work
       <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
         <path d="M14 1L19 6M19 6L14 11M19 6H1" stroke="currentColor" stroke-width="1.2"/>
       </svg>
@@ -1397,57 +1528,58 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     <div class="projects-header reveal">
       <div>
         <span class="section-num">02</span>
-        <h2 class="projects-title">Selected Work</h2>
-      </div>
-      <div class="projects-filter">
-        <button class="active">All</button>
-        <button>Cultural</button>
-        <button>Residential</button>
-        <button>Commercial</button>
+        <h2 class="projects-title">LA TECH</h2>
       </div>
     </div>
     <div class="project-list">
       <a href="#" class="project-item reveal"
-         data-preview="https://images.unsplash.com/photo-1545558014-8692077e7f5b?w=760&h=520&fit=crop">
+         data-preview="TRANSIENT CENTER FOR THE NOMADIC SCAVENGER - RUSTON, LA.jpg">
         <span class="project-num">01</span>
-        <span class="project-name">Meridian Pavilion</span>
-        <span class="project-type">Cultural</span>
-        <span class="project-location">Copenhagen, DK</span>
+        <span class="project-name">Transient Center for the Nomadic Scavenger</span>
+        <span class="project-type">Architecture</span>
+        <span class="project-location">Ruston, LA</span>
       </a>
       <a href="#" class="project-item reveal reveal-delay-1"
-         data-preview="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?w=760&h=520&fit=crop">
+         data-preview="VERITAS - POLITICAL DEBATE CENTER, RUSTON, LA.jpg">
         <span class="project-num">02</span>
-        <span class="project-name">Canopy Residences</span>
-        <span class="project-type">Residential</span>
-        <span class="project-location">Portland, US</span>
+        <span class="project-name">Veritas — Political Debate Center</span>
+        <span class="project-type">Architecture</span>
+        <span class="project-location">Ruston, LA</span>
       </a>
       <a href="#" class="project-item reveal reveal-delay-2"
-         data-preview="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=760&h=520&fit=crop">
+         data-preview="SKETCHES &amp; RENDERINGS.jpg">
         <span class="project-num">03</span>
-        <span class="project-name">Volta Tower</span>
-        <span class="project-type">Commercial</span>
-        <span class="project-location">Rotterdam, NL</span>
+        <span class="project-name">Sketches &amp; Renderings</span>
+        <span class="project-type">Design</span>
+        <span class="project-location">Louisiana Tech</span>
       </a>
       <a href="#" class="project-item reveal reveal-delay-1"
-         data-preview="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=760&h=520&fit=crop">
+         data-preview="GRAPHIC DESIGN.jpg">
         <span class="project-num">04</span>
-        <span class="project-name">Solace House</span>
-        <span class="project-type">Residential</span>
-        <span class="project-location">Lisbon, PT</span>
+        <span class="project-name">Graphic Design</span>
+        <span class="project-type">Design</span>
+        <span class="project-location">Louisiana Tech</span>
       </a>
       <a href="#" class="project-item reveal reveal-delay-2"
-         data-preview="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=760&h=520&fit=crop">
+         data-preview="FABRICATION AND INSTALLATION.jpg">
         <span class="project-num">05</span>
-        <span class="project-name">Forum Innovation Hub</span>
-        <span class="project-type">Commercial</span>
-        <span class="project-location">Seoul, KR</span>
+        <span class="project-name">Fabrication and Installation</span>
+        <span class="project-type">Fabrication</span>
+        <span class="project-location">Louisiana Tech</span>
       </a>
       <a href="#" class="project-item reveal reveal-delay-1"
-         data-preview="https://images.unsplash.com/photo-1470723710355-95304d8aece4?w=760&h=520&fit=crop">
+         data-preview="CRAFT.jpg">
         <span class="project-num">06</span>
-        <span class="project-name">Horizon Cultural Center</span>
-        <span class="project-type">Cultural</span>
-        <span class="project-location">Oslo, NO</span>
+        <span class="project-name">Craft</span>
+        <span class="project-type">Fabrication</span>
+        <span class="project-location">Louisiana Tech</span>
+      </a>
+      <a href="#" class="project-item reveal reveal-delay-2"
+         data-pdf="Final Research Document 2.pdf">
+        <span class="project-num">07</span>
+        <span class="project-name">Final Research Document</span>
+        <span class="project-type">Research</span>
+        <span class="project-location">Louisiana Tech</span>
       </a>
     </div>
   </div>
@@ -1617,36 +1749,24 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
         <h2 class="contact-title reveal reveal-delay-1">
           <span class="title-heavy">Let's</span> build<br>something <em>together</em>
         </h2>
+        <!-- TODO: Review contact headline ("Let's build something together") before launch -->
         <div class="contact-rows reveal reveal-delay-2">
           <div class="contact-row">
-            <span class="contact-row-label">General</span>
+            <span class="contact-row-label">Email</span>
             <span class="contact-row-value">
-              <a href="#" class="ph">[PLACEHOLDER — general email]</a>
-            </span>
-          </div>
-          <div class="contact-row">
-            <span class="contact-row-label">New Business</span>
-            <span class="contact-row-value">
-              <a href="#" class="ph">[PLACEHOLDER — new business email]</a>
-            </span>
-          </div>
-          <div class="contact-row">
-            <span class="contact-row-label">Press</span>
-            <span class="contact-row-value">
-              <a href="#" class="ph">[PLACEHOLDER — press email]</a>
-            </span>
-          </div>
-          <div class="contact-row">
-            <span class="contact-row-label">Address</span>
-            <span class="contact-row-value ph">
-              [PLACEHOLDER — street address]<br>
-              [City, State ZIP]
+              <a href="mailto:cmrlmatthews@gmail.com">cmrlmatthews@gmail.com</a>
             </span>
           </div>
           <div class="contact-row">
             <span class="contact-row-label">Phone</span>
             <span class="contact-row-value">
-              <a href="#" class="ph">[PLACEHOLDER — phone number]</a>
+              <a href="tel:+13184558063">318-455-8063</a>
+            </span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-row-label">Location</span>
+            <span class="contact-row-value">
+              Atlanta, GA
             </span>
           </div>
         </div>
@@ -1667,7 +1787,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
           </div>
           <div class="form-group">
             <label for="message">Message</label>
-            <textarea id="message" rows="4" placeholder="Tell us about your project..."></textarea>
+            <textarea id="message" rows="4" placeholder="Tell me about your project..."></textarea>
           </div>
           <button type="button" class="form-submit">
             Send Message
@@ -1690,10 +1810,19 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     <span class="footer-copy">&copy; 2026 CMRLM. All rights reserved.</span>
     <div class="footer-social">
       <a href="https://www.instagram.com/318atl/" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://www.linkedin.com/feed/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.linkedin.com/in/cade-matthews-130939113" target="_blank" rel="noopener">LinkedIn</a>
     </div>
   </div>
 </footer>
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+</script>
 
 <!-- ═══════════════════════════════════════════
      SCRIPTS
@@ -1843,34 +1972,129 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-  /* ── Project Hover Preview ── */
-  const preview = document.getElementById('projectPreview');
+  /* ── Project Lightbox (click to open) ── */
+  const lightbox = document.getElementById('projectLightbox');
   const previewImg = document.getElementById('previewImg');
-  const projectItems = document.querySelectorAll('.project-item[data-preview]');
+  const lightboxClose = document.getElementById('lightboxClose');
 
-  if (window.matchMedia('(pointer: fine)').matches) {
-    projectItems.forEach(item => {
-      item.addEventListener('mouseenter', () => {
-        previewImg.src = item.getAttribute('data-preview');
-        preview.classList.add('visible');
-      });
-      item.addEventListener('mousemove', e => {
-        preview.style.left = (e.clientX + 24) + 'px';
-        preview.style.top = (e.clientY - 130) + 'px';
-      });
-      item.addEventListener('mouseleave', () => {
-        preview.classList.remove('visible');
-      });
-    });
+  function openLightbox(src) {
+    previewImg.src = src;
+    lightbox.classList.add('visible');
+    document.body.style.overflow = 'hidden';
   }
 
-  /* ── Project Filter (UI only) ── */
-  document.querySelectorAll('.projects-filter button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.projects-filter button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+  function closeLightbox() {
+    lightbox.classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.project-item[data-preview]').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      openLightbox(item.getAttribute('data-preview'));
     });
   });
+
+  lightboxClose.addEventListener('click', closeLightbox);
+
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeLightbox();
+      closePdfViewer();
+    }
+  });
+
+  /* ── PDF Viewer ── */
+  (function() {
+    const overlay    = document.getElementById('pdfViewerOverlay');
+    const canvas     = document.getElementById('pdfCanvas');
+    const ctx        = canvas.getContext('2d');
+    const btnPrev    = document.getElementById('pdfPrevPage');
+    const btnNext    = document.getElementById('pdfNextPage');
+    const btnZoomIn  = document.getElementById('pdfZoomIn');
+    const btnZoomOut = document.getElementById('pdfZoomOut');
+    const btnClose   = document.getElementById('pdfClose');
+    const pageNum    = document.getElementById('pdfPageNum');
+    const pageCount  = document.getElementById('pdfPageCount');
+    const zoomLabel  = document.getElementById('pdfZoomLabel');
+
+    let pdfDoc = null, currentPage = 1, scale = 1.2, renderTask = null;
+
+    function renderPage(num) {
+      if (!pdfDoc) return;
+      pdfDoc.getPage(num).then(page => {
+        const vp = page.getViewport({ scale });
+        canvas.width  = vp.width;
+        canvas.height = vp.height;
+        if (renderTask) renderTask.cancel();
+        renderTask = page.render({ canvasContext: ctx, viewport: vp });
+        renderTask.promise.catch(() => {});
+      });
+      pageNum.textContent = num;
+    }
+
+    function openPdfViewer(src) {
+      if (typeof pdfjsLib === 'undefined') return;
+      overlay.classList.add('visible');
+      document.body.style.overflow = 'hidden';
+      currentPage = 1; scale = 1.2;
+      zoomLabel.textContent = '100%';
+      pdfjsLib.getDocument(src).promise.then(doc => {
+        pdfDoc = doc;
+        pageCount.textContent = doc.numPages;
+        renderPage(currentPage);
+      });
+    }
+
+    window.closePdfViewer = function() {
+      overlay.classList.remove('visible');
+      document.body.style.overflow = '';
+      pdfDoc = null;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    btnClose.addEventListener('click', closePdfViewer);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closePdfViewer(); });
+
+    btnPrev.addEventListener('click', () => {
+      if (!pdfDoc || currentPage <= 1) return;
+      currentPage--;
+      renderPage(currentPage);
+      document.getElementById('pdfCanvasWrap').scrollTop = 0;
+    });
+
+    btnNext.addEventListener('click', () => {
+      if (!pdfDoc || currentPage >= pdfDoc.numPages) return;
+      currentPage++;
+      renderPage(currentPage);
+      document.getElementById('pdfCanvasWrap').scrollTop = 0;
+    });
+
+    btnZoomIn.addEventListener('click', () => {
+      if (scale >= 3) return;
+      scale = Math.round((scale + 0.25) * 100) / 100;
+      zoomLabel.textContent = Math.round((scale / 1.2) * 100) + '%';
+      renderPage(currentPage);
+    });
+
+    btnZoomOut.addEventListener('click', () => {
+      if (scale <= 0.5) return;
+      scale = Math.round((scale - 0.25) * 100) / 100;
+      zoomLabel.textContent = Math.round((scale / 1.2) * 100) + '%';
+      renderPage(currentPage);
+    });
+
+    document.querySelectorAll('.project-item[data-pdf]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        openPdfViewer(item.getAttribute('data-pdf'));
+      });
+    });
+  })();
 
   /* ── Section Flash Transition ── */
   (function() {
