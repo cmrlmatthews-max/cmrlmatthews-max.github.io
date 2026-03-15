@@ -693,6 +693,17 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   border-top: 1px solid rgba(200,199,194,0.4);
 }
 
+/* Second project group — Professional work */
+.projects-group {
+  margin-top: clamp(64px, 8vw, 108px);
+  padding-top: clamp(52px, 6vw, 84px);
+  border-top: 2.5px solid var(--accent);
+}
+
+.projects-group .projects-header {
+  margin-bottom: 64px;
+}
+
 .project-item {
   display: grid;
   grid-template-columns: 80px 1fr 160px 160px;
@@ -747,14 +758,15 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   padding: 40px;
   opacity: 0;
   pointer-events: none;
-  opacity: 0;
-  transform: scale(0.92);
-  transition: opacity 0.3s ease;
+  transform: scale(0.96);
+  transition: opacity 0.35s cubic-bezier(.23,1,.32,1),
+              transform 0.35s cubic-bezier(.23,1,.32,1);
 }
 
 .project-lightbox.visible {
   opacity: 1;
   pointer-events: all;
+  transform: scale(1);
 }
 
 .project-lightbox img {
@@ -881,15 +893,13 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
 .pdf-canvas-wrap {
   flex: 1;
-  overflow: auto;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 32px 24px;
+  overflow: hidden;
 }
 
-#pdfCanvas {
-  box-shadow: 0 8px 48px rgba(0,0,0,0.6);
+#pdfFrame {
+  width: 100%;
+  height: 100%;
+  border: none;
   display: block;
 }
 
@@ -954,6 +964,44 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--mid);
+}
+
+/* Skills tags (About section) */
+.about-skills {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(200,199,194,0.5);
+}
+
+.about-skills-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 14px;
+}
+
+.about-skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  color: var(--ink);
+  padding: 5px 13px;
+  border: 1px solid rgba(17,17,16,0.14);
+  border-radius: 2px;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.skill-tag:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .about-image {
@@ -1674,6 +1722,16 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   .timeline-nav a::after { display: none; }
 }
 
+/* ── PDF doc navigation (multi-document group mode) ── */
+.pdf-doc-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 8px;
+  padding-right: 14px;
+  border-right: 1px solid rgba(255,255,255,0.12);
+}
+
 /* ── Inspirations fallback (if image fails to load) ── */
 .insp-fallback {
   position: absolute;
@@ -1715,19 +1773,18 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   <div class="pdf-viewer-shell">
     <div class="pdf-toolbar">
       <div class="pdf-toolbar-left">
-        <button class="pdf-btn" id="pdfPrevPage" title="Previous page">&#8592;</button>
-        <span class="pdf-page-info"><span id="pdfPageNum">1</span> / <span id="pdfPageCount">—</span></span>
-        <button class="pdf-btn" id="pdfNextPage" title="Next page">&#8594;</button>
-      </div>
+        <div id="pdfDocNav" class="pdf-doc-nav" style="display:none">
+          <button class="pdf-btn" id="pdfPrevDoc" title="Previous document">&#10094;</button>
+          <span class="pdf-page-info" id="pdfDocLabel">I / I</span>
+          <button class="pdf-btn" id="pdfNextDoc" title="Next document">&#10095;</button>
+        </div>
+        </div>
       <div class="pdf-toolbar-right">
-        <button class="pdf-btn" id="pdfZoomOut" title="Zoom out">&#8722;</button>
-        <span class="pdf-zoom-label" id="pdfZoomLabel">100%</span>
-        <button class="pdf-btn" id="pdfZoomIn" title="Zoom in">&#43;</button>
         <button class="pdf-btn pdf-close-btn" id="pdfClose" title="Close">&#x2715;</button>
       </div>
     </div>
     <div class="pdf-canvas-wrap" id="pdfCanvasWrap">
-      <canvas id="pdfCanvas"></canvas>
+      <iframe id="pdfFrame" title="PDF viewer"></iframe>
     </div>
   </div>
 </div>
@@ -1885,7 +1942,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
       <span class="word-heavy">Shaping</span> <span class="word-light">space</span><br>for <em>human</em><br>experience
     </h1>
     <p class="hero-desc reveal reveal-delay-2">
-      We design environments that respond to the way people live, move, and connect —
+      I design environments that respond to the way people live, move, and connect —
       balancing <strong class="accent-bold">rigorous precision</strong> with an intuitive sense of place.
     </p>
     <a href="#projects" class="hero-cta reveal reveal-delay-3">
@@ -1915,55 +1972,107 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     </div>
     <div class="project-list">
       <a href="#" class="project-item reveal"
-         data-preview="TRANSIENT CENTER FOR THE NOMADIC SCAVENGER - RUSTON, LA.jpg">
+         data-preview="LA TECH - SECTIONS/TRANSIENT CENTER FOR THE NOMADIC SCAVENGER - RUSTON, LA.jpg">
         <span class="project-num">01</span>
         <span class="project-name">Transient Center for the Nomadic Scavenger</span>
         <span class="project-type">Architecture</span>
         <span class="project-location">Ruston, LA</span>
       </a>
       <a href="#" class="project-item reveal reveal-delay-1"
-         data-preview="VERITAS - POLITICAL DEBATE CENTER, RUSTON, LA.jpg">
+         data-preview="LA TECH - SECTIONS/VERITAS - POLITICAL DEBATE CENTER, RUSTON, LA.jpg">
         <span class="project-num">02</span>
         <span class="project-name">Veritas — Political Debate Center</span>
         <span class="project-type">Architecture</span>
         <span class="project-location">Ruston, LA</span>
       </a>
       <a href="#" class="project-item reveal reveal-delay-2"
-         data-preview="SKETCHES &amp; RENDERINGS.jpg">
+         data-preview="LA TECH - SECTIONS/SKETCHES &amp; RENDERINGS.jpg">
         <span class="project-num">03</span>
         <span class="project-name">Sketches &amp; Renderings</span>
         <span class="project-type">Design</span>
         <span class="project-location">Louisiana Tech</span>
       </a>
       <a href="#" class="project-item reveal reveal-delay-1"
-         data-preview="GRAPHIC DESIGN.jpg">
+         data-preview="LA TECH - SECTIONS/GRAPHIC DESIGN.jpg">
         <span class="project-num">04</span>
         <span class="project-name">Graphic Design</span>
         <span class="project-type">Design</span>
         <span class="project-location">Louisiana Tech</span>
       </a>
       <a href="#" class="project-item reveal reveal-delay-2"
-         data-preview="FABRICATION AND INSTALLATION.jpg">
+         data-preview="LA TECH - SECTIONS/FABRICATION AND INSTALLATION.jpg">
         <span class="project-num">05</span>
         <span class="project-name">Fabrication and Installation</span>
         <span class="project-type">Fabrication</span>
         <span class="project-location">Louisiana Tech</span>
       </a>
       <a href="#" class="project-item reveal reveal-delay-1"
-         data-preview="CRAFT.jpg">
+         data-preview="LA TECH - SECTIONS/CRAFT.jpg">
         <span class="project-num">06</span>
         <span class="project-name">Craft</span>
         <span class="project-type">Fabrication</span>
         <span class="project-location">Louisiana Tech</span>
       </a>
-      <a href="#" class="project-item reveal reveal-delay-2"
-         data-pdf="Final Research Document 2.pdf">
+      <a href="#" class="project-item reveal reveal-delay-1"
+         data-pdf-group="LA TECH - SECTIONS/Grad1.pdf|LA TECH - SECTIONS/Grad2.pdf|LA TECH - SECTIONS/Grad3.pdf">
         <span class="project-num">07</span>
-        <span class="project-name">Final Research Document</span>
-        <span class="project-type">Research</span>
+        <span class="project-name">Reversing The Tides</span>
+        <span class="project-type">Research &nbsp;·&nbsp; I–III</span>
         <span class="project-location">Louisiana Tech</span>
       </a>
     </div>
+
+    <!-- ── Professional Work ── -->
+    <div class="projects-group">
+      <div class="projects-header reveal">
+        <div>
+          <h2 class="projects-title">Professional</h2>
+        </div>
+        <span class="label">Nelson Worldwide &nbsp;·&nbsp; Atlanta, GA</span>
+      </div>
+      <div class="project-list">
+        <a href="#" class="project-item reveal"
+           data-preview="Echo-Street-West.jpg">
+          <span class="project-num">01</span>
+          <span class="project-name">Echo St. West</span>
+          <span class="project-type">Architecture</span>
+          <span class="project-location">Atlanta, GA</span>
+        </a>
+        <a href="#" class="project-item reveal reveal-delay-1"
+           data-preview="Trilith-Creative-Centers.jpg">
+          <span class="project-num">02</span>
+          <span class="project-name">Trilith Creative Centers</span>
+          <span class="project-type">Architecture</span>
+          <span class="project-location">Fayetteville, GA</span>
+        </a>
+        <a href="#" class="project-item reveal reveal-delay-2"
+           data-preview="Trilith-LIVE.jpg">
+          <span class="project-num">03</span>
+          <span class="project-name">Trilith LIVE Office Building</span>
+          <span class="project-type">Architecture</span>
+          <span class="project-location">Fayetteville, GA</span>
+        </a>
+        <a href="#" class="project-item reveal reveal-delay-1">
+          <span class="project-num">04</span>
+          <span class="project-name">Truist Tower</span>
+          <span class="project-type">Architecture</span>
+          <span class="project-location">Cobb County, GA</span>
+        </a>
+        <a href="#" class="project-item reveal reveal-delay-2">
+          <span class="project-num">05</span>
+          <span class="project-name">Cumberland Mall Multi-family</span>
+          <span class="project-type">Architecture</span>
+          <span class="project-location">Cobb County, GA</span>
+        </a>
+        <a href="#" class="project-item reveal reveal-delay-1">
+          <span class="project-num">06</span>
+          <span class="project-name">3 Ballpark Center</span>
+          <span class="project-type">Architecture</span>
+          <span class="project-location">Cobb County, GA</span>
+        </a>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1998,6 +2107,19 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
             <div class="stat-label">Firms</div>
           </div>
         </div>
+        <div class="about-skills reveal reveal-delay-4">
+          <div class="about-skills-label">Software</div>
+          <div class="about-skills-list">
+            <span class="skill-tag">Revit</span>
+            <span class="skill-tag">Bluebeam</span>
+            <span class="skill-tag">Newform</span>
+            <span class="skill-tag">AutoCAD</span>
+            <span class="skill-tag">Photoshop</span>
+            <span class="skill-tag">InDesign</span>
+            <span class="skill-tag">BOMA Calculations</span>
+            <span class="skill-tag">MS Office Suite</span>
+          </div>
+        </div>
       </div>
       <div class="about-image reveal reveal-delay-2">
         <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=1100&fit=crop&crop=center"
@@ -2023,7 +2145,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     <div class="team-grid">
       <div class="team-member reveal">
         <div class="team-photo">
-          <img src="Rem Koolhaas.jpeg"
+          <img src="Architect%20Images/Rem%20Koolhaas.jpeg"
                alt="Rem Koolhaas"
                onerror="this.style.display='none'"
                loading="lazy">
@@ -2034,7 +2156,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
       </div>
       <div class="team-member reveal reveal-delay-1">
         <div class="team-photo">
-          <img src="Mies Van Der Rohe.webp"
+          <img src="Architect%20Images/Mies%20Van%20Der%20Rohe.webp"
                alt="Mies van der Rohe"
                onerror="this.style.display='none'"
                loading="lazy">
@@ -2045,7 +2167,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
       </div>
       <div class="team-member reveal reveal-delay-2">
         <div class="team-photo">
-          <img src="Le Corbusier.webp"
+          <img src="Architect%20Images/Le%20Corbusier.webp"
                alt="Le Corbusier"
                onerror="this.style.display='none'"
                loading="lazy">
@@ -2056,7 +2178,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
       </div>
       <div class="team-member reveal reveal-delay-3">
         <div class="team-photo">
-          <img src="Peter Zumthor.jpeg"
+          <img src="Architect%20Images/Peter%20Zumthor.jpeg"
                alt="Peter Zumthor"
                onerror="this.style.display='none'"
                loading="lazy">
@@ -2154,7 +2276,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
         <h2 class="contact-title reveal reveal-delay-1">
           <span class="title-heavy">Let's</span> build<br>something <em>together</em>
         </h2>
-        <!-- TODO: Review contact headline ("Let's build something together") before launch -->
+
         <div class="contact-rows reveal reveal-delay-2">
           <div class="contact-row">
             <span class="contact-row-label">Email</span>
@@ -2221,13 +2343,6 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 </footer>
 
 <!-- PDF.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script>
-  if (typeof pdfjsLib !== 'undefined') {
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  }
-</script>
 
 <!-- ═══════════════════════════════════════════
      SCRIPTS
@@ -2383,7 +2498,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   const lightboxClose = document.getElementById('lightboxClose');
 
   function openLightbox(src) {
-    previewImg.src = src;
+    previewImg.src = src.split('/').map(encodeURIComponent).join('/');
     lightbox.classList.add('visible');
     document.body.style.overflow = 'hidden';
   }
@@ -2393,10 +2508,10 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     document.body.style.overflow = '';
   }
 
-  document.querySelectorAll('.project-item[data-preview]').forEach(item => {
+  document.querySelectorAll('.project-item').forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
-      openLightbox(item.getAttribute('data-preview'));
+      if (item.dataset.preview) openLightbox(item.dataset.preview);
     });
   });
 
@@ -2413,124 +2528,71 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     }
   });
 
-  /* ── PDF Viewer ── */
+    /* ── PDF Viewer (single + group mode, iframe) ── */
   (function() {
     const overlay    = document.getElementById('pdfViewerOverlay');
-    const canvas     = document.getElementById('pdfCanvas');
-    const ctx        = canvas.getContext('2d');
-    const btnPrev    = document.getElementById('pdfPrevPage');
-    const btnNext    = document.getElementById('pdfNextPage');
-    const btnZoomIn  = document.getElementById('pdfZoomIn');
-    const btnZoomOut = document.getElementById('pdfZoomOut');
+    const frame      = document.getElementById('pdfFrame');
     const btnClose   = document.getElementById('pdfClose');
-    const pageNum    = document.getElementById('pdfPageNum');
-    const pageCount  = document.getElementById('pdfPageCount');
-    const zoomLabel  = document.getElementById('pdfZoomLabel');
+    const docNav     = document.getElementById('pdfDocNav');
+    const docLabel   = document.getElementById('pdfDocLabel');
+    const btnPrevDoc = document.getElementById('pdfPrevDoc');
+    const btnNextDoc = document.getElementById('pdfNextDoc');
+    const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X'];
+    function toRoman(n) { return ROMAN[n - 1] || String(n); }
+    let pdfGroup = [], pdfGroupIdx = 0;
 
-    let pdfDoc = null, currentPage = 1, scale = 1.2, renderTask = null;
-
-    function renderPage(num) {
-      if (!pdfDoc) return;
-      pdfDoc.getPage(num).then(page => {
-        const vp = page.getViewport({ scale });
-        canvas.width  = vp.width;
-        canvas.height = vp.height;
-        if (renderTask) renderTask.cancel();
-        renderTask = page.render({ canvasContext: ctx, viewport: vp });
-        renderTask.promise.catch(() => {});
-      });
-      pageNum.textContent = num;
+    function loadDoc(src) {
+      frame.src = src.split('/').map(encodeURIComponent).join('/');
     }
-
+    function updateDocLabel() {
+      docLabel.textContent = toRoman(pdfGroupIdx + 1) + ' / ' + toRoman(pdfGroup.length);
+      btnPrevDoc.style.opacity = (pdfGroupIdx === 0) ? '0.3' : '1';
+      btnNextDoc.style.opacity = (pdfGroupIdx === pdfGroup.length - 1) ? '0.3' : '1';
+    }
     function openPdfViewer(src) {
-      /* When running from a local file:// URL the browser blocks fetch access
-         to other local files. Fall back to opening natively in a new tab.
-         The PDF.js viewer works correctly once the site is hosted on a server. */
-      const isLocal = (location.protocol === 'file:');
-
-      if (isLocal || typeof pdfjsLib === 'undefined') {
-        /* Brief accent flash before opening new tab — feels intentional */
-        const fl = document.getElementById('sectionFlash');
-        if (fl) {
-          fl.classList.remove('firing');
-          void fl.offsetWidth; /* reflow to restart animation */
-          fl.classList.add('firing');
-        }
-        setTimeout(() => window.open(src, '_blank'), 280);
-        return;
-      }
-
+      docNav.style.display = 'none';
       overlay.classList.add('visible');
       document.body.style.overflow = 'hidden';
-      currentPage = 1; scale = 1.2;
-      zoomLabel.textContent = '100%';
-      pageCount.textContent = '\u2026';
-      pageNum.textContent = '\u2026';
-
-      /* Encode path so spaces become %20 */
-      const encodedSrc = src.split('/').map(encodeURIComponent).join('/');
-
-      fetch(encodedSrc)
-        .then(res => {
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          return res.arrayBuffer();
-        })
-        .then(buf => pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise)
-        .then(doc => {
-          pdfDoc = doc;
-          pageCount.textContent = doc.numPages;
-          pageNum.textContent = 1;
-          renderPage(currentPage);
-        })
-        .catch(err => {
-          console.error('PDF load error:', err);
-          closePdfViewer();
-          window.open(src, '_blank');
-        });
+      loadDoc(src);
     }
-
+    function openPdfGroup(paths) {
+      pdfGroup = paths; pdfGroupIdx = 0;
+      docNav.style.display = 'flex';
+      updateDocLabel();
+      overlay.classList.add('visible');
+      document.body.style.overflow = 'hidden';
+      loadDoc(paths[0]);
+    }
     window.closePdfViewer = function() {
       overlay.classList.remove('visible');
       document.body.style.overflow = '';
-      pdfDoc = null;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      frame.src = '';
     };
 
     btnClose.addEventListener('click', closePdfViewer);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closePdfViewer(); });
 
-    btnPrev.addEventListener('click', () => {
-      if (!pdfDoc || currentPage <= 1) return;
-      currentPage--;
-      renderPage(currentPage);
-      document.getElementById('pdfCanvasWrap').scrollTop = 0;
+    btnPrevDoc.addEventListener('click', () => {
+      if (pdfGroupIdx <= 0) return;
+      pdfGroupIdx--; updateDocLabel(); loadDoc(pdfGroup[pdfGroupIdx]);
+    });
+    btnNextDoc.addEventListener('click', () => {
+      if (pdfGroupIdx >= pdfGroup.length - 1) return;
+      pdfGroupIdx++; updateDocLabel(); loadDoc(pdfGroup[pdfGroupIdx]);
     });
 
-    btnNext.addEventListener('click', () => {
-      if (!pdfDoc || currentPage >= pdfDoc.numPages) return;
-      currentPage++;
-      renderPage(currentPage);
-      document.getElementById('pdfCanvasWrap').scrollTop = 0;
-    });
-
-    btnZoomIn.addEventListener('click', () => {
-      if (scale >= 3) return;
-      scale = Math.round((scale + 0.25) * 100) / 100;
-      zoomLabel.textContent = Math.round((scale / 1.2) * 100) + '%';
-      renderPage(currentPage);
-    });
-
-    btnZoomOut.addEventListener('click', () => {
-      if (scale <= 0.5) return;
-      scale = Math.round((scale - 0.25) * 100) / 100;
-      zoomLabel.textContent = Math.round((scale / 1.2) * 100) + '%';
-      renderPage(currentPage);
-    });
-
-    document.querySelectorAll('.project-item[data-pdf]').forEach(item => {
-      item.addEventListener('click', (e) => {
+    document.querySelectorAll('[data-pdf]').forEach(el => {
+      el.addEventListener('click', e => {
         e.preventDefault();
-        openPdfViewer(item.getAttribute('data-pdf'));
+        openPdfViewer(el.dataset.pdf);
+      });
+    });
+    document.querySelectorAll('[data-pdf-group]').forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        const paths = el.dataset.pdfGroup.split('|');
+        if (paths.length === 1) openPdfViewer(paths[0]);
+        else openPdfGroup(paths);
       });
     });
   })();
