@@ -36,6 +36,7 @@ html {
   background: var(--ink);
   color: var(--ink);
   cursor: none;
+  overflow-x: hidden;
 }
 
 body {
@@ -1467,6 +1468,8 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   justify-content: center;
   padding: var(--section-pad) 0 calc(var(--section-pad) / 2);
   overflow: hidden;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 .timeline-header {
@@ -1546,6 +1549,8 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   padding: 0 var(--gutter) 32px;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
 }
 
 .timeline-track-wrap::-webkit-scrollbar { display: none; }
@@ -2508,7 +2513,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   const lightboxClose = document.getElementById('lightboxClose');
 
   function openLightbox(src) {
-    previewImg.src = src;
+    previewImg.src = src.split('/').map(s => encodeURIComponent(s)).join('/');
     lightbox.classList.add('visible');
     document.body.style.overflow = 'hidden';
   }
@@ -2552,7 +2557,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     let pdfGroup = [], pdfGroupIdx = 0;
 
     function loadDoc(src) {
-      frame.src = src;
+      frame.src = src.split('/').map(s => encodeURIComponent(s)).join('/');
     }
     function updateDocLabel() {
       docLabel.textContent = toRoman(pdfGroupIdx + 1) + ' / ' + toRoman(pdfGroup.length);
