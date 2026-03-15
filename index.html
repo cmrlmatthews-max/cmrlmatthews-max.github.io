@@ -349,13 +349,15 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
 .cover-menu-logo {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 48px;
   font-weight: 400;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--white);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   display: block;
+  line-height: 1;
+  text-shadow: 3px 0 0 rgba(232,80,122,0.22);
 }
 
 /* Full-width accent line below cover logo */
@@ -506,10 +508,11 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
 .nav-logo {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 32px;
   font-weight: 400;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
+  text-shadow: 2px 0 0 rgba(232,80,122,0.18);
 }
 
 .nav-links {
@@ -791,12 +794,21 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.45s cubic-bezier(.23,1,.32,1);
 }
 
 .pdf-viewer-overlay.visible {
   opacity: 1;
   pointer-events: all;
+}
+
+.pdf-viewer-overlay.visible .pdf-viewer-shell {
+  animation: pdfShellIn 0.5s cubic-bezier(.23,1,.32,1) forwards;
+}
+
+@keyframes pdfShellIn {
+  from { transform: translateY(28px); opacity: 0.4; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
 
 .pdf-viewer-shell {
@@ -1292,9 +1304,9 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
 .footer-logo {
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 26px;
   font-weight: 400;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(250,250,248,0.4);
 }
@@ -1395,6 +1407,289 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     text-align: center;
   }
 }
+
+/* ═══════════════════════════════════════════
+   TIMELINE
+   ═══════════════════════════════════════════ */
+.timeline {
+  min-height: 100vh;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--section-pad) 0 calc(var(--section-pad) / 2);
+  overflow: hidden;
+}
+
+.timeline-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 72px;
+  padding: 0 var(--gutter);
+}
+
+.timeline-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.timeline-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.05em;
+  color: var(--white);
+}
+
+.timeline-heading em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.timeline-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.timeline-nav a {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(250,250,248,0.28);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.3s ease;
+}
+
+.timeline-nav a .tl-nav-num {
+  color: rgba(250,250,248,0.13);
+  transition: color 0.3s ease;
+  min-width: 18px;
+}
+
+.timeline-nav a:hover { color: var(--white); }
+.timeline-nav a:hover .tl-nav-num { color: var(--accent); }
+
+.timeline-nav a::after {
+  content: '→';
+  color: rgba(250,250,248,0.13);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.timeline-nav a:hover::after {
+  transform: translateX(5px);
+  color: var(--accent);
+}
+
+/* Track */
+.timeline-track-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 0 var(--gutter) 32px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.timeline-track-wrap::-webkit-scrollbar { display: none; }
+
+.timeline-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: max-content;
+  padding: 140px 0;
+}
+
+/* Center line */
+.timeline-line {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(250,250,248,0.1);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.timeline-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 0%, var(--accent) 25%, var(--accent) 75%, transparent 100%);
+  opacity: 0.16;
+}
+
+/* Milestone item */
+.timeline-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 clamp(28px, 4vw, 58px);
+}
+
+.timeline-item.above { flex-direction: column-reverse; }
+
+/* Dot */
+.timeline-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--accent);
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(.23,1,.32,1), box-shadow 0.3s ease;
+}
+
+.timeline-item:hover .timeline-dot {
+  transform: scale(1.9);
+  box-shadow: 0 0 18px rgba(232,80,122,0.55);
+}
+
+.timeline-item.career .timeline-dot {
+  background: var(--white);
+  border-color: var(--white);
+}
+
+.timeline-item.career:hover .timeline-dot {
+  box-shadow: 0 0 18px rgba(250,250,248,0.4);
+}
+
+.timeline-item.life .timeline-dot {
+  background: transparent;
+  border-color: rgba(250,250,248,0.22);
+  width: 8px; height: 8px;
+  border-style: dashed;
+}
+
+/* Stem */
+.timeline-stem {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, rgba(250,250,248,0), rgba(250,250,248,0.14));
+  flex-shrink: 0;
+}
+
+.timeline-item.above .timeline-stem {
+  background: linear-gradient(to top, rgba(250,250,248,0), rgba(250,250,248,0.14));
+}
+
+/* Card */
+.timeline-card {
+  max-width: 195px;
+  text-align: center;
+  padding: 18px 10px;
+}
+
+.timeline-year {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+.timeline-item.career .timeline-year { color: rgba(250,250,248,0.85); }
+.timeline-item.life .timeline-year { font-size: 1.5rem; color: rgba(250,250,248,0.3); }
+
+.timeline-card-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.07em;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  color: var(--white);
+  transition: color 0.3s ease;
+}
+
+.timeline-item:hover .timeline-card-title { color: var(--accent); }
+.timeline-item.career:hover .timeline-card-title { color: var(--white); }
+.timeline-item.life .timeline-card-title { color: rgba(250,250,248,0.5); }
+
+.timeline-card-sub {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(250,250,248,0.28);
+  line-height: 1.65;
+}
+
+/* Present end cap */
+.timeline-endcap {
+  padding: 0 clamp(20px, 3vw, 40px);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(250,250,248,0.18);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.timeline-endcap::before {
+  content: '';
+  display: inline-block;
+  width: 28px; height: 1px;
+  background: rgba(250,250,248,0.1);
+}
+
+.timeline-drag-hint {
+  padding: 0 var(--gutter);
+  margin-top: 20px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(250,250,248,0.16);
+}
+
+@media (max-width: 768px) {
+  .timeline-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+  .timeline-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px 20px;
+  }
+  .timeline-nav a::after { display: none; }
+}
+
+/* ── Inspirations fallback (if image fails to load) ── */
+.insp-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 64px;
+  color: var(--light);
+  background: var(--off-white);
+  z-index: 0;
+}
+
+.team-photo img { position: relative; z-index: 1; }
+
 </style>
 </head>
 <body>
@@ -1452,10 +1747,10 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     <span class="cover-menu-logo">CMRLM</span>
     <div class="cover-logo-line"></div>
     <nav class="cover-menu-links">
-      <a href="#hero" data-cover-link><span class="menu-num">01</span> Studio</a>
-      <a href="#projects" data-cover-link><span class="menu-num">02</span> Projects</a>
+      <a href="#timeline" data-cover-link><span class="menu-num">01</span> Timeline</a>
+      <a href="#projects" data-cover-link><span class="menu-num">02</span> Work</a>
       <a href="#about" data-cover-link><span class="menu-num">03</span> About</a>
-      <a href="#team" data-cover-link><span class="menu-num">04</span> Team</a>
+      <a href="#team" data-cover-link><span class="menu-num">04</span> Inspirations</a>
       <a href="#journal" data-cover-link><span class="menu-num">05</span> Journal</a>
       <a href="#contact" data-cover-link><span class="menu-num">06</span> Contact</a>
     </nav>
@@ -1494,11 +1789,98 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 </nav>
 
 <!-- ═══════════════════════════════════════════
+     1. TIMELINE
+     ═══════════════════════════════════════════ -->
+<section class="timeline" id="timeline">
+  <div class="timeline-header">
+    <div>
+      <div class="timeline-eyebrow">01 — Journey</div>
+      <h2 class="timeline-heading reveal">
+        <span class="title-heavy">Experience</span><br>&amp; <em>history</em>
+      </h2>
+    </div>
+    <nav class="timeline-nav reveal reveal-delay-1">
+      <a href="#projects"><span class="tl-nav-num">02</span> Work</a>
+      <a href="#about"><span class="tl-nav-num">03</span> About</a>
+      <a href="#team"><span class="tl-nav-num">04</span> Inspirations</a>
+      <a href="#journal"><span class="tl-nav-num">05</span> Journal</a>
+      <a href="#contact"><span class="tl-nav-num">06</span> Contact</a>
+    </nav>
+  </div>
+
+  <div class="timeline-track-wrap">
+    <div class="timeline-track">
+      <div class="timeline-line"></div>
+
+      <!-- 2009 — B.S. Architectural Studies -->
+      <div class="timeline-item education above reveal">
+        <div class="timeline-card">
+          <div class="timeline-year">2009</div>
+          <div class="timeline-card-title">B.S. Architectural Studies</div>
+          <div class="timeline-card-sub">Louisiana Tech University<br>Ruston, LA</div>
+        </div>
+        <div class="timeline-stem"></div>
+        <div class="timeline-dot"></div>
+      </div>
+
+      <!-- 2010 — Masters of Architecture -->
+      <div class="timeline-item education below reveal reveal-delay-1">
+        <div class="timeline-dot"></div>
+        <div class="timeline-stem"></div>
+        <div class="timeline-card">
+          <div class="timeline-year">2010</div>
+          <div class="timeline-card-title">Masters of Architecture</div>
+          <div class="timeline-card-sub">Louisiana Tech University<br>Ruston, LA</div>
+        </div>
+      </div>
+
+      <!-- 2010–14 — Resilience & Rebuild -->
+      <div class="timeline-item life above reveal reveal-delay-2">
+        <div class="timeline-card">
+          <div class="timeline-year">2010–14</div>
+          <div class="timeline-card-title">Resilience &amp; Rebuild</div>
+          <div class="timeline-card-sub">Flood recovery &amp;<br>Restaurant management</div>
+        </div>
+        <div class="timeline-stem"></div>
+        <div class="timeline-dot"></div>
+      </div>
+
+      <!-- 2014 — MasterBuilders Design Build -->
+      <div class="timeline-item career below reveal reveal-delay-3">
+        <div class="timeline-dot"></div>
+        <div class="timeline-stem"></div>
+        <div class="timeline-card">
+          <div class="timeline-year">2014</div>
+          <div class="timeline-card-title">MasterBuilders Design Build</div>
+          <div class="timeline-card-sub">Designer / Builder<br>2014 – 2020</div>
+        </div>
+      </div>
+
+      <!-- 2020 — Nelson Worldwide -->
+      <div class="timeline-item career above reveal reveal-delay-4">
+        <div class="timeline-card">
+          <div class="timeline-year">2020</div>
+          <div class="timeline-card-title">Nelson Worldwide</div>
+          <div class="timeline-card-sub">Technical Designer<br>Atlanta, GA &nbsp;·&nbsp; 2020 – Present</div>
+        </div>
+        <div class="timeline-stem"></div>
+        <div class="timeline-dot"></div>
+      </div>
+
+      <!-- Present -->
+      <div class="timeline-endcap">Present</div>
+    </div>
+  </div>
+
+  <p class="timeline-drag-hint">← Scroll to explore →</p>
+</section>
+
+<!-- ═══════════════════════════════════════════
      2. HERO
      ═══════════════════════════════════════════ -->
 <section class="hero" id="hero">
   <div class="hero-content">
-    <div class="hero-eyebrow reveal">Architecture &amp; Design Studio</div>
+    <div class="hero-eyebrow reveal">Architecture &amp; Design</div>
     <h1 class="hero-title reveal reveal-delay-1">
       <span class="word-heavy">Shaping</span> <span class="word-light">space</span><br>for <em>human</em><br>experience
     </h1>
@@ -1586,34 +1968,34 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 </section>
 
 <!-- ═══════════════════════════════════════════
-     4. ABOUT / STUDIO
+     4. ABOUT
      ═══════════════════════════════════════════ -->
 <section class="about" id="about">
   <div class="container">
     <div class="about-grid">
       <div class="about-content">
-        <span class="label about-eyebrow reveal">03 — Studio</span>
+        <span class="label about-eyebrow reveal">03 — About</span>
         <h2 class="about-title reveal reveal-delay-1">
           <span class="title-heavy">Design</span> as a<br>dialogue with <em>context</em>
         </h2>
         <p class="about-text reveal reveal-delay-2">
-          <span class="ph">[PLACEHOLDER — Studio description paragraph 1: founding story, mission, scale of work, core values.]</span>
+          From the design studios of Louisiana Tech to commercial towers across Atlanta, my career has been built on equal parts rigorous training and real-world craft. I hold a B.S. in Architectural Studies and a Master of Architecture — both from Louisiana Tech University — and have spent the years since learning what buildings actually demand of the people who make them.
         </p>
         <p class="about-text reveal reveal-delay-3">
-          <span class="ph">[PLACEHOLDER — Studio description paragraph 2: process, approach, what sets CMRLM apart.]</span>
+          My work spans residential renovation and large-scale commercial. From managing hands-on projects at MasterBuilders Design Build to coordinating curtain wall details and consultant teams on high-rise mixed-use developments at Nelson Worldwide, I bring the same precision and care to every scale of work.
         </p>
         <div class="about-stats reveal reveal-delay-4">
           <div class="stat">
-            <div class="stat-number ph">[#]</div>
-            <div class="stat-label ph">Years Practice</div>
+            <div class="stat-number">16</div>
+            <div class="stat-label">Years in Architecture</div>
           </div>
           <div class="stat">
-            <div class="stat-number ph">[#]+</div>
-            <div class="stat-label ph">Projects Built</div>
+            <div class="stat-number">20+</div>
+            <div class="stat-label">Projects Delivered</div>
           </div>
           <div class="stat">
-            <div class="stat-number ph">[#]</div>
-            <div class="stat-label ph">Countries</div>
+            <div class="stat-number">2</div>
+            <div class="stat-label">Firms</div>
           </div>
         </div>
       </div>
@@ -1634,31 +2016,54 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     <div class="team-header reveal">
       <div>
         <span class="section-num">04</span>
-        <h2 class="team-title">Our People</h2>
+        <h2 class="team-title">Inspirations</h2>
       </div>
-      <span class="label">16 Designers &amp; Thinkers</span>
+      <span class="label">Those who shaped how I see space</span>
     </div>
     <div class="team-grid">
       <div class="team-member reveal">
-        <div class="team-photo" style="background:var(--off-white);display:flex;align-items:center;justify-content:center;">
-          <span style="font-family:var(--font-display);font-size:48px;color:var(--light);">RK</span>
+        <div class="team-photo">
+          <img src="Rem Koolhaas.jpeg"
+               alt="Rem Koolhaas"
+               onerror="this.style.display='none'"
+               loading="lazy">
+          <span class="insp-fallback">RK</span>
         </div>
         <div class="team-name">Rem Koolhaas</div>
-        <div class="team-role ph">[PLACEHOLDER — Role]</div>
+        <div class="team-role">Deconstructivism &amp; Urban Theory</div>
       </div>
       <div class="team-member reveal reveal-delay-1">
-        <div class="team-photo" style="background:var(--off-white);display:flex;align-items:center;justify-content:center;">
-          <span style="font-family:var(--font-display);font-size:48px;color:var(--light);">MV</span>
+        <div class="team-photo">
+          <img src="Mies Van Der Rohe.webp"
+               alt="Mies van der Rohe"
+               onerror="this.style.display='none'"
+               loading="lazy">
+          <span class="insp-fallback">MV</span>
         </div>
         <div class="team-name">Mies van der Rohe</div>
-        <div class="team-role ph">[PLACEHOLDER — Role]</div>
+        <div class="team-role">Modernist Minimalism &mdash; Less is More</div>
       </div>
       <div class="team-member reveal reveal-delay-2">
-        <div class="team-photo" style="background:var(--off-white);display:flex;align-items:center;justify-content:center;">
-          <span style="font-family:var(--font-display);font-size:48px;color:var(--light);">LC</span>
+        <div class="team-photo">
+          <img src="Le Corbusier.webp"
+               alt="Le Corbusier"
+               onerror="this.style.display='none'"
+               loading="lazy">
+          <span class="insp-fallback">LC</span>
         </div>
         <div class="team-name">Le Corbusier</div>
-        <div class="team-role ph">[PLACEHOLDER — Role]</div>
+        <div class="team-role">Five Points of Modern Architecture</div>
+      </div>
+      <div class="team-member reveal reveal-delay-3">
+        <div class="team-photo">
+          <img src="Peter Zumthor.jpeg"
+               alt="Peter Zumthor"
+               onerror="this.style.display='none'"
+               loading="lazy">
+          <span class="insp-fallback">PZ</span>
+        </div>
+        <div class="team-name">Peter Zumthor</div>
+        <div class="team-role">Architecture of Atmosphere &amp; Material Honesty</div>
       </div>
     </div>
   </div>
@@ -1882,7 +2287,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
       }
     });
 
-    const hoverTargets = 'a, button, input, textarea, .project-item, .journal-card, .team-member';
+    const hoverTargets = 'a, button, input, textarea, .project-item, .journal-card, .team-member, .timeline-item';
     document.querySelectorAll(hoverTargets).forEach(el => {
       el.addEventListener('mouseenter', () => {
         dot.classList.add('hovering');
@@ -2038,16 +2443,50 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     }
 
     function openPdfViewer(src) {
-      if (typeof pdfjsLib === 'undefined') return;
+      /* When running from a local file:// URL the browser blocks fetch access
+         to other local files. Fall back to opening natively in a new tab.
+         The PDF.js viewer works correctly once the site is hosted on a server. */
+      const isLocal = (location.protocol === 'file:');
+
+      if (isLocal || typeof pdfjsLib === 'undefined') {
+        /* Brief accent flash before opening new tab — feels intentional */
+        const fl = document.getElementById('sectionFlash');
+        if (fl) {
+          fl.classList.remove('firing');
+          void fl.offsetWidth; /* reflow to restart animation */
+          fl.classList.add('firing');
+        }
+        setTimeout(() => window.open(src, '_blank'), 280);
+        return;
+      }
+
       overlay.classList.add('visible');
       document.body.style.overflow = 'hidden';
       currentPage = 1; scale = 1.2;
       zoomLabel.textContent = '100%';
-      pdfjsLib.getDocument(src).promise.then(doc => {
-        pdfDoc = doc;
-        pageCount.textContent = doc.numPages;
-        renderPage(currentPage);
-      });
+      pageCount.textContent = '\u2026';
+      pageNum.textContent = '\u2026';
+
+      /* Encode path so spaces become %20 */
+      const encodedSrc = src.split('/').map(encodeURIComponent).join('/');
+
+      fetch(encodedSrc)
+        .then(res => {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.arrayBuffer();
+        })
+        .then(buf => pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise)
+        .then(doc => {
+          pdfDoc = doc;
+          pageCount.textContent = doc.numPages;
+          pageNum.textContent = 1;
+          renderPage(currentPage);
+        })
+        .catch(err => {
+          console.error('PDF load error:', err);
+          closePdfViewer();
+          window.open(src, '_blank');
+        });
     }
 
     window.closePdfViewer = function() {
