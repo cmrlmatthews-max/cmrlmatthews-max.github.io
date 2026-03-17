@@ -1544,23 +1544,18 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
 /* Track */
 .timeline-track-wrap {
-  overflow-x: auto;
-  overflow-y: visible;
+  overflow: hidden;
   padding: 0 var(--gutter) 32px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
   max-width: 100%;
 }
-
-.timeline-track-wrap::-webkit-scrollbar { display: none; }
 
 .timeline-track {
   position: relative;
   display: flex;
   align-items: center;
-  min-width: max-content;
+  justify-content: space-between;
   padding: 140px 0;
+  width: 100%;
 }
 
 /* Center line */
@@ -1588,7 +1583,9 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 clamp(28px, 4vw, 58px);
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 8px;
 }
 
 .timeline-item.above { flex-direction: column-reverse; }
@@ -1640,9 +1637,9 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
 /* Card */
 .timeline-card {
-  max-width: 195px;
+  max-width: 180px;
   text-align: center;
-  padding: 18px 10px;
+  padding: 14px 6px;
 }
 
 .timeline-year {
@@ -1682,7 +1679,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
 /* Present end cap */
 .timeline-endcap {
-  padding: 0 clamp(20px, 3vw, 40px);
+  padding: 0 clamp(10px, 1.5vw, 40px);
   font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 0.18em;
@@ -1692,6 +1689,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   align-items: center;
   gap: 12px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .timeline-endcap::before {
@@ -1699,16 +1697,6 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   display: inline-block;
   width: 28px; height: 1px;
   background: rgba(250,250,248,0.1);
-}
-
-.timeline-drag-hint {
-  padding: 0 var(--gutter);
-  margin-top: 20px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(250,250,248,0.16);
 }
 
 @media (max-width: 768px) {
@@ -1725,6 +1713,26 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     gap: 10px 20px;
   }
   .timeline-nav a::after { display: none; }
+
+  .timeline-track {
+    padding: 100px 0;
+  }
+  .timeline-card {
+    max-width: 120px;
+    padding: 10px 4px;
+  }
+  .timeline-year {
+    font-size: 1.6rem;
+  }
+  .timeline-card-title {
+    font-size: 0.8rem;
+  }
+  .timeline-card-sub {
+    font-size: 8px;
+  }
+  .timeline-stem {
+    height: 32px;
+  }
 }
 
 /* ── PDF doc navigation (multi-document group mode) ── */
@@ -1945,7 +1953,6 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     </div>
   </div>
 
-  <p class="timeline-drag-hint">← Scroll to explore →</p>
 </section>
 
 <!-- ═══════════════════════════════════════════
@@ -2084,18 +2091,6 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
         </a>
         <a href="#" class="project-item reveal reveal-delay-1">
           <span class="project-num">04</span>
-          <span class="project-name">Truist Tower</span>
-          <span class="project-type">Architecture</span>
-          <span class="project-location">Cobb County, GA</span>
-        </a>
-        <a href="#" class="project-item reveal reveal-delay-2">
-          <span class="project-num">05</span>
-          <span class="project-name">Cumberland Mall Multi-family</span>
-          <span class="project-type">Architecture</span>
-          <span class="project-location">Cobb County, GA</span>
-        </a>
-        <a href="#" class="project-item reveal reveal-delay-1">
-          <span class="project-num">06</span>
           <span class="project-name">3 Ballpark Center</span>
           <span class="project-type">Architecture</span>
           <span class="project-location">Cobb County, GA</span>
@@ -2112,7 +2107,8 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
         <span class="label">RJTR Architecture &nbsp;·&nbsp; Atlanta, GA</span>
       </div>
       <div class="project-list">
-        <a href="#" class="project-item reveal">
+        <a href="#" class="project-item reveal"
+           data-preview="Cobb Galleria.png">
           <span class="project-num">01</span>
           <span class="project-name">Cobb Galleria</span>
           <span class="project-type">Mixed Use</span>
