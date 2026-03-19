@@ -1853,24 +1853,63 @@ a.timeline-link:hover .timeline-card {
   }
   .timeline-nav a::after { display: none; }
 
-  .timeline-track {
-    padding: 100px 0;
+  /* Mobile: horizontal scroll timeline */
+  .timeline-track-wrap {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 20px;
   }
+  .timeline-track-wrap::-webkit-scrollbar { display: none; }
+
+  .timeline-track {
+    min-width: max-content;
+    justify-content: flex-start;
+    padding: 110px 0;
+  }
+
+  .timeline-item {
+    flex: 0 0 auto;
+    padding: 0 clamp(16px, 4vw, 28px);
+    min-width: 130px;
+  }
+
   .timeline-card {
-    max-width: 120px;
-    padding: 10px 4px;
+    max-width: 150px;
+    padding: 12px 6px;
   }
   .timeline-year {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
   }
   .timeline-card-title {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
   .timeline-card-sub {
-    font-size: 8px;
+    font-size: 8.5px;
   }
   .timeline-stem {
-    height: 32px;
+    height: 36px;
+  }
+}
+
+/* Swipe hint for mobile timeline */
+.timeline-swipe-hint {
+  display: none;
+  padding: 0 var(--gutter);
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(250,250,248,0.16);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .timeline-swipe-hint {
+    display: block;
   }
 }
 
@@ -2095,6 +2134,7 @@ a.timeline-link:hover .timeline-card {
     </div>
   </div>
 
+  <p class="timeline-swipe-hint">← Swipe to explore →</p>
 </section>
 
 <!-- ═══════════════════════════════════════════
