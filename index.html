@@ -1805,17 +1805,6 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   line-height: 1.65;
 }
 
-/* Clickable timeline items */
-a.timeline-link {
-  text-decoration: none;
-  color: inherit;
-  cursor: none;
-}
-a.timeline-link:hover .timeline-card {
-  transform: translateY(-4px);
-  transition: transform 0.3s ease;
-}
-
 /* Present end cap */
 .timeline-endcap {
   padding: 0 clamp(10px, 1.5vw, 40px);
@@ -1853,10 +1842,13 @@ a.timeline-link:hover .timeline-card {
   }
   .timeline-nav a::after { display: none; }
 
-  /* Mobile: horizontal scroll timeline */
+  /* Mobile: allow horizontal scroll to escape parent overflow */
+  .timeline {
+    overflow: visible;
+  }
   .timeline-track-wrap {
-    overflow-x: auto;
-    overflow-y: visible;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -2064,7 +2056,7 @@ a.timeline-link:hover .timeline-card {
       <div class="timeline-line"></div>
 
       <!-- 2009 — B.S. Architectural Studies -->
-      <a href="#projects" class="timeline-item education above reveal timeline-link">
+      <div class="timeline-item education above reveal">
         <div class="timeline-card">
           <div class="timeline-year">2009</div>
           <div class="timeline-card-title">B.S. Architectural Studies</div>
@@ -2072,10 +2064,10 @@ a.timeline-link:hover .timeline-card {
         </div>
         <div class="timeline-stem"></div>
         <div class="timeline-dot"></div>
-      </a>
+      </div>
 
       <!-- 2010 — Masters of Architecture -->
-      <a href="#projects" class="timeline-item education below reveal reveal-delay-1 timeline-link">
+      <div class="timeline-item education below reveal reveal-delay-1">
         <div class="timeline-dot"></div>
         <div class="timeline-stem"></div>
         <div class="timeline-card">
@@ -2083,10 +2075,10 @@ a.timeline-link:hover .timeline-card {
           <div class="timeline-card-title">Masters of Architecture</div>
           <div class="timeline-card-sub">Louisiana Tech University<br>Ruston, LA</div>
         </div>
-      </a>
+      </div>
 
       <!-- 2010–14 — Resilience & Rebuild -->
-      <a href="#about" class="timeline-item life above reveal reveal-delay-2 timeline-link">
+      <div class="timeline-item life above reveal reveal-delay-2">
         <div class="timeline-card">
           <div class="timeline-year">2010–14</div>
           <div class="timeline-card-title">Resilience &amp; Rebuild</div>
@@ -2094,10 +2086,10 @@ a.timeline-link:hover .timeline-card {
         </div>
         <div class="timeline-stem"></div>
         <div class="timeline-dot"></div>
-      </a>
+      </div>
 
       <!-- 2014 — MasterBuilders Design Build -->
-      <a href="#about" class="timeline-item career below reveal reveal-delay-3 timeline-link">
+      <div class="timeline-item career below reveal reveal-delay-3">
         <div class="timeline-dot"></div>
         <div class="timeline-stem"></div>
         <div class="timeline-card">
@@ -2105,10 +2097,10 @@ a.timeline-link:hover .timeline-card {
           <div class="timeline-card-title">MasterBuilders Design Build</div>
           <div class="timeline-card-sub">Designer / Builder<br>2014 – 2020</div>
         </div>
-      </a>
+      </div>
 
       <!-- 2020 — Nelson Worldwide -->
-      <a href="#projects" class="timeline-item career above reveal reveal-delay-4 timeline-link" data-scroll-to="professional">
+      <div class="timeline-item career above reveal reveal-delay-4">
         <div class="timeline-card">
           <div class="timeline-year">2020</div>
           <div class="timeline-card-title">Nelson Worldwide</div>
@@ -2116,10 +2108,10 @@ a.timeline-link:hover .timeline-card {
         </div>
         <div class="timeline-stem"></div>
         <div class="timeline-dot"></div>
-      </a>
+      </div>
 
       <!-- 2025 — RJTR Architecture -->
-      <a href="#projects" class="timeline-item career below reveal reveal-delay-5 timeline-link" data-scroll-to="rjtr">
+      <div class="timeline-item career below reveal reveal-delay-5">
         <div class="timeline-dot"></div>
         <div class="timeline-stem"></div>
         <div class="timeline-card">
@@ -2127,7 +2119,7 @@ a.timeline-link:hover .timeline-card {
           <div class="timeline-card-title">RJTR Architecture</div>
           <div class="timeline-card-sub">Designer<br>Atlanta, GA &nbsp;·&nbsp; 2025 – Present</div>
         </div>
-      </a>
+      </div>
 
       <!-- Present -->
       <div class="timeline-endcap">Present</div>
@@ -2985,10 +2977,11 @@ a.timeline-link:hover .timeline-card {
 
     reset(init) {
       this.x = Math.random() * W;
-      this.y = init ? Math.random() * H : -20;
+      this.y = init ? Math.random() * H : -20 - Math.random() * 40;
       this.size = 3 + Math.random() * 8;
       this.speedX = (Math.random() - 0.5) * 0.4;
-      this.speedY = 0.3 + Math.random() * 0.8;
+      this.baseSpeedY = 0.3 + Math.random() * 0.8;
+      this.speedY = this.baseSpeedY;
       this.rotation = Math.random() * Math.PI * 2;
       this.rotationSpeed = (Math.random() - 0.5) * 0.04;
       this.wobblePhase = Math.random() * Math.PI * 2;
@@ -3033,15 +3026,15 @@ a.timeline-link:hover .timeline-card {
 
           /* Spin faster near cursor */
           this.rotationSpeed += force * 0.015;
-
-          /* Slow down natural drift when captured */
-          this.speedY *= 0.96;
         } else {
           this.swirlStrength *= 0.94;
         }
       } else {
         this.swirlStrength *= 0.92;
       }
+
+      /* Always recover fall speed toward base rate */
+      this.speedY += (this.baseSpeedY - this.speedY) * 0.02;
 
       /* Dampen rotation speed */
       this.rotationSpeed *= 0.995;
