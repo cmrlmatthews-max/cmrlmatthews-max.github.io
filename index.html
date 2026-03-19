@@ -225,13 +225,13 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 }
 
 /* ═══════════════════════════════════════════
-   SCROLL REVEAL
+   SCROLL REVEAL — BASE
    ═══════════════════════════════════════════ */
 .reveal {
   opacity: 0;
   transform: translateY(32px);
-  transition: opacity 0.8s cubic-bezier(.23,1,.32,1),
-              transform 0.8s cubic-bezier(.23,1,.32,1);
+  transition: opacity 1.4s cubic-bezier(.23,1,.32,1),
+              transform 1.4s cubic-bezier(.23,1,.32,1);
 }
 
 .reveal.visible {
@@ -239,10 +239,126 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   transform: translateY(0);
 }
 
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-1 { transition-delay: 0.2s; }
+.reveal-delay-2 { transition-delay: 0.4s; }
+.reveal-delay-3 { transition-delay: 0.6s; }
+.reveal-delay-4 { transition-delay: 0.8s; }
+.reveal-delay-5 { transition-delay: 1.0s; }
+
+/* ── Word-by-word reveal ── */
+.split-heading .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px) rotateX(45deg);
+  transition: opacity 1.0s cubic-bezier(.23,1,.32,1),
+              transform 1.2s cubic-bezier(.23,1,.32,1);
+  transform-origin: bottom center;
+}
+
+.split-heading.visible .word {
+  opacity: 1;
+  transform: translateY(0) rotateX(0deg);
+}
+
+/* Stagger each word */
+.split-heading .word:nth-child(1)  { transition-delay: 0.00s; }
+.split-heading .word:nth-child(2)  { transition-delay: 0.12s; }
+.split-heading .word:nth-child(3)  { transition-delay: 0.24s; }
+.split-heading .word:nth-child(4)  { transition-delay: 0.36s; }
+.split-heading .word:nth-child(5)  { transition-delay: 0.48s; }
+.split-heading .word:nth-child(6)  { transition-delay: 0.60s; }
+.split-heading .word:nth-child(7)  { transition-delay: 0.72s; }
+.split-heading .word:nth-child(8)  { transition-delay: 0.84s; }
+.split-heading .word:nth-child(9)  { transition-delay: 0.96s; }
+.split-heading .word:nth-child(10) { transition-delay: 1.08s; }
+
+/* ── Slide-in from left / right ── */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 1.6s cubic-bezier(.23,1,.32,1),
+              transform 1.6s cubic-bezier(.23,1,.32,1);
+}
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 1.6s cubic-bezier(.23,1,.32,1),
+              transform 1.6s cubic-bezier(.23,1,.32,1);
+}
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── Scale-up reveal ── */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 1.4s cubic-bezier(.23,1,.32,1),
+              transform 1.4s cubic-bezier(.23,1,.32,1);
+}
+.reveal-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ── Parallax helper (JS-driven via transform) ── */
+.parallax {
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+/* ── Stat counter animation ── */
+.stat-number {
+  transition: opacity 0.5s ease;
+}
+
+/* ── Skill tags cascade ── */
+.skill-tag {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.8s cubic-bezier(.23,1,.32,1),
+              transform 0.8s cubic-bezier(.23,1,.32,1);
+}
+.about-skills.visible .skill-tag { opacity: 1; transform: translateY(0); }
+.about-skills.visible .skill-tag:nth-child(1) { transition-delay: 0.10s; }
+.about-skills.visible .skill-tag:nth-child(2) { transition-delay: 0.22s; }
+.about-skills.visible .skill-tag:nth-child(3) { transition-delay: 0.34s; }
+.about-skills.visible .skill-tag:nth-child(4) { transition-delay: 0.46s; }
+.about-skills.visible .skill-tag:nth-child(5) { transition-delay: 0.58s; }
+.about-skills.visible .skill-tag:nth-child(6) { transition-delay: 0.70s; }
+.about-skills.visible .skill-tag:nth-child(7) { transition-delay: 0.82s; }
+.about-skills.visible .skill-tag:nth-child(8) { transition-delay: 0.94s; }
+
+/* ── Project item enhanced hover + reveal ── */
+.project-item {
+  transition: opacity 0.6s cubic-bezier(.23,1,.32,1),
+              transform 0.6s cubic-bezier(.23,1,.32,1),
+              background 0.3s ease, padding-left 0.3s ease;
+}
+
+/* ── Horizontal line draw animation ── */
+.line-draw {
+  position: relative;
+}
+.line-draw::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s cubic-bezier(.23,1,.32,1);
+}
+.line-draw.visible::after {
+  transform: scaleX(1);
+}
 
 /* ═══════════════════════════════════════════
    COVER PAGE
@@ -273,6 +389,18 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 .cover.revealed .cover-image img {
   filter: brightness(0.45) saturate(0.7);
   transform: scale(1.02);
+}
+
+/* Petal canvas overlay */
+.petal-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.cover.revealed .petal-canvas {
+  pointer-events: auto;
+  cursor: none;
 }
 
 /* Dark vignette overlay — always present for depth */
@@ -1677,6 +1805,17 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   line-height: 1.65;
 }
 
+/* Clickable timeline items */
+a.timeline-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: none;
+}
+a.timeline-link:hover .timeline-card {
+  transform: translateY(-4px);
+  transition: transform 0.3s ease;
+}
+
 /* Present end cap */
 .timeline-endcap {
   padding: 0 clamp(10px, 1.5vw, 40px);
@@ -1812,6 +1951,9 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
          loading="eager">
   </div>
 
+  <!-- Petal Particle Canvas -->
+  <canvas class="petal-canvas" id="petalCanvas"></canvas>
+
   <!-- Menu (hidden until click) -->
   <div class="cover-menu">
     <span class="cover-menu-logo">CMRLM</span>
@@ -1865,8 +2007,8 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   <div class="timeline-header">
     <div>
       <div class="timeline-eyebrow">01 — Journey</div>
-      <h2 class="timeline-heading reveal">
-        <span class="title-heavy">Experience</span><br>&amp; <em>history</em>
+      <h2 class="timeline-heading split-heading" data-split>
+        <span class="title-heavy">Experience</span> &amp; <em>history</em>
       </h2>
     </div>
     <nav class="timeline-nav reveal reveal-delay-1">
@@ -1883,7 +2025,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
       <div class="timeline-line"></div>
 
       <!-- 2009 — B.S. Architectural Studies -->
-      <div class="timeline-item education above reveal">
+      <a href="#projects" class="timeline-item education above reveal timeline-link">
         <div class="timeline-card">
           <div class="timeline-year">2009</div>
           <div class="timeline-card-title">B.S. Architectural Studies</div>
@@ -1891,10 +2033,10 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
         </div>
         <div class="timeline-stem"></div>
         <div class="timeline-dot"></div>
-      </div>
+      </a>
 
       <!-- 2010 — Masters of Architecture -->
-      <div class="timeline-item education below reveal reveal-delay-1">
+      <a href="#projects" class="timeline-item education below reveal reveal-delay-1 timeline-link">
         <div class="timeline-dot"></div>
         <div class="timeline-stem"></div>
         <div class="timeline-card">
@@ -1902,10 +2044,10 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
           <div class="timeline-card-title">Masters of Architecture</div>
           <div class="timeline-card-sub">Louisiana Tech University<br>Ruston, LA</div>
         </div>
-      </div>
+      </a>
 
       <!-- 2010–14 — Resilience & Rebuild -->
-      <div class="timeline-item life above reveal reveal-delay-2">
+      <a href="#about" class="timeline-item life above reveal reveal-delay-2 timeline-link">
         <div class="timeline-card">
           <div class="timeline-year">2010–14</div>
           <div class="timeline-card-title">Resilience &amp; Rebuild</div>
@@ -1913,10 +2055,10 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
         </div>
         <div class="timeline-stem"></div>
         <div class="timeline-dot"></div>
-      </div>
+      </a>
 
       <!-- 2014 — MasterBuilders Design Build -->
-      <div class="timeline-item career below reveal reveal-delay-3">
+      <a href="#about" class="timeline-item career below reveal reveal-delay-3 timeline-link">
         <div class="timeline-dot"></div>
         <div class="timeline-stem"></div>
         <div class="timeline-card">
@@ -1924,10 +2066,10 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
           <div class="timeline-card-title">MasterBuilders Design Build</div>
           <div class="timeline-card-sub">Designer / Builder<br>2014 – 2020</div>
         </div>
-      </div>
+      </a>
 
       <!-- 2020 — Nelson Worldwide -->
-      <div class="timeline-item career above reveal reveal-delay-4">
+      <a href="#projects" class="timeline-item career above reveal reveal-delay-4 timeline-link" data-scroll-to="professional">
         <div class="timeline-card">
           <div class="timeline-year">2020</div>
           <div class="timeline-card-title">Nelson Worldwide</div>
@@ -1935,10 +2077,10 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
         </div>
         <div class="timeline-stem"></div>
         <div class="timeline-dot"></div>
-      </div>
+      </a>
 
       <!-- 2025 — RJTR Architecture -->
-      <div class="timeline-item career below reveal reveal-delay-5">
+      <a href="#projects" class="timeline-item career below reveal reveal-delay-5 timeline-link" data-scroll-to="rjtr">
         <div class="timeline-dot"></div>
         <div class="timeline-stem"></div>
         <div class="timeline-card">
@@ -1946,7 +2088,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
           <div class="timeline-card-title">RJTR Architecture</div>
           <div class="timeline-card-sub">Designer<br>Atlanta, GA &nbsp;·&nbsp; 2025 – Present</div>
         </div>
-      </div>
+      </a>
 
       <!-- Present -->
       <div class="timeline-endcap">Present</div>
@@ -1961,8 +2103,8 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 <section class="hero" id="hero">
   <div class="hero-content">
     <div class="hero-eyebrow reveal">Architecture &amp; Design</div>
-    <h1 class="hero-title reveal reveal-delay-1">
-      <span class="word-heavy">Shaping</span> <span class="word-light">space</span><br>for <em>human</em><br>experience
+    <h1 class="hero-title split-heading reveal-delay-1" data-split>
+      <span class="word-heavy">Shaping</span> <span class="word-light">space</span> for <em>human</em> experience
     </h1>
     <p class="hero-desc reveal reveal-delay-2">
       I pursue design that uses materials with <strong class="accent-bold">delicacy and rigor</strong>
@@ -2135,13 +2277,13 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     <div class="about-grid">
       <div class="about-content">
         <span class="label about-eyebrow reveal">03 — About</span>
-        <h2 class="about-title reveal reveal-delay-1">
-          <span class="title-heavy">Design</span> as a<br>dialogue with <em>context</em>
+        <h2 class="about-title split-heading reveal-delay-1" data-split>
+          <span class="title-heavy">Design</span> as a dialogue with <em>context</em>
         </h2>
-        <p class="about-text reveal reveal-delay-2">
+        <p class="about-text reveal-left reveal-delay-2">
           From the design studios of Louisiana Tech to commercial towers across Atlanta, my career has been built on equal parts rigorous training and real-world craft. I hold a B.S. in Architectural Studies and a Master of Architecture — both from Louisiana Tech University — and have spent the years since learning what buildings actually demand of the people who make them.
         </p>
-        <p class="about-text reveal reveal-delay-3">
+        <p class="about-text reveal-left reveal-delay-3">
           My work spans residential renovation and large-scale commercial. From managing hands-on projects at MasterBuilders Design Build to coordinating curtain wall details and consultant teams on high-rise mixed-use developments at Nelson Worldwide, I bring the same precision and care to every scale of work.
         </p>
         <div class="about-stats reveal reveal-delay-4">
@@ -2172,7 +2314,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
           </div>
         </div>
       </div>
-      <div class="about-image reveal reveal-delay-2">
+      <div class="about-image reveal-right reveal-delay-2 parallax" data-parallax-speed="0.08">
         <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=1100&fit=crop&crop=center"
              alt="Architect reviewing models in a light-filled studio space"
              loading="lazy">
@@ -2320,8 +2462,8 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     <div class="contact-grid">
       <div class="contact-info">
         <span class="label reveal">06 — Contact</span>
-        <h2 class="contact-title reveal reveal-delay-1">
-          <span class="title-heavy">Let's</span> build<br>something <em>together</em>
+        <h2 class="contact-title split-heading reveal-delay-1" data-split>
+          <span class="title-heavy">Let's</span> build something <em>together</em>
         </h2>
 
         <div class="contact-rows reveal reveal-delay-2">
@@ -2527,7 +2669,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
   window.addEventListener('scroll', setActiveNav, { passive: true });
 
-  /* ── Scroll Reveal ── */
+  /* ── Scroll Reveal (enhanced) ── */
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -2537,7 +2679,97 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .split-heading, .line-draw, .about-skills').forEach(el => revealObserver.observe(el));
+
+  /* ── Word-by-word split heading ── */
+  document.querySelectorAll('[data-split]').forEach(el => {
+    const html = el.innerHTML;
+    // Wrap each text node word in a span, preserve existing HTML tags
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+
+    function wrapWords(node) {
+      if (node.nodeType === 3) { // Text node
+        const words = node.textContent.split(/(\s+)/);
+        const frag = document.createDocumentFragment();
+        words.forEach(w => {
+          if (w.trim() === '') {
+            frag.appendChild(document.createTextNode(w));
+          } else {
+            const span = document.createElement('span');
+            span.className = 'word';
+            span.textContent = w;
+            frag.appendChild(span);
+          }
+        });
+        node.parentNode.replaceChild(frag, node);
+      } else if (node.nodeType === 1) { // Element node
+        // Wrap the element itself as a word if it's inline (span, em, strong)
+        const tag = node.tagName.toLowerCase();
+        if (['em', 'strong', 'span'].includes(tag)) {
+          // Wrap inner text words
+          Array.from(node.childNodes).forEach(wrapWords);
+          // Wrap the whole element as a word
+          if (!node.classList.contains('word')) {
+            node.classList.add('word');
+          }
+        } else {
+          Array.from(node.childNodes).forEach(wrapWords);
+        }
+      }
+    }
+
+    Array.from(temp.childNodes).forEach(wrapWords);
+    el.innerHTML = temp.innerHTML;
+  });
+
+  /* ── Parallax on scroll ── */
+  const parallaxEls = document.querySelectorAll('[data-parallax-speed]');
+  if (parallaxEls.length) {
+    let pTicking = false;
+    function updateParallax() {
+      const scrollY = window.scrollY;
+      const winH = window.innerHeight;
+      parallaxEls.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const speed = parseFloat(el.dataset.parallaxSpeed) || 0.05;
+        // Only animate when in/near viewport
+        if (rect.bottom > -200 && rect.top < winH + 200) {
+          const offset = (rect.top - winH / 2) * speed;
+          el.style.transform = 'translateY(' + offset + 'px)';
+        }
+      });
+      pTicking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!pTicking) { requestAnimationFrame(updateParallax); pTicking = true; }
+    }, { passive: true });
+    updateParallax();
+  }
+
+  /* ── Stat counter animation ── */
+  const statNumbers = document.querySelectorAll('.stat-number');
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const raw = el.textContent.trim();
+        const suffix = raw.replace(/[0-9]/g, ''); // e.g. "+"
+        const target = parseInt(raw);
+        if (isNaN(target)) return;
+        let current = 0;
+        const duration = 2800;
+        const step = Math.max(1, Math.floor(target / (duration / 45)));
+        const timer = setInterval(() => {
+          current += step;
+          if (current >= target) { current = target; clearInterval(timer); }
+          el.textContent = current + suffix;
+        }, 30);
+        statObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  statNumbers.forEach(el => statObserver.observe(el));
 
   /* ── Project Lightbox (click to open) ── */
   const lightbox = document.getElementById('projectLightbox');
@@ -2672,6 +2904,198 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     document.querySelectorAll('section[id]').forEach(sec => observer.observe(sec));
   })();
 
+})();
+
+/* ═══════════════════════════════════════════
+   PETAL PARTICLE SYSTEM
+   ═══════════════════════════════════════════ */
+(function() {
+  const canvas = document.getElementById('petalCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cover = document.getElementById('cover');
+
+  let W, H;
+  let mouse = { x: -1000, y: -1000, active: false };
+  const PETAL_COUNT = 120;
+  const petals = [];
+
+  /* Petal colors — soft pinks, rose, blush, a few white */
+  const petalColors = [
+    'rgba(232, 80, 122, 0.6)',
+    'rgba(232, 80, 122, 0.4)',
+    'rgba(245, 130, 160, 0.5)',
+    'rgba(255, 180, 200, 0.5)',
+    'rgba(220, 60, 100, 0.45)',
+    'rgba(255, 200, 215, 0.55)',
+    'rgba(250, 250, 248, 0.25)',
+    'rgba(255, 160, 185, 0.5)',
+  ];
+
+  function resize() {
+    const rect = cover.getBoundingClientRect();
+    W = canvas.width = rect.width;
+    H = canvas.height = rect.height;
+  }
+
+  class Petal {
+    constructor() {
+      this.reset(true);
+    }
+
+    reset(init) {
+      this.x = Math.random() * W;
+      this.y = init ? Math.random() * H : -20;
+      this.size = 3 + Math.random() * 8;
+      this.speedX = (Math.random() - 0.5) * 0.4;
+      this.speedY = 0.3 + Math.random() * 0.8;
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotationSpeed = (Math.random() - 0.5) * 0.04;
+      this.wobblePhase = Math.random() * Math.PI * 2;
+      this.wobbleSpeed = 0.01 + Math.random() * 0.02;
+      this.wobbleAmp = 0.3 + Math.random() * 0.7;
+      this.color = petalColors[Math.floor(Math.random() * petalColors.length)];
+      this.opacity = 0.3 + Math.random() * 0.5;
+      this.life = 1;
+      /* Swirl properties */
+      this.orbitAngle = Math.random() * Math.PI * 2;
+      this.orbitSpeed = 0.02 + Math.random() * 0.04;
+      this.swirlStrength = 0;
+    }
+
+    update() {
+      /* Natural drift */
+      this.wobblePhase += this.wobbleSpeed;
+      this.x += this.speedX + Math.sin(this.wobblePhase) * this.wobbleAmp;
+      this.y += this.speedY;
+      this.rotation += this.rotationSpeed;
+
+      /* Mouse swirl interaction */
+      if (mouse.active) {
+        const dx = this.x - mouse.x;
+        const dy = this.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const maxDist = 320;
+
+        if (dist < maxDist) {
+          const force = Math.pow(1 - dist / maxDist, 1.5);
+          this.swirlStrength += (force * 0.5 - this.swirlStrength) * 0.15;
+
+          /* Orbit around cursor — tight condensing */
+          this.orbitAngle += this.orbitSpeed * (1 + force * 5);
+          const orbitRadius = 20 + dist * 0.35;
+          const targetX = mouse.x + Math.cos(this.orbitAngle) * orbitRadius;
+          const targetY = mouse.y + Math.sin(this.orbitAngle) * orbitRadius;
+
+          /* Stronger pull toward orbit position */
+          this.x += (targetX - this.x) * this.swirlStrength * 0.18;
+          this.y += (targetY - this.y) * this.swirlStrength * 0.18;
+
+          /* Spin faster near cursor */
+          this.rotationSpeed += force * 0.015;
+
+          /* Slow down natural drift when captured */
+          this.speedY *= 0.96;
+        } else {
+          this.swirlStrength *= 0.94;
+        }
+      } else {
+        this.swirlStrength *= 0.92;
+      }
+
+      /* Dampen rotation speed */
+      this.rotationSpeed *= 0.995;
+
+      /* Reset if off screen */
+      if (this.y > H + 30 || this.x < -30 || this.x > W + 30) {
+        this.reset(false);
+      }
+    }
+
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation);
+      ctx.globalAlpha = this.opacity;
+
+      /* Petal shape — organic oval with a slight point */
+      ctx.beginPath();
+      ctx.moveTo(0, -this.size);
+      ctx.bezierCurveTo(
+        this.size * 0.8, -this.size * 0.6,
+        this.size * 0.7, this.size * 0.5,
+        0, this.size
+      );
+      ctx.bezierCurveTo(
+        -this.size * 0.7, this.size * 0.5,
+        -this.size * 0.8, -this.size * 0.6,
+        0, -this.size
+      );
+      ctx.closePath();
+
+      ctx.fillStyle = this.color;
+      ctx.fill();
+
+      /* Subtle vein line */
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(0, -this.size * 0.7);
+      ctx.lineTo(0, this.size * 0.7);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+  }
+
+  function init() {
+    resize();
+    petals.length = 0;
+    for (let i = 0; i < PETAL_COUNT; i++) {
+      petals.push(new Petal());
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    petals.forEach(p => {
+      p.update();
+      p.draw();
+    });
+    requestAnimationFrame(animate);
+  }
+
+  /* Mouse tracking (relative to canvas) */
+  cover.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+    mouse.active = true;
+  });
+
+  cover.addEventListener('mouseleave', () => {
+    mouse.active = false;
+  });
+
+  /* Touch support */
+  cover.addEventListener('touchmove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const t = e.touches[0];
+    mouse.x = t.clientX - rect.left;
+    mouse.y = t.clientY - rect.top;
+    mouse.active = true;
+  }, { passive: true });
+
+  cover.addEventListener('touchend', () => {
+    mouse.active = false;
+  });
+
+  window.addEventListener('resize', () => {
+    resize();
+  });
+
+  init();
+  animate();
 })();
 </script>
 
