@@ -436,17 +436,17 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 }
 
 .cover-hint-text {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.18em;
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(250,250,248,0.5);
+  color: var(--accent);
 }
 
 .cover-hint-dot {
-  width: 6px; height: 6px;
+  width: 7px; height: 7px;
   border-radius: 50%;
-  background: rgba(250,250,248,0.4);
+  background: var(--accent);
   animation: hintPulse 2.5s ease-in-out infinite;
 }
 
@@ -2031,9 +2031,9 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   }
   .timeline-nav a::after { display: none; }
 
-  /* Mobile: allow horizontal scroll to escape parent overflow */
+  /* Mobile: clip horizontal overflow so timeline line doesn't bleed */
   .timeline {
-    overflow: visible;
+    overflow: hidden;
   }
   .timeline-track-wrap {
     overflow-x: auto !important;
@@ -2200,7 +2200,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   <!-- Click hint -->
   <div class="cover-hint">
     <span class="cover-hint-dot"></span>
-    <span class="cover-hint-text"><span class="cover-hint-slash">Slash to enter</span><span class="cover-hint-click">Tap to enter</span></span>
+    <span class="cover-hint-text"><span class="cover-hint-slash">Slash to enter</span><span class="cover-hint-click">Swipe to enter</span></span>
   </div>
 </section>
 
@@ -2958,13 +2958,50 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     cover.addEventListener('mousemove', trackMouse);
   }
 
-  // Mobile fallback: tap to enter (still works)
-  cover.addEventListener('click', function(e) {
+  // Mobile: swipe to slice, tap to explode petals
+  const touchSlash = { startX: 0, startY: 0, startT: 0, swiped: false };
+  const SWIPE_THRESHOLD = 80;   // min px distance for a swipe
+  const SWIPE_VELOCITY = 400;   // min px/s for a swipe
+
+  cover.addEventListener('touchstart', function(e) {
     if (e.target.closest('[data-cover-link]') || e.target.closest('#coverClose')) return;
-    // On mobile or as fallback, click still works
-    if (!slashState.sliced && !slashState.animating) {
-      if (!window.matchMedia('(pointer: fine)').matches) {
-        triggerSlice(50);
+    const t = e.touches[0];
+    touchSlash.startX = t.clientX;
+    touchSlash.startY = t.clientY;
+    touchSlash.startT = performance.now();
+    touchSlash.swiped = false;
+  }, { passive: true });
+
+  cover.addEventListener('touchmove', function(e) {
+    if (touchSlash.swiped) return;
+    if (slashState.sliced || slashState.animating) return;
+    const t = e.touches[0];
+    const dx = t.clientX - touchSlash.startX;
+    const dy = t.clientY - touchSlash.startY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const dt = (performance.now() - touchSlash.startT) / 1000;
+    if (dt <= 0) return;
+    const velocity = dist / dt;
+
+    if (dist >= SWIPE_THRESHOLD && velocity >= SWIPE_VELOCITY) {
+      touchSlash.swiped = true;
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      const rect = cover.getBoundingClientRect();
+      const cx = (touchSlash.startX + t.clientX) / 2 - rect.left;
+      const cy = (touchSlash.startY + t.clientY) / 2 - rect.top;
+      triggerSlice(50, { angle, cx, cy });
+    }
+  }, { passive: true });
+
+  cover.addEventListener('touchend', function(e) {
+    // If it wasn't a swipe, treat as a tap → explode petals
+    if (!touchSlash.swiped && !slashState.sliced && !slashState.animating) {
+      if (e.target.closest('[data-cover-link]') || e.target.closest('#coverClose')) return;
+      const rect = canvas.getBoundingClientRect();
+      const cx = touchSlash.startX - rect.left;
+      const cy = touchSlash.startY - rect.top;
+      if (window._petalExplodeAt) {
+        window._petalExplodeAt(cx, cy);
       }
     }
   });
@@ -3334,7 +3371,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
   let W, H;
   let mouse = { x: -1000, y: -1000, active: false };
-  const PETAL_COUNT = 120;
+  const PETAL_COUNT = 84;
   const petals = [];
 
   /* Petal colors — soft pinks, rose, blush, a few white */
@@ -3536,6 +3573,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   };
 
   /* ── Click to explode petals outward from click point ── */
+  window._petalExplodeAt = explodePetalsAt;
   function explodePetalsAt(cx, cy) {
     const BURST_RADIUS = 280;
     const BURST_FORCE = 14;
@@ -3583,17 +3621,6 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     const cy = e.clientY - rect.top;
     explodePetalsAt(cx, cy);
   });
-
-  /* Touch support for petal explosion */
-  cover.addEventListener('touchstart', function(e) {
-    if (cover.classList.contains('revealed') || cover.classList.contains('sliced')) return;
-    if (e.target.closest('[data-cover-link]') || e.target.closest('#coverClose')) return;
-    const rect = canvas.getBoundingClientRect();
-    const t = e.touches[0];
-    const cx = t.clientX - rect.left;
-    const cy = t.clientY - rect.top;
-    explodePetalsAt(cx, cy);
-  }, { passive: true });
 
   init();
   animate();
