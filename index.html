@@ -2036,10 +2036,14 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
   }
   .timeline-nav a::after { display: none; }
 
-  /* Mobile: clip timeline bleed without breaking inner scroll */
+  /* Mobile: allow horizontal scroll inside track-wrap */
   .timeline {
-    overflow-x: clip;
-    overflow-y: visible;
+    overflow: visible;
+    position: relative;
+  }
+  .timeline-line {
+    max-width: 100vw;
+    overflow: hidden;
   }
   .timeline-track-wrap {
     overflow-x: auto;
@@ -2048,6 +2052,7 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding-bottom: 20px;
+    max-width: 100vw;
   }
   .timeline-track-wrap::-webkit-scrollbar { display: none; }
 
