@@ -2131,6 +2131,359 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
 .team-photo img { position: relative; z-index: 1; }
 
+/* ═══════════════════════════════════════════
+   SLICABLE FRUIT EASTER EGGS
+   ═══════════════════════════════════════════ */
+.slice-fruit {
+  position: relative;
+  width: 120px;
+  height: 140px;
+  margin: 40px auto 0;
+  cursor: none;
+  user-select: none;
+  -webkit-user-select: none;
+  z-index: 10;
+}
+
+/* The fruit — whole state */
+.slice-fruit-whole {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  line-height: 1;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+  transition: transform 0.3s cubic-bezier(.23,1,.32,1), filter 0.3s ease, opacity 0.15s ease;
+  animation: fruitBob 3s ease-in-out infinite;
+}
+
+.slice-fruit:hover .slice-fruit-whole {
+  transform: scale(1.12);
+  filter: drop-shadow(0 6px 18px rgba(232,80,122,0.3));
+}
+
+.slice-fruit.sliced .slice-fruit-whole {
+  opacity: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+  animation: none;
+}
+
+@keyframes fruitBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* Slash line flash */
+.slice-fruit-slash {
+  position: absolute;
+  left: -25%; right: -25%;
+  top: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+  z-index: 15;
+  border-radius: 2px;
+}
+
+.slice-fruit.slicing .slice-fruit-slash {
+  animation: fruitSlashLine 0.4s ease forwards;
+}
+
+@keyframes fruitSlashLine {
+  0%   { transform: translateY(-50%) scaleX(0); opacity: 1; }
+  35%  { transform: translateY(-50%) scaleX(1); opacity: 1; }
+  100% { transform: translateY(-50%) scaleX(1); opacity: 0; }
+}
+
+/* Fruit pieces — spawned by JS, animated with Web Animations API */
+.slice-fruit-piece {
+  position: absolute;
+  font-size: 34px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 12;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+}
+
+/* Juice particles */
+.slice-fruit-juice {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 11;
+}
+
+/* +100 score popup */
+.slice-fruit-score {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  color: var(--accent);
+  pointer-events: none;
+  z-index: 20;
+  text-shadow: 0 2px 8px rgba(232,80,122,0.35);
+  white-space: nowrap;
+}
+
+/* The revealed fact */
+.slice-fruit-reveal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 280px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.5s ease 0.55s, transform 0.5s cubic-bezier(.23,1,.32,1) 0.55s;
+  pointer-events: none;
+}
+
+.slice-fruit.sliced .slice-fruit-reveal {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Reset button */
+.slice-fruit-reset {
+  position: absolute;
+  bottom: -34px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  cursor: none;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.8s;
+  background: none;
+  border: none;
+  padding: 4px 10px;
+}
+
+.slice-fruit.sliced .slice-fruit-reset {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.slice-fruit-reset:hover {
+  color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════
+   SCORE TOTAL — Bottom of page
+   ═══════════════════════════════════════════ */
+.fruit-score-bar {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin: 48px auto 0;
+  padding: 18px 28px;
+  background: rgba(232,80,122,0.06);
+  border: 1.5px solid rgba(232,80,122,0.2);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-mono);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease;
+}
+
+.fruit-score-bar.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fruit-score-bar.has-score {
+  border-color: rgba(232,80,122,0.45);
+}
+
+.fruit-score-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+
+.fruit-score-value {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  transition: transform 0.3s cubic-bezier(.23,1,.32,1);
+}
+
+.fruit-score-value.bumped {
+  transform: scale(1.25);
+}
+
+.fruit-score-fruits {
+  display: flex;
+  gap: 4px;
+  font-size: 1.1rem;
+}
+
+.fruit-score-fruits span {
+  opacity: 0.25;
+  transition: opacity 0.4s ease;
+}
+
+.fruit-score-fruits span.collected {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════
+   AWARD BADGE
+   ═══════════════════════════════════════════ */
+.fruit-award {
+  margin-top: 20px;
+  text-align: center;
+  opacity: 0;
+  transform: scale(0.6) translateY(12px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.23,1,.32,1);
+  pointer-events: none;
+}
+
+.fruit-award.revealed {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+.fruit-award-medal {
+  display: inline-block;
+  line-height: 0;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.2));
+  animation: none;
+}
+
+.fruit-award.revealed .fruit-award-medal {
+  animation: medalBounce 0.7s cubic-bezier(.23,1,.32,1) forwards;
+}
+
+@keyframes medalBounce {
+  0%   { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+  50%  { transform: scale(1.15) rotate(5deg); opacity: 1; }
+  70%  { transform: scale(0.95) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.fruit-award-title {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+}
+
+.fruit-award-subtitle {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 1.2;
+}
+
+/* Tier colors — architecture-themed */
+.fruit-award--bronze .fruit-award-title { color: #a67c2e; }
+.fruit-award--silver .fruit-award-title { color: #8a8d8f; }
+.fruit-award--gold   .fruit-award-title { color: var(--accent); }
+
+.fruit-award--bronze .fruit-award-medal { filter: drop-shadow(0 4px 20px rgba(166,124,46,0.35)); }
+.fruit-award--silver .fruit-award-medal { filter: drop-shadow(0 4px 20px rgba(138,141,143,0.35)); }
+.fruit-award--gold   .fruit-award-medal { filter: drop-shadow(0 4px 20px rgba(232,80,122,0.4)); }
+
+/* Glow ring behind Master Builder */
+.fruit-award--gold .fruit-award-medal {
+  position: relative;
+}
+.fruit-award--gold .fruit-award-medal::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 2px solid rgba(232,80,122,0.2);
+  animation: masterGlow 2.2s ease-in-out infinite;
+}
+
+@keyframes masterGlow {
+  0%, 100% { transform: scale(1); opacity: 0.25; }
+  50%      { transform: scale(1.12); opacity: 0.55; }
+}
+
+/* Progress bar under fruit icons */
+.fruit-score-progress {
+  width: 100%;
+  height: 4px;
+  background: rgba(232,80,122,0.1);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.fruit-score-progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(.23,1,.32,1), background 0.3s ease;
+  background: #a67c2e;
+}
+
+.fruit-score-progress-fill[data-tier="silver"] { background: #8a8d8f; }
+.fruit-score-progress-fill[data-tier="gold"]   { background: var(--accent); }
+
+/* Tier label (next to score) */
+.fruit-score-tier {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 2px;
+  transition: color 0.3s ease;
+  color: var(--mid);
+}
+
+.fruit-score-tier.bronze { color: #a67c2e; }
+.fruit-score-tier.silver { color: #8a8d8f; }
+.fruit-score-tier.gold   { color: var(--accent); }
+
+/* Mobile */
+@media (max-width: 640px) {
+  .slice-fruit { width: 100px; height: 120px; margin-top: 28px; }
+  .slice-fruit-whole { height: 100px; font-size: 52px; }
+  .slice-fruit-slash { top: 50px; }
+  .slice-fruit-piece { font-size: 26px; }
+  .slice-fruit-score { font-size: 1.8rem; }
+  .slice-fruit-reveal { width: 240px; font-size: 0.6rem; }
+  .fruit-score-bar { max-width: 300px; padding: 14px 20px; }
+  .fruit-score-value { font-size: 1.6rem; }
+  .fruit-award-medal svg { width: 40px; height: 40px; }
+  .fruit-award-title { font-size: 1.3rem; }
+}
+
 </style>
 </head>
 <body>
@@ -2351,6 +2704,13 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
         <path d="M14 1L19 6M19 6L14 11M19 6H1" stroke="currentColor" stroke-width="1.2"/>
       </svg>
     </a>
+    <!-- Slicable Easter Egg -->
+    <div class="slice-fruit reveal reveal-delay-4" data-fruit="log" data-juice="#8B6914" data-slice-fact="&ldquo;Architecture is the learned game, correct and magnificent, of forms assembled in the light.&rdquo; — Le Corbusier">
+      <div class="slice-fruit-slash"></div>
+      <div class="slice-fruit-whole"><svg viewBox="0 0 64 64" width="64" height="64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="20" width="38" height="24" rx="2" fill="#5a3718"/><rect x="8" y="22" width="36" height="20" fill="#6B4226"/><line x1="8" y1="26" x2="44" y2="26" stroke="#4a2c10" stroke-width="0.6" opacity="0.3"/><line x1="8" y1="31" x2="44" y2="31" stroke="#4a2c10" stroke-width="0.5" opacity="0.2"/><line x1="8" y1="36" x2="44" y2="36" stroke="#4a2c10" stroke-width="0.6" opacity="0.3"/><ellipse cx="44" cy="32" rx="14" ry="12" fill="#a67c2e"/><ellipse cx="44" cy="32" rx="14" ry="12" stroke="#5a3718" stroke-width="1.2" fill="none"/><ellipse cx="44" cy="32" rx="10" ry="8.5" stroke="#8B6914" stroke-width="0.6" fill="none" opacity="0.5"/><ellipse cx="44" cy="32" rx="6.5" ry="5.5" stroke="#8B6914" stroke-width="0.5" fill="none" opacity="0.4"/><ellipse cx="44" cy="32" rx="3.5" ry="3" fill="#c4a050" opacity="0.35"/><circle cx="44" cy="32" r="1.2" fill="#5a3718" opacity="0.4"/><path d="M6 20 Q24 17 44 20" stroke="#4a2c10" stroke-width="0.8" fill="none" opacity="0.3"/></svg></div>
+      <div class="slice-fruit-reveal"></div>
+      <button class="slice-fruit-reset">Reset</button>
+    </div>
   </div>
   <div class="hero-image">
     <img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&h=1600&fit=crop&crop=center"
@@ -2501,6 +2861,14 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
       </div>
     </div>
 
+    <!-- Slicable Easter Egg -->
+    <div class="slice-fruit reveal" data-fruit="branch" data-juice="#6B4226" data-slice-fact="The word &ldquo;architect&rdquo; comes from the Greek arkhitekton — chief builder. Louisiana Tech's program was founded in 1926.">
+      <div class="slice-fruit-slash"></div>
+      <div class="slice-fruit-whole"><svg viewBox="0 0 64 64" width="64" height="64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 48 Q20 44 32 32 Q44 20 56 16" stroke="#6B4226" stroke-width="8" stroke-linecap="round"/><path d="M8 48 Q20 44 32 32 Q44 20 56 16" stroke="#8B6914" stroke-width="5" stroke-linecap="round"/><path d="M32 32 Q38 24 46 28" stroke="#6B4226" stroke-width="4" stroke-linecap="round"/><path d="M32 32 Q38 24 46 28" stroke="#8B6914" stroke-width="2.5" stroke-linecap="round"/><path d="M24 38 Q18 32 22 24" stroke="#6B4226" stroke-width="3.5" stroke-linecap="round"/><path d="M24 38 Q18 32 22 24" stroke="#8B6914" stroke-width="2" stroke-linecap="round"/><circle cx="56" cy="16" r="2" fill="#6B4226"/></svg></div>
+      <div class="slice-fruit-reveal"></div>
+      <button class="slice-fruit-reset">Reset</button>
+    </div>
+
   </div>
 </section>
 
@@ -2554,6 +2922,13 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
              alt="Architect reviewing models in a light-filled studio space"
              loading="lazy">
       </div>
+    </div>
+    <!-- Slicable Easter Egg -->
+    <div class="slice-fruit reveal reveal-delay-4" data-fruit="plank" data-juice="#a67c2e" data-slice-fact="A building's curtain wall weighs roughly 15 lbs per sq ft — yet holds back 100+ mph wind loads. Delicacy and rigor, indeed.">
+      <div class="slice-fruit-slash"></div>
+      <div class="slice-fruit-whole"><svg viewBox="0 0 72 48" width="72" height="48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="10" width="68" height="28" fill="#a67c2e"/><rect x="2" y="10" width="68" height="28" fill="none" stroke="#8B6914" stroke-width="1.5"/><path d="M4 16 Q20 14 36 16 Q52 18 68 16" stroke="#c4a050" stroke-width="0.7" opacity="0.45" fill="none"/><path d="M4 21 Q18 23 34 21 Q50 19 68 21" stroke="#8B6914" stroke-width="0.5" opacity="0.3" fill="none"/><path d="M4 26 Q22 24 40 26 Q56 28 68 26" stroke="#c4a050" stroke-width="0.7" opacity="0.45" fill="none"/><path d="M4 31 Q16 33 32 31 Q48 29 68 31" stroke="#8B6914" stroke-width="0.5" opacity="0.3" fill="none"/><path d="M4 35 Q24 33 44 35 Q58 37 68 35" stroke="#c4a050" stroke-width="0.6" opacity="0.35" fill="none"/><ellipse cx="50" cy="24" rx="3" ry="2.5" fill="#8B6914" opacity="0.3"/><ellipse cx="50" cy="24" rx="1.5" ry="1.2" fill="#6B4226" opacity="0.25"/><line x1="70" y1="12" x2="70" y2="36" stroke="#8B6914" stroke-width="0.8" opacity="0.4"/></svg></div>
+      <div class="slice-fruit-reveal"></div>
+      <button class="slice-fruit-reset">Reset</button>
     </div>
   </div>
 </section>
@@ -2611,6 +2986,13 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
         <div class="team-name">Peter Zumthor</div>
         <div class="team-role">Architecture of Atmosphere &amp; Material Honesty</div>
       </div>
+    </div>
+    <!-- Slicable Easter Egg -->
+    <div class="slice-fruit reveal" data-fruit="bamboo" data-juice="#6a8c3a" data-slice-fact="Zumthor once spent 3 years choosing the exact stone for Therme Vals. Mies said &ldquo;God is in the details&rdquo; — but patience is, too.">
+      <div class="slice-fruit-slash"></div>
+      <div class="slice-fruit-whole"><svg viewBox="0 0 64 64" width="64" height="64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="24" y="4" width="16" height="56" rx="2" fill="#7a9e4a"/><rect x="24" y="4" width="16" height="56" rx="2" fill="none" stroke="#5a7a32" stroke-width="1"/><rect x="22" y="16" width="20" height="4" rx="1" fill="#5a7a32" opacity="0.6"/><rect x="22" y="32" width="20" height="4" rx="1" fill="#5a7a32" opacity="0.6"/><rect x="22" y="48" width="20" height="4" rx="1" fill="#5a7a32" opacity="0.6"/><rect x="30" y="6" width="3" height="52" rx="1" fill="#a3c470" opacity="0.3"/><line x1="28" y1="6" x2="28" y2="58" stroke="#6a8c3a" stroke-width="0.4" opacity="0.25"/><line x1="36" y1="6" x2="36" y2="58" stroke="#6a8c3a" stroke-width="0.4" opacity="0.25"/><path d="M42 30 Q50 24 52 18" stroke="#6a8c3a" stroke-width="1.2" fill="none"/><path d="M42 30 Q48 26 52 18 Q46 24 42 30" fill="#7a9e4a" opacity="0.5"/></svg></div>
+      <div class="slice-fruit-reveal"></div>
+      <button class="slice-fruit-reset">Reset</button>
     </div>
   </div>
 </section>
@@ -2686,6 +3068,13 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
         </a>
       </article>
     </div>
+    <!-- Slicable Easter Egg -->
+    <div class="slice-fruit reveal" data-fruit="cork" data-juice="#c49a6c" data-slice-fact="The Burj Khalifa sways up to 6 feet at the top. Every skyscraper is designed to move — rigidity would break it.">
+      <div class="slice-fruit-slash"></div>
+      <div class="slice-fruit-whole"><svg viewBox="0 0 64 64" width="64" height="64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="16" y="14" width="32" height="36" rx="4" fill="#c49a6c"/><rect x="16" y="14" width="32" height="36" rx="4" fill="none" stroke="#a07850" stroke-width="1.2"/><ellipse cx="32" cy="14" rx="16" ry="5" fill="#d4aa7c"/><ellipse cx="32" cy="14" rx="16" ry="5" fill="none" stroke="#a07850" stroke-width="1"/><circle cx="24" cy="24" r="1" fill="#a07850" opacity="0.3"/><circle cx="36" cy="22" r="0.8" fill="#a07850" opacity="0.25"/><circle cx="28" cy="30" r="1.2" fill="#a07850" opacity="0.3"/><circle cx="40" cy="28" r="0.7" fill="#a07850" opacity="0.2"/><circle cx="22" cy="36" r="0.9" fill="#a07850" opacity="0.25"/><circle cx="34" cy="38" r="1.1" fill="#a07850" opacity="0.3"/><circle cx="42" cy="36" r="0.8" fill="#a07850" opacity="0.2"/><circle cx="26" cy="44" r="0.7" fill="#a07850" opacity="0.25"/><circle cx="38" cy="42" r="1" fill="#a07850" opacity="0.3"/><circle cx="30" cy="20" r="0.6" fill="#a07850" opacity="0.2"/><line x1="26" y1="18" x2="26" y2="48" stroke="#b08860" stroke-width="0.3" opacity="0.2"/><line x1="38" y1="18" x2="38" y2="48" stroke="#b08860" stroke-width="0.3" opacity="0.2"/></svg></div>
+      <div class="slice-fruit-reveal"></div>
+      <button class="slice-fruit-reset">Reset</button>
+    </div>
   </div>
 </section>
 
@@ -2749,6 +3138,43 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
         </div>
       </div>
     </div>
+    <!-- Slicable Easter Egg -->
+    <div class="slice-fruit reveal" data-fruit="pencil" data-juice="#d4a030" data-slice-fact="You found all the easter eggs! Fun fact: the Great Wall of China used sticky rice in its mortar. Now go build something great.">
+      <div class="slice-fruit-slash"></div>
+      <div class="slice-fruit-whole"><svg viewBox="0 0 72 40" width="72" height="40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="18" y="10" width="38" height="8" fill="#d4a030"/><rect x="18" y="18" width="38" height="6" fill="#c4900a"/><rect x="18" y="24" width="38" height="6" fill="#d4a030"/><rect x="18" y="10" width="38" height="20" fill="none" stroke="#a67c2e" stroke-width="1"/><line x1="20" y1="14" x2="54" y2="14" stroke="#c4a050" stroke-width="0.4" opacity="0.4"/><line x1="20" y1="26" x2="54" y2="26" stroke="#c4a050" stroke-width="0.4" opacity="0.4"/><polygon points="18,10 6,20 18,30" fill="#e8d4a0"/><polygon points="18,10 6,20 18,30" fill="none" stroke="#a67c2e" stroke-width="0.8"/><polygon points="10,17 6,20 10,23" fill="#333"/><line x1="6" y1="20" x2="4" y2="20" stroke="#333" stroke-width="1.5" stroke-linecap="round"/><rect x="56" y="9" width="6" height="22" rx="0.5" fill="#b0b0b0"/><rect x="56" y="9" width="6" height="22" rx="0.5" fill="none" stroke="#888" stroke-width="0.6"/><line x1="58" y1="9" x2="58" y2="31" stroke="#ccc" stroke-width="0.5" opacity="0.5"/><line x1="60" y1="9" x2="60" y2="31" stroke="#999" stroke-width="0.4" opacity="0.4"/><rect x="62" y="10" width="8" height="20" rx="2" fill="#d4896e"/><rect x="62" y="10" width="8" height="20" rx="2" fill="none" stroke="#b8714e" stroke-width="0.6"/></svg></div>
+      <div class="slice-fruit-reveal"></div>
+      <button class="slice-fruit-reset">Reset</button>
+    </div>
+
+    <!-- ── Fruit Score Total ── -->
+    <div class="fruit-score-bar" id="fruitScoreBar">
+      <div style="flex:1;">
+        <div class="fruit-score-label">Fruit Sliced</div>
+        <div class="fruit-score-fruits" id="fruitScoreIcons">
+          <span data-fruit-icon="log"><svg viewBox="0 0 20 20" width="16" height="16" fill="none"><rect x="2" y="6" width="11" height="8" rx="1" fill="#6B4226"/><ellipse cx="13" cy="10" rx="5" ry="4" fill="#a67c2e" stroke="#5a3718" stroke-width="0.6"/><ellipse cx="13" cy="10" rx="2.5" ry="2" stroke="#8B6914" stroke-width="0.4" fill="none" opacity="0.4"/><circle cx="13" cy="10" r="0.8" fill="#5a3718" opacity="0.3"/></svg></span>
+          <span data-fruit-icon="branch"><svg viewBox="0 0 20 20" width="16" height="16" fill="none"><path d="M3 15Q8 13 10 10Q12 7 17 5" stroke="#6B4226" stroke-width="2.5" stroke-linecap="round"/><path d="M3 15Q8 13 10 10Q12 7 17 5" stroke="#8B6914" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          <span data-fruit-icon="plank"><svg viewBox="0 0 22 14" width="18" height="12" fill="none"><rect x="1" y="2" width="20" height="10" fill="#a67c2e" stroke="#8B6914" stroke-width="0.8"/><path d="M2 5Q8 4 14 5Q18 6 20 5" stroke="#c4a050" stroke-width="0.4" opacity="0.5" fill="none"/><path d="M2 9Q10 10 20 9" stroke="#c4a050" stroke-width="0.4" opacity="0.4" fill="none"/></svg></span>
+          <span data-fruit-icon="bamboo"><svg viewBox="0 0 14 20" width="12" height="16" fill="none"><rect x="4" y="1" width="6" height="18" rx="1" fill="#7a9e4a" stroke="#5a7a32" stroke-width="0.6"/><rect x="3" y="6" width="8" height="2" rx="0.5" fill="#5a7a32" opacity="0.5"/><rect x="3" y="12" width="8" height="2" rx="0.5" fill="#5a7a32" opacity="0.5"/></svg></span>
+          <span data-fruit-icon="cork"><svg viewBox="0 0 16 20" width="13" height="16" fill="none"><rect x="2" y="4" width="12" height="14" rx="2" fill="#c49a6c" stroke="#a07850" stroke-width="0.6"/><ellipse cx="8" cy="4" rx="6" ry="2" fill="#d4aa7c" stroke="#a07850" stroke-width="0.5"/><circle cx="5" cy="9" r="0.6" fill="#a07850" opacity="0.3"/><circle cx="10" cy="12" r="0.5" fill="#a07850" opacity="0.25"/></svg></span>
+          <span data-fruit-icon="pencil"><svg viewBox="0 0 22 12" width="18" height="10" fill="none"><rect x="6" y="2" width="11" height="8" fill="#d4a030" stroke="#a67c2e" stroke-width="0.6"/><polygon points="6,2 2,6 6,10" fill="#e8d4a0" stroke="#a67c2e" stroke-width="0.4"/><polygon points="3.5,4.5 2,6 3.5,7.5" fill="#333"/><rect x="17" y="1.5" width="2" height="9" rx="0.3" fill="#b0b0b0"/><rect x="19" y="2" width="2.5" height="8" rx="1" fill="#d4896e"/></svg></span>
+        </div>
+        <div class="fruit-score-progress">
+          <div class="fruit-score-progress-fill" id="fruitProgressFill"></div>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div class="fruit-score-value" id="fruitScoreValue">0</div>
+        <div class="fruit-score-tier" id="fruitScoreTier"></div>
+      </div>
+    </div>
+
+    <!-- ── Award Badge ── -->
+    <div class="fruit-award" id="fruitAward">
+      <div class="fruit-award-medal" id="fruitAwardMedal"></div>
+      <span class="fruit-award-title" id="fruitAwardTitle"></span>
+      <span class="fruit-award-subtitle" id="fruitAwardSubtitle"></span>
+    </div>
+
   </div>
 </section>
 
@@ -3615,6 +4041,332 @@ input, textarea { font: inherit; border: none; outline: none; background: none; 
 
   init();
   animate();
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════
+     SLICABLE FRUIT — Gesture Detection + Scoring
+     ═══════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  /* ── Tuning ── */
+  const VELOCITY_THRESHOLD = 1800;
+  const HISTORY_WINDOW     = 200;
+  const MIN_TRAVEL         = 40;
+  const PIECE_COUNT        = 5;
+  const JUICE_COUNT        = 14;
+
+  /* ── Score state ── */
+  let totalScore = 0;
+  const TOTAL_FRUITS   = 6;
+  const MAX_SCORE      = TOTAL_FRUITS * 100;
+  const scoreBar       = document.getElementById('fruitScoreBar');
+  const scoreValue     = document.getElementById('fruitScoreValue');
+  const scoreIcons     = document.getElementById('fruitScoreIcons');
+  const progressFill   = document.getElementById('fruitProgressFill');
+  const tierLabel      = document.getElementById('fruitScoreTier');
+  const awardEl        = document.getElementById('fruitAward');
+  const awardMedal     = document.getElementById('fruitAwardMedal');
+  const awardTitle     = document.getElementById('fruitAwardTitle');
+  const awardSubtitle  = document.getElementById('fruitAwardSubtitle');
+
+  /* Tier definitions: Bronze 100-200, Silver 300-400, Gold 500-600 */
+  /* SVG icons for each tier */
+  const TIER_SVGS = {
+    /* Apprentice — pencil sketch */
+    bronze: '<svg viewBox="0 0 64 64" width="52" height="52" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="18" y="12" width="8" height="40" rx="1" fill="#a67c2e"/><polygon points="22,52 18,52 16,60 22,60 28,60 26,52" fill="#e8d4a0"/><polygon points="19,58 22,64 25,58" fill="#333"/><rect x="18" y="8" width="8" height="6" rx="0.5" fill="#b0b0b0"/><line x1="22" y1="16" x2="22" y2="48" stroke="#c4a050" stroke-width="0.5" opacity="0.4"/></svg>',
+    /* Architect — compass & triangle */
+    silver: '<svg viewBox="0 0 64 64" width="52" height="52" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="32,6 8,56 56,56" fill="none" stroke="#8a8d8f" stroke-width="2.5" stroke-linejoin="round"/><line x1="17" y1="40" x2="47" y2="40" stroke="#8a8d8f" stroke-width="1.5"/><circle cx="32" cy="28" r="10" fill="none" stroke="#aaa" stroke-width="1.5" stroke-dasharray="3 2"/><circle cx="32" cy="28" r="1.5" fill="#8a8d8f"/></svg>',
+    /* Master Builder — classical column */
+    gold: '<svg viewBox="0 0 64 64" width="52" height="52" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="4" width="36" height="6" rx="1" fill="#e8507a"/><rect x="16" y="10" width="32" height="3" fill="#c44068"/><rect x="22" y="13" width="6" height="38" rx="1" fill="#e8507a"/><rect x="36" y="13" width="6" height="38" rx="1" fill="#e8507a"/><rect x="29" y="13" width="6" height="38" rx="1" fill="#c44068" opacity="0.5"/><rect x="16" y="51" width="32" height="3" fill="#c44068"/><rect x="14" y="54" width="36" height="6" rx="1" fill="#e8507a"/><line x1="24" y1="16" x2="24" y2="49" stroke="#c44068" stroke-width="0.6" opacity="0.4"/><line x1="25" y1="16" x2="25" y2="49" stroke="#f2a0b8" stroke-width="0.4" opacity="0.3"/><line x1="38" y1="16" x2="38" y2="49" stroke="#c44068" stroke-width="0.6" opacity="0.4"/><line x1="39" y1="16" x2="39" y2="49" stroke="#f2a0b8" stroke-width="0.4" opacity="0.3"/></svg>'
+  };
+
+  const TIERS = [
+    { min: 500, key: 'gold',   medal: TIER_SVGS.gold,   title: 'Master Builder',  subtitle: 'Every piece cut — you built the whole thing.' },
+    { min: 300, key: 'silver', medal: TIER_SVGS.silver,  title: 'Architect',        subtitle: 'Sharp eye — keep exploring the site.' },
+    { min: 100, key: 'bronze', medal: TIER_SVGS.bronze,  title: 'Apprentice',       subtitle: 'Nice start — there\'s more to discover.' },
+  ];
+
+  function getTier(score) {
+    return TIERS.find(t => score >= t.min) || null;
+  }
+
+  /* Show score bar when contact section scrolls into view */
+  const contactSection = document.getElementById('contact');
+  if (contactSection && scoreBar) {
+    const scoreObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) scoreBar.classList.add('visible');
+      });
+    }, { threshold: 0.15 });
+    scoreObserver.observe(contactSection);
+  }
+
+  function updateScoreUI() {
+    /* Number */
+    if (scoreValue) {
+      scoreValue.textContent = totalScore;
+      scoreValue.classList.add('bumped');
+      setTimeout(() => scoreValue.classList.remove('bumped'), 300);
+    }
+
+    /* Progress bar */
+    if (progressFill) {
+      const pct = Math.min(100, (totalScore / MAX_SCORE) * 100);
+      progressFill.style.width = pct + '%';
+      const tier = getTier(totalScore);
+      progressFill.setAttribute('data-tier', tier ? tier.key : '');
+    }
+
+    /* Tier label */
+    if (tierLabel) {
+      const tier = getTier(totalScore);
+      tierLabel.className = 'fruit-score-tier' + (tier ? ' ' + tier.key : '');
+      tierLabel.textContent = tier ? tier.title : '';
+    }
+
+    /* Score bar border */
+    if (scoreBar) {
+      if (totalScore > 0) scoreBar.classList.add('has-score');
+      else scoreBar.classList.remove('has-score');
+    }
+
+    /* Award badge */
+    updateAward();
+  }
+
+  function updateAward() {
+    const tier = getTier(totalScore);
+    if (!awardEl) return;
+
+    if (!tier) {
+      awardEl.classList.remove('revealed');
+      awardEl.className = 'fruit-award';
+      return;
+    }
+
+    awardEl.className = 'fruit-award fruit-award--' + tier.key;
+    if (awardMedal)    awardMedal.innerHTML       = tier.medal;
+    if (awardTitle)    awardTitle.textContent     = tier.title;
+    if (awardSubtitle) awardSubtitle.textContent  = tier.subtitle;
+
+    /* Small delay so the CSS transition fires */
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        awardEl.classList.add('revealed');
+      });
+    });
+  }
+
+  function addScore(fruitEmoji) {
+    totalScore += 100;
+    updateScoreUI();
+
+    /* Light up the matching fruit icon */
+    if (scoreIcons) {
+      const icon = scoreIcons.querySelector(`[data-fruit-icon="${fruitEmoji}"]`);
+      if (icon) icon.classList.add('collected');
+    }
+  }
+
+  /* ═══════════════════════════════════════════
+     Per-fruit setup
+     ═══════════════════════════════════════════ */
+  document.querySelectorAll('.slice-fruit').forEach(fruit => {
+    const fact       = fruit.getAttribute('data-slice-fact') || '';
+    const fruitEmoji = fruit.getAttribute('data-fruit') || 'log';
+    const juiceColor = fruit.getAttribute('data-juice') || '#e8507a';
+    const revealEl   = fruit.querySelector('.slice-fruit-reveal');
+    if (revealEl) revealEl.textContent = fact;
+
+    let history  = [];
+    let isSliced = false;
+
+    /* ═══ Pointer tracking (works for mouse + touch) ═══ */
+    fruit.addEventListener('pointerenter', () => { history = []; });
+
+    fruit.addEventListener('pointermove', (e) => {
+      if (isSliced) return;
+      const now = performance.now();
+      history.push({ x: e.clientX, y: e.clientY, t: now });
+      while (history.length > 0 && now - history[0].t > HISTORY_WINDOW * 2) {
+        history.shift();
+      }
+      checkSlice(now);
+    });
+
+    /* ═══ Touch fallback ═══ */
+    fruit.addEventListener('touchstart', (e) => {
+      if (isSliced) return;
+      history = [];
+      const t = e.touches[0];
+      history.push({ x: t.clientX, y: t.clientY, t: performance.now() });
+    }, { passive: true });
+
+    fruit.addEventListener('touchmove', (e) => {
+      if (isSliced) return;
+      const t = e.touches[0];
+      const now = performance.now();
+      history.push({ x: t.clientX, y: t.clientY, t: now });
+      while (history.length > 0 && now - history[0].t > HISTORY_WINDOW * 2) {
+        history.shift();
+      }
+      checkSlice(now);
+    }, { passive: false });
+
+    /* ═══ Velocity check ═══ */
+    function checkSlice(now) {
+      if (history.length < 2) return;
+      const cutoff = now - HISTORY_WINDOW;
+      const recent = history.filter(p => p.t >= cutoff);
+      if (recent.length < 2) return;
+
+      const first = recent[0];
+      const last  = recent[recent.length - 1];
+      const dx    = last.x - first.x;
+      const dy    = last.y - first.y;
+      const dist  = Math.sqrt(dx * dx + dy * dy);
+      const dt    = (last.t - first.t) / 1000;
+      if (dt <= 0) return;
+
+      if ((dist / dt) >= VELOCITY_THRESHOLD && dist >= MIN_TRAVEL) {
+        doSlice();
+      }
+    }
+
+    /* ═══ Trigger slice ═══ */
+    function doSlice() {
+      if (isSliced) return;
+      isSliced = true;
+      history  = [];
+
+      fruit.classList.add('slicing');
+      setTimeout(() => fruit.classList.add('sliced'), 80);
+      setTimeout(() => fruit.classList.remove('slicing'), 450);
+
+      spawnPieces(fruit, fruitEmoji);
+      spawnJuice(fruit, juiceColor);
+      showScorePopup(fruit);
+      addScore(fruitEmoji);
+    }
+
+    /* ═══ Wood chip pieces — fly outward with gravity ═══ */
+    const WOOD_TONES = ['#6B4226','#8B6914','#a67c2e','#c4a050','#5a3718','#b8943e'];
+
+    function spawnPieces(el, itemId) {
+      for (let i = 0; i < PIECE_COUNT; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'slice-fruit-piece';
+        piece.style.left = '50%';
+        piece.style.top  = '50%';
+
+        // Random wood chip shape
+        const w = 8 + Math.random() * 16;
+        const h = 4 + Math.random() * 8;
+        piece.style.width      = w + 'px';
+        piece.style.height     = h + 'px';
+        piece.style.background = WOOD_TONES[Math.floor(Math.random() * WOOD_TONES.length)];
+        piece.style.borderRadius = (1 + Math.random() * 2) + 'px';
+        piece.style.fontSize   = '0';
+        el.appendChild(piece);
+
+        const angle = (Math.PI * 2 / PIECE_COUNT) * i + (Math.random() - 0.5) * 0.8;
+        const dist  = 50 + Math.random() * 60;
+        const tx    = Math.cos(angle) * dist;
+        const ty    = Math.sin(angle) * dist;
+        const rot   = (Math.random() - 0.5) * 540;
+        const dur   = 600 + Math.random() * 400;
+
+        piece.animate([
+          {
+            transform: 'translate(-50%,-50%) rotate(0deg) scale(1)',
+            opacity: 1
+          },
+          {
+            transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty + 40}px)) rotate(${rot}deg) scale(0.4)`,
+            opacity: 0
+          }
+        ], {
+          duration: dur,
+          easing: 'cubic-bezier(.15,.8,.3,1)',
+          fill: 'forwards'
+        }).onfinish = () => piece.remove();
+      }
+    }
+
+    /* ═══ Sawdust particle burst ═══ */
+    function spawnJuice(el, color) {
+      const dustColors = [color, '#c4a050', '#8B6914', '#d4b060'];
+      for (let i = 0; i < JUICE_COUNT; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'slice-fruit-juice';
+        dot.style.background = dustColors[Math.floor(Math.random() * dustColors.length)];
+        dot.style.left = '50%';
+        dot.style.top  = '50%';
+        // Sawdust: smaller, some elongated
+        const isChip = Math.random() > 0.5;
+        const size   = isChip ? (2 + Math.random() * 4) : (3 + Math.random() * 5);
+        dot.style.width  = (isChip ? size * 1.8 : size) + 'px';
+        dot.style.height = size + 'px';
+        dot.style.borderRadius = isChip ? '1px' : '50%';
+        el.appendChild(dot);
+
+        const angle = (Math.PI * 2 / JUICE_COUNT) * i + (Math.random() - 0.5) * 0.8;
+        const dist  = 30 + Math.random() * 60;
+        const tx    = Math.cos(angle) * dist;
+        const ty    = Math.sin(angle) * dist;
+
+        dot.animate([
+          { transform: `translate(-50%,-50%) rotate(0deg) scale(1)`, opacity: 0.8 },
+          { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty + 15}px)) rotate(${(Math.random()-0.5)*180}deg) scale(0.1)`, opacity: 0 }
+        ], {
+          duration: 400 + Math.random() * 400,
+          easing: 'cubic-bezier(.23,1,.32,1)',
+          fill: 'forwards'
+        }).onfinish = () => dot.remove();
+      }
+    }
+
+    /* ═══ +100 score popup ═══ */
+    function showScorePopup(el) {
+      const popup = document.createElement('div');
+      popup.className = 'slice-fruit-score';
+      popup.textContent = '+100';
+      el.appendChild(popup);
+
+      popup.animate([
+        { transform: 'translateX(-50%) translateY(0)',    opacity: 1 },
+        { transform: 'translateX(-50%) translateY(-50px)', opacity: 0 }
+      ], {
+        duration: 900,
+        easing: 'cubic-bezier(.23,1,.32,1)',
+        fill: 'forwards'
+      }).onfinish = () => popup.remove();
+    }
+
+    /* ═══ Reset ═══ */
+    const resetBtn = fruit.querySelector('.slice-fruit-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        fruit.classList.remove('sliced', 'slicing');
+        fruit.querySelectorAll('.slice-fruit-piece, .slice-fruit-juice, .slice-fruit-score').forEach(e => e.remove());
+        isSliced = false;
+        history  = [];
+
+        // Deduct score and refresh all UI
+        totalScore = Math.max(0, totalScore - 100);
+        updateScoreUI();
+
+        // Un-light the fruit icon
+        if (scoreIcons) {
+          const icon = scoreIcons.querySelector(`[data-fruit-icon="${fruitEmoji}"]`);
+          if (icon) icon.classList.remove('collected');
+        }
+      });
+    }
+  });
 })();
 </script>
 
