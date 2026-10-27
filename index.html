@@ -2430,8 +2430,8 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 .section-num, .project-num { color: #7d7c77; }
 
 /* ═══ About: exploded curtain wall axonometric ═══ */
-.about-image.has-axon { background: var(--white); }
-.about-image.has-axon::before { border-width: 6px; }
+.about-image.has-axon { background: var(--white); border: 1px solid var(--light); }
+.about-image.has-axon::before { display: none; }
 .about-axon { position: absolute; inset: 0; }
 @media (max-width: 900px), (max-width: 1100px) and (orientation: portrait) { .about-image.has-axon { aspect-ratio: 4 / 5; max-width: 600px; width: 100%; } }
 /* CurtainWallAxon — scoped styles. Every class is prefixed cwa-. Inherits :root --ink / --white / --mid / --accent when present. */
@@ -2606,6 +2606,20 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 .cwa-caption span { display: block; }
 .cwa--narrow .cwa-controls { padding-bottom: 6px; }
 .cwa--narrow .cwa-fig { top: 8px; font-size: 8.5px; }
+
+/* ---- pink hint above the slider ---- */
+.cwa-hint {
+  display: flex; align-items: center; gap: 10px; padding-top: 10px; cursor: pointer;
+  font: 500 10px/1 var(--font-mono, 'DM Mono', monospace); letter-spacing: .16em; text-transform: uppercase; color: var(--cwa-acc);
+}
+.cwa-arrow { width: 56px; height: 10px; flex: 0 0 auto; animation: cwa-nudge 1.6s ease-in-out infinite; }
+.cwa--collapse .cwa-hint { flex-direction: row-reverse; justify-content: flex-end; }
+.cwa--collapse .cwa-arrow { transform: scaleX(-1); animation-name: cwa-nudge-l; }
+@keyframes cwa-nudge { 0%, 100% { translate: 0 0; } 50% { translate: 6px 0; } }
+@keyframes cwa-nudge-l { 0%, 100% { translate: 0 0; } 50% { translate: -6px 0; } }
+.cwa--rm .cwa-arrow { animation: none; }
+@media (prefers-reduced-motion: reduce) { .cwa-arrow { animation: none; } }
+.cwa--narrow .cwa-hint { padding-top: 6px; }
 
 </style>
 </head>
@@ -4660,8 +4674,11 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     var renderImg = null, modes = null;
 
     var controls = el('div', 'cwa-controls', root);
+    // pink hint above the slider: names the action and points the way to drag
+    var hint = el('label', 'cwa-hint', controls); hint.setAttribute('for', id + '-r');
+    hint.innerHTML = '<span class="cwa-hint-t">Explode</span><svg class="cwa-arrow" viewBox="0 0 64 10" aria-hidden="true"><path d="M0 5 H61 M56 1 L62 5 L56 9" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>';
+    var hintT = hint.firstChild;
     var row = el('div', 'cwa-row', controls);
-    var lab = el('label', 'cwa-lab', row); lab.textContent = 'Explode'; lab.setAttribute('for', id + '-r');
     var e0 = el('span', 'cwa-end', row); e0.textContent = '0%';
     var slider = el('input', 'cwa-range', row);
     slider.type = 'range'; slider.min = 0; slider.max = 100; slider.step = 1; slider.id = id + '-r';
@@ -4826,6 +4843,11 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
         }
       }
       if (opts.render && renderImg && opts.renderMode === 'crossfade') renderImg.style.opacity = t < 0.08 ? 1 : 0;
+      var collapse = t >= 0.5;
+      if (collapse !== root.classList.contains('cwa--collapse')) {
+        root.classList.toggle('cwa--collapse', collapse);
+        hintT.textContent = collapse ? 'Collapse' : 'Explode';
+      }
       var pct = Math.round(t * 100);
       slider.value = pct;
       slider.setAttribute('aria-valuetext', 'Explode ' + pct + '%');
