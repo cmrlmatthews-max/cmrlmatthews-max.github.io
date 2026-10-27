@@ -2602,7 +2602,8 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 @media (max-width: 400px) {
   .cwa { --cwa-pad: 14px; }
 }
-.cwa--narrow .cwa-caption { font-size: 9px; letter-spacing: .01em; white-space: nowrap; }
+.cwa--narrow .cwa-caption { font-size: 9px; letter-spacing: .01em; }
+.cwa-caption span { display: block; }
 .cwa--narrow .cwa-controls { padding-bottom: 6px; }
 .cwa--narrow .cwa-fig { top: 8px; font-size: 8.5px; }
 
@@ -2978,13 +2979,13 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
       <div class="about-content">
         <span class="label about-eyebrow reveal">03 — About</span>
         <h2 class="about-title split-heading reveal-delay-1" data-split>
-          <span class="title-heavy">Design</span> as a dialogue with <em>context</em>
+          <span class="title-heavy">Detail</span> drives <em>innovation</em>
         </h2>
         <p class="about-text reveal-left reveal-delay-2">
-          From the design studios of Louisiana Tech to commercial towers across Atlanta, my career has been built on equal parts rigorous training and real-world craft. I hold a B.S. in Architectural Studies and a Master of Architecture — both from Louisiana Tech University — and have spent the years since learning what buildings actually demand of the people who make them.
+          From the design studios of Louisiana Tech to commercial towers across Atlanta, my career rests on rigorous training and real-world craft. I hold a B.S. in Architectural Studies and a Master of Architecture from Louisiana Tech University. I have spent the years since learning what buildings actually demand of the people who make them.
         </p>
         <p class="about-text reveal-left reveal-delay-3">
-          My work spans residential renovation and large-scale commercial. From managing hands-on projects at MasterBuilders Design Build to coordinating curtain wall details and consultant teams on high-rise mixed-use developments at Nelson Worldwide, I bring the same precision and care to every scale of work. Today, as an Associate at RJTR Architecture, I apply that approach to mixed-use and multifamily work across the Southeast.
+          My work runs from residential renovation to large-scale commercial: hands-on design-build at MasterBuilders, then envelope detailing, code compliance, and consultant coordination on high-rise mixed-use projects at Nelson Worldwide. Today, as an Associate at RJTR Architecture, I bring that technical depth to mixed-use and multifamily work across the Southeast. I also use AI tools such as Claude and Gemini to research faster, test ideas earlier, and build my own design tools.
         </p>
         <div class="about-stats reveal reveal-delay-4">
           <div class="stat">
@@ -4666,7 +4667,7 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     slider.type = 'range'; slider.min = 0; slider.max = 100; slider.step = 1; slider.id = id + '-r';
     var e1 = el('span', 'cwa-end', row); e1.textContent = '100%';
     var legend = el('ol', 'cwa-legend', controls);
-    var cap = el('p', 'cwa-caption', controls); cap.textContent = 'Illustrative assembly. Not a specific project or system.';
+    var cap = el('p', 'cwa-caption', controls); cap.innerHTML = '<span>Illustrative assembly. Not a specific project or system.</span><span>Drawn in code with Claude. Material textures by Gemini.</span>';
     var sr = el('ul', 'cwa-sr', root);
     LAYERS.forEach(function (l) { var li = el('li', '', sr); li.textContent = l.id + '. ' + l.name + ' — ' + l.desc + '.'; });
 
