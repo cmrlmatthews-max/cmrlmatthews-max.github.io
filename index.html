@@ -4407,21 +4407,21 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
   /* ---------- layers (inside -> outside) ---------- */
   var LAYERS = [
     { id: 1, name: 'Concrete slab edge', desc: 'carries the wall back to the structure', short: 'Slab', off: 0,
-      anchors: [[-1.6, -2.0, 0], [-2.2, YC, -0.33]] },
+      anchors: [[-1.6, -2.0, 0], [-2.2, YC, -0.33], [-1.2, YC, -0.33], [-3.0, YC, -0.33], [-0.6, YC, -0.45]] },
     { id: 2, name: 'Anchor bracket', desc: 'takes dead and wind load, allows movement', short: 'Anchor', off: 0.5,
-      anchors: [[0.3, -MY, 0.15], [0.3, MY, 0.15]] },
+      anchors: [[0.3, -MY, 0.15], [0.3, MY, 0.15], [0.03, MY + 0.125, -0.2], [0.41, MY, 0.17]] },
     { id: 3, name: 'Fire safing + smoke seal', desc: 'stops fire and smoke at the slab edge', short: 'Safing', off: 1.0,
-      anchors: [[0.28, -2.3, 0.07], [0.28, YC, -0.17]] },
+      anchors: [[0.28, -2.3, 0.07], [0.28, YC, -0.17], [0.15, YC, -0.25], [0.42, YC, -0.1], [0.28, YC, -0.3], [0.45, YC, -0.3], [0.1, YC, -0.3]] },
     { id: 4, name: 'Mullions + stack joint', desc: 'frame the wall, take floor movement', short: 'Mullions', off: 1.5,
-      anchors: [[0.75, -MY, ZT], [0.9, YC, 0.55]] },
+      anchors: [[0.75, -MY, ZT], [0.9, YC, 0.55], [0.9, YC, -2.0], [0.9, YC, 1.5], [0.9, YC, 0.32], [1.0, MY, 3.2], [1.0, MY, 2.2], [1.0, MY, -1.2]] },
     { id: 5, name: 'Spandrel', desc: 'hides the slab, insulates, seals', short: 'Spandrel', off: 2.0,
-      anchors: [[1.0, -2.3, -1.0], [0.665, YC, -0.8]] },
+      anchors: [[1.0, -2.3, -1.0], [0.665, YC, -0.8], [0.665, YC, -1.5], [0.665, YC, 0.9], [0.665, YC, -0.2], [1.0, 1.2, 1.1], [1.0, 0.0, 1.1], [1.0, 1.2, -1.2]] },
     { id: 6, name: 'Vision glass', desc: '1" insulating unit, low\u2011E', short: 'Glass', off: 2.5,
-      anchors: [[1.0, -2.3, 2.9], [0.98, YC, 2.9]] },
+      anchors: [[1.0, -2.3, 2.9], [0.98, YC, 2.9], [0.98, YC, 2.2], [0.98, YC, -2.4], [0.98, YC, 3.4], [1.0, 1.0, 3.2], [1.0, 0.0, 2.4], [1.0, 1.0, -2.4]] },
     { id: 7, name: 'Cover caps', desc: 'exterior profile and sightline', short: 'Caps', off: 3.0,
-      anchors: [[1.1, -MY, 1.0], [1.05, YC, 1.5]] },
+      anchors: [[1.1, -MY, 1.0], [1.05, YC, 1.5], [1.05, YC, -2.0], [1.05, YC, 0.6], [1.05, YC, 0.3], [1.1, MY, 3.3], [1.1, MY, 2.4], [1.1, MY, 1.0], [1.1, MY, -1.0]] },
     { id: 8, name: 'Interior finish', desc: 'sill and soffit', short: 'Interior', off: -1.1,
-      anchors: [[0.0, -2.2, 1.70], [0.2, YC, 1.66]] }
+      anchors: [[0.0, -2.2, 1.70], [0.2, YC, 1.66], [-0.03, YC, 0.8], [-1.0, YC, -1.7], [0.4, YC, 1.66]] }
   ];
 
   /* ---------- 3D model ---------- */
@@ -4793,7 +4793,8 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     }
     function viewAt(t, K0, K1, cx, cy) {
       var u = Math.min(1, t / 0.4), e = u * u * (3 - 2 * u), K = K0 + (K1 - K0) * e, bb = bboxAt(t);
-      return { K: K, ox: cx - K * (bb[0] + bb[2]) / 2, oy: cy - K * (bb[1] + bb[3]) / 2 };
+      var x = (cx && cx.length) ? cx[0] + (cx[1] - cx[0]) * e : cx;
+      return { K: K, ox: x - K * (bb[0] + bb[2]) / 2, oy: cy - K * (bb[1] + bb[3]) / 2 };
     }
     function anchorPx(l, t) {
       var v = viewAt(t, state.K0, state.K1, state.cx, state.cy), q = anchorUnit(l, t);
@@ -5007,6 +5008,189 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
       return ok ? { placed: placed, cost: total } : null;
     }
 
+    /* ---------- right-column labels: fixed order, no crossing leaders ----------
+       Labels stack in a right-hand column, each placed level with its anchor so leaders run close to flat. Interior
+       finish is forced to the top and Fire safing to the bottom; the rest follow their anchors' heights. A local search
+       over each layer's anchor candidates removes crossings and near-touches at every explode value where labels show,
+       then the drawing is grown as large as it can be without running under a label. */
+    // Interior finish is pinned to the top of the column. Fire safing is not pinned to the bottom: it sits mid-drawing,
+    // and pinning it there forces crossings with the outer layers' leaders. The rest follow the geometry.
+    var RIGHT_FIRST = opts.forceTop === undefined ? 8 : opts.forceTop, RIGHT_LAST = opts.forceBottom === undefined ? -99 : opts.forceBottom;
+    var PRESET_PICKS = ['32522521', '32572381', '31272381', '32522221', '11322341', '32552521'];
+    function layoutRight(W, H, sizes, Lw) {
+      if (opts.tuneH) sizes = sizes.map(function () { return { w: Lw, h: opts.tuneH }; });
+      var topPad = 18, ub1 = bboxAt(1), ub0 = bboxAt(0), SH = 14, GAP = 10;
+      var lx = W - M - Lw, DH = H - 2 * M - topPad, nL = LAYERS.length;
+      var TS = [0.42, 0.55, 0.7, 0.85, 1], last = TS.length - 1;
+      var yTop = M + topPad + 4, yBot = H - M;
+      var bw = ub1[2] - ub1[0], bh = ub1[3] - ub1[1];
+      var fit0 = 0.94 * Math.min((W - 2 * M) / (ub0[2] - ub0[0]), DH / (ub0[3] - ub0[1]));
+      var cy = M + topPad + DH / 2;
+      function near(a, b, c, d) {
+        var m = 1e9, j, k;
+        for (j = 0; j <= 6; j++) { var px = a[0] + (b[0] - a[0]) * j / 6, py = a[1] + (b[1] - a[1]) * j / 6;
+          for (k = 0; k <= 6; k++) m = Math.min(m, Math.hypot(px - c[0] - (d[0] - c[0]) * k / 6, py - c[1] - (d[1] - c[1]) * k / 6)); }
+        return m;
+      }
+      function pack(order, want) {
+        var ys = [], i;
+        for (i = 0; i < order.length; i++) ys.push(Math.max(want[i], i ? ys[i - 1] + sizes[order[i - 1]].h + GAP : yTop));
+        for (i = order.length - 1; i >= 0; i--) {
+          var lim = i === order.length - 1 ? yBot - sizes[order[i]].h : ys[i + 1] - sizes[order[i]].h - GAP;
+          if (ys[i] > lim) ys[i] = lim;
+        }
+        return ys[0] < yTop - 0.5 ? null : ys;
+      }
+      function solve(K1, cx1) {
+        var K0 = Math.max(K1, Math.min(fit0, 1.9 * K1)), cx = [W / 2, cx1];
+        var P = LAYERS.map(function (l) {
+          return l.anchors.map(function (a, k) {
+            return TS.map(function (t) { var v = viewAt(t, K0, K1, cx, cy), q = anchorUnit(l, t, k); return [v.ox + v.K * q[0], v.oy + v.K * q[1]]; });
+          });
+        });
+        var best = null;
+        function hungarian(C) { // square cost matrix -> assignment row -> column (minimum total)
+          var n = C.length, u = new Array(n + 1).fill(0), v = new Array(n + 1).fill(0), p = new Array(n + 1).fill(0), way = new Array(n + 1).fill(0), i, j;
+          for (i = 1; i <= n; i++) {
+            p[0] = i; var j0 = 0, minv = new Array(n + 1).fill(Infinity), used = new Array(n + 1).fill(false);
+            do {
+              used[j0] = true; var i0 = p[j0], delta = Infinity, j1 = 0;
+              for (j = 1; j <= n; j++) if (!used[j]) {
+                var cur = C[i0 - 1][j - 1] - u[i0] - v[j];
+                if (cur < minv[j]) { minv[j] = cur; way[j] = j0; }
+                if (minv[j] < delta) { delta = minv[j]; j1 = j; }
+              }
+              for (j = 0; j <= n; j++) { if (used[j]) { u[p[j]] += delta; v[j] -= delta; } else minv[j] -= delta; }
+              j0 = j1;
+            } while (p[j0] !== 0);
+            do { var jj = way[j0]; p[j0] = p[jj]; j0 = jj; } while (j0);
+          }
+          var ans = new Array(n); for (j = 1; j <= n; j++) ans[p[j] - 1] = j - 1; return ans;
+        }
+        function packScore(pick, cap) {
+          var mid = [], i;
+          for (i = 0; i < nL; i++) if (LAYERS[i].id !== RIGHT_FIRST && LAYERS[i].id !== RIGHT_LAST) mid.push(i);
+          mid.sort(function (a, b) { return P[a][pick[a]][last][1] - P[b][pick[b]][last][1]; });
+          var prov = (RIGHT_FIRST > 0 ? [RIGHT_FIRST - 1] : []).concat(mid, RIGHT_LAST > 0 ? [RIGHT_LAST - 1] : []);
+          // column runs from the top of the frame down to just past the lowest anchor, labels evenly spaced
+          var wants = prov.map(function (i) { return P[i][pick[i]][last][1] - 9; }).sort(function (a, b) { return a - b; });
+          if (opts.colMode === 'center') { // centre the stack on the anchors' mean height
+            var sumHp = 0; prov.forEach(function (i) { sumHp += sizes[i].h; }); sumHp += GAP * (nL - 1);
+            var mean = wants.reduce(function (a, b) { return a + b; }, 0) / nL, yy = Math.max(yTop, Math.min(yBot - sumHp, mean - sumHp / 2));
+            wants = []; prov.forEach(function (i) { wants.push(yy); yy += sizes[i].h + GAP; });
+          }
+          var ys0 = pack(prov, wants);
+          if (!ys0) return { cost: 1e18 };
+          // assign labels to these positions by minimum total leader length (ends fixed)
+          var C = [];
+          for (i = 0; i < nL; i++) {
+            var row = [], A = P[i][pick[i]][last];
+            for (var n = 0; n < nL; n++) {
+              var c = Math.hypot(A[0] - (lx - 5 - SH), A[1] - ys0[n] - 9);
+              if (RIGHT_FIRST > 0 && (i === RIGHT_FIRST - 1) !== (n === 0)) c += 1e7;
+              if (RIGHT_LAST > 0 && (i === RIGHT_LAST - 1) !== (n === nL - 1)) c += 1e7;
+              row.push(c);
+            }
+            C.push(row);
+          }
+          var asg = hungarian(C), order = new Array(nL);
+          for (i = 0; i < nL; i++) order[asg[i]] = i;
+          var ys = pack(order, ys0);
+          if (!ys) return { cost: 1e18 };
+          var yOf = new Array(nL); order.forEach(function (i, n) { yOf[i] = ys[n]; });
+          var cost = 0, ti, a2, b2;
+          for (ti = TS.length - 1; ti >= 0; ti--) {
+            for (a2 = 0; a2 < nL; a2++) {
+              var A0 = P[a2][pick[a2]][ti], pa = [lx - 5 - SH, yOf[a2] + 9];
+              if (A0[0] > pa[0] - 10) cost += 1e5;
+              for (b2 = a2 + 1; b2 < nL; b2++) if (segHitsSeg(A0, pa, P[b2][pick[b2]][ti], [lx - 5 - SH, yOf[b2] + 9])) cost += 1e6;
+            }
+            if (cost >= cap) return { cost: 1e18 };
+          }
+          for (ti = 0; ti < TS.length; ti += last) for (a2 = 0; a2 < nL; a2++) for (b2 = a2 + 1; b2 < nL; b2++) {
+            if (near(P[a2][pick[a2]][ti], [lx - 5 - SH, yOf[a2] + 9], P[b2][pick[b2]][ti], [lx - 5 - SH, yOf[b2] + 9]) < 7) cost += 2e4;
+            if (cost >= cap) return { cost: 1e18 };
+          }
+          for (a2 = 0; a2 < nL; a2++) { var Q = P[a2][pick[a2]][last]; cost += Math.hypot(lx - 5 - SH - Q[0], yOf[a2] + 9 - Q[1]) * 0.3 + Math.abs(yOf[a2] + 9 - Q[1]); }
+          return { cost: cost, yOf: yOf, pick: pick.slice() };
+        }
+        if (opts.forcePick) { best = packScore(opts.forcePick, 1e18); }
+        else if (opts.tune) {
+          var bestT = { cost: 1e18 }, pk = new Array(nL), evals = 0;
+          (function rec(i) {
+            if (i === nL) { evals++; var r = packScore(pk, bestT.cost); if (r.cost < bestT.cost) bestT = r; return; }
+            for (var k = 1; k < LAYERS[i].anchors.length; k++) { pk[i] = k; rec(i + 1); }
+          })(0);
+          bestT.evals = evals; best = bestT;
+        } else {
+          // anchor sets found by an offline exhaustive search on common frame sizes; then a short local search
+          best = { cost: 1e18 };
+          PRESET_PICKS.forEach(function (str) {
+            var r = packScore(str.split('').map(Number), best.cost);
+            if (r.cost < best.cost) best = r;
+          });
+          if (best.cost >= 1e5) {
+            var seed = 7, rnd = function (n) { seed = (seed * 16807) % 2147483647; return seed % n; };
+            for (var rs = 0; rs < 12 && best.cost >= 1e5; rs++) {
+              var cur = rs < PRESET_PICKS.length ? PRESET_PICKS[rs].split('').map(Number) : LAYERS.map(function (l) { return 1 + rnd(l.anchors.length - 1); });
+              var cs = packScore(cur, 1e18), improved = true, guard = 0;
+              while (improved && guard++ < 10) {
+                improved = false;
+                for (var i = 0; i < nL; i++) for (var k = 1; k < LAYERS[i].anchors.length; k++) {
+                  if (k === cur[i]) continue;
+                  var tp = cur.slice(); tp[i] = k;
+                  var r = packScore(tp, cs.cost);
+                  if (r.cost < cs.cost - 1e-6) { cs = r; cur = tp; improved = true; }
+                }
+              }
+              if (cs.cost < best.cost) best = cs;
+            }
+          }
+        }
+        best.K0 = K0; best.K1 = K1; best.cx = cx;
+        return best;
+      }
+      function overlapsLabels(sol) {
+        var vw = function (t) { return viewAt(t, sol.K0, sol.K1, sol.cx, cy); };
+        var o = raster(vw, W, H, TS, 4);
+        for (var i = 0; i < nL; i++) if (occupied(o, lx - 4, sol.yOf[i] - 2, Lw + 4, sizes[i].h + 4)) return true;
+        return false;
+      }
+      // base: the drawing fits left of the label column; then grow while it clears every label
+      var gap = 24, Kb = Math.min((lx - gap - M) / bw, DH / bh), sol = null, f;
+      for (f = opts.tune ? 1.0 : 1.4; f >= 0.999; f -= 0.1) {
+        var K1 = Math.min(Kb * f, DH / bh), cx1 = M + K1 * bw / 2;
+        var s1 = solve(K1, cx1);
+        if (s1.cost < 1e5 && !overlapsLabels(s1)) { sol = s1; break; }
+      }
+      if (!sol) sol = solve(Kb, M + Kb * bw / 2);
+      if (!sol.yOf) return false;   // the column does not fit this box: fall back to numbered callouts
+      state.K1 = sol.K1; state.K0 = sol.K0; state.cx = sol.cx; state.cy = cy;
+      lastSized = 0; places = [];
+      for (var i = 0; i < nL; i++) {
+        var y = sol.yOf[i], bEl = labelEls[i];
+        sel[i] = sol.pick[i];
+        places[i] = { rect: { x: lx, y: y, w: Lw, h: sizes[i].h }, attach: [lx - 5, y + 9], sh: -SH };
+        bEl.style.left = lx.toFixed(1) + 'px'; bEl.style.top = y.toFixed(1) + 'px';
+        bEl.classList.remove('cwa-lft');
+      }
+      state.rightCost = sol.cost; state.rightEvals = sol.evals; state.rightOrder = sol.yOf ? sol.yOf.map(function (y, i) { return [y, i + 1]; }).sort(function (a, b) { return a[0] - b[0]; }).map(function (x) { return x[1]; }).join(',') : '';
+      state.rightDbg = (function () {
+        var out = [], vwF = function (t) { return viewAt(t, sol.K0, sol.K1, sol.cx, cy); };
+        TS.forEach(function (t) {
+          for (var a = 0; a < nL; a++) for (var b = a + 1; b < nL; b++) {
+            var va = vwF(t), qa = anchorUnit(LAYERS[a], t, sol.pick[a]), qb = anchorUnit(LAYERS[b], t, sol.pick[b]);
+            var A = [va.ox + va.K * qa[0], va.oy + va.K * qa[1]], B = [va.ox + va.K * qb[0], va.oy + va.K * qb[1]];
+            if (segHitsSeg(A, [lx - 5 - SH, sol.yOf[a] + 9], B, [lx - 5 - SH, sol.yOf[b] + 9])) out.push(t + ':' + (a + 1) + 'x' + (b + 1));
+          }
+        });
+        return out.join(' ');
+      })();
+      lastHs = labelEls.map(function (b) { return b.offsetHeight; }).join(',');
+      apply(state.t, true);
+      return true;
+    }
+
     var sig = '';
     function layout(force) {
       var W = stage.clientWidth, H = stage.clientHeight;
@@ -5025,6 +5209,11 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
         if (narrow) { b.style.width = ''; sizes.push({ w: 22, h: 22 }); }
         else { b.style.width = Lw + 'px'; sizes.push({ w: Lw, h: b.offsetHeight || 54 }); }
       });
+      if (!narrow && opts.labels === 'right') {
+        if (layoutRight(W, H, sizes, Lw)) return;
+        narrow = true; state.narrow = true; M = 12; root.classList.add('cwa--narrow');
+        sizes = labelEls.map(function (b) { b.style.width = ''; return { w: 22, h: 22 }; });
+      }
       var topPad = 18, ub1 = bboxAt(1), ub0 = bboxAt(0);
       var Kmax = Math.min((W - 2 * M) / (ub1[2] - ub1[0]), (H - 2 * M - topPad) / (ub1[3] - ub1[1]));
       var fit0 = 0.94 * Math.min((W - 2 * M) / (ub0[2] - ub0[0]), (H - 2 * M - topPad) / (ub0[3] - ub0[1]));
@@ -5163,7 +5352,7 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
         root.removeEventListener('focusin', onFocusIn); root.removeEventListener('focusout', onFocusOut);
         if (root.parentNode) root.parentNode.removeChild(root);
       },
-      _debug: function () { return { K: state.K, narrow: state.narrow, conflicts: shapes.conflicts, places: places, W: state.W, H: state.H }; }
+      _debug: function () { return { order: state.rightOrder, evals: state.rightEvals, rightDbg: state.rightDbg, pick: sel.slice(), rightCost: state.rightCost, K: state.K, narrow: state.narrow, conflicts: shapes.conflicts, places: places, W: state.W, H: state.H }; }
     };
   }
 
@@ -5177,7 +5366,7 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
   var el = document.getElementById('aboutAxon');
   if (!el || !window.CurtainWallAxon) return;
   var T = 'images/axon/tex-';
-  CurtainWallAxon.mount(el, { style: 'shaded', scrollLink: true,
+  CurtainWallAxon.mount(el, { style: 'shaded', scrollLink: true, labels: 'right',
     textures: { aluminum: T + 'aluminum.webp', glass: T + 'glass.webp', concrete: T + 'concrete.webp', wool: T + 'wool.webp', steel: T + 'steel.webp' } });
 })();
 </script>
