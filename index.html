@@ -2609,11 +2609,11 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 
 /* ---- pink hint above the slider ---- */
 .cwa-hint {
-  display: flex; align-items: center; gap: 10px; padding-top: 10px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px; padding-top: 10px; cursor: pointer;
   font: 500 10px/1 var(--font-mono, 'DM Mono', monospace); letter-spacing: .16em; text-transform: uppercase; color: var(--cwa-acc);
 }
 .cwa-arrow { width: 56px; height: 10px; flex: 0 0 auto; animation: cwa-nudge 1.6s ease-in-out infinite; }
-.cwa--collapse .cwa-hint { flex-direction: row-reverse; justify-content: flex-end; }
+.cwa--collapse .cwa-hint { flex-direction: row-reverse; justify-content: center; }
 .cwa--collapse .cwa-arrow { transform: scaleX(-1); animation-name: cwa-nudge-l; }
 @keyframes cwa-nudge { 0%, 100% { translate: 0 0; } 50% { translate: 6px 0; } }
 @keyframes cwa-nudge-l { 0%, 100% { translate: 0 0; } 50% { translate: -6px 0; } }
