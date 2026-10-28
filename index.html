@@ -2434,7 +2434,7 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 .about-image.has-axon::before { display: none; }
 .about-axon { position: absolute; inset: 0; }
 @media (max-width: 900px), (max-width: 1100px) and (orientation: portrait) { .about-image.has-axon { aspect-ratio: 4 / 5; max-width: 600px; width: 100%; } }
-/* CurtainWallAxon — scoped styles. Every class is prefixed cwa-. Inherits :root --ink / --white / --mid / --accent when present. */
+/* CurtainWallAxon 0.2 — scoped styles. Every class is prefixed cwa-. Inherits :root --ink / --white / --mid / --accent when present. */
 
 .cwa {
   --cwa-ink: var(--ink, #111110);
@@ -2455,6 +2455,7 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 .cwa *, .cwa *::before, .cwa *::after { box-sizing: border-box; }
 
 .cwa-stage { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; transition: background-color .5s ease; }
+.cwa-scene { position: absolute; inset: 0; }
 .cwa-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; transition: opacity .5s ease; }
 
 /* ---- title strip ---- */
@@ -2490,16 +2491,17 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 .cwa-fa-side { fill: var(--s); }
 .cwa-fa-cut { fill: var(--c); }
 .cwa-active .cwa-f { stroke: var(--cwa-acc); }
-.cwa[data-hl="1"] .cwa-chunk[data-layer="1"] .cwa-f, .cwa[data-hl="2"] .cwa-chunk[data-layer="2"] .cwa-f,
-.cwa[data-hl="3"] .cwa-chunk[data-layer="3"] .cwa-f, .cwa[data-hl="4"] .cwa-chunk[data-layer="4"] .cwa-f,
-.cwa[data-hl="5"] .cwa-chunk[data-layer="5"] .cwa-f, .cwa[data-hl="6"] .cwa-chunk[data-layer="6"] .cwa-f,
-.cwa[data-hl="7"] .cwa-chunk[data-layer="7"] .cwa-f, .cwa[data-hl="8"] .cwa-chunk[data-layer="8"] .cwa-f { stroke: var(--cwa-acc); }
+.cwa-chunk.cwa-hlon .cwa-f { stroke: var(--cwa-acc); }
 
 /* material tints — LINE variant: paper faces, ink lines */
 .cwa--line .cwa-s { --t: #fff; --f: #fff; --s: #fff; --c: #fff; }
 .cwa--line .cwa-m-glass, .cwa--line .cwa-m-sglass { --t: rgba(255,255,255,.7); --f: rgba(255,255,255,.62); --s: rgba(255,255,255,.7); --c: #fff; }
 .cwa--line .cwa-m-sglass { --t: rgba(255,255,255,.92); --f: rgba(255,255,255,.88); --s: rgba(255,255,255,.92); }
-.cwa--line .cwa-m-steel, .cwa--line .cwa-m-frit, .cwa--line .cwa-m-void { --c: var(--cwa-ink); }
+.cwa--line .cwa-m-steel, .cwa--line .cwa-m-stud, .cwa--line .cwa-m-frit, .cwa--line .cwa-m-void { --c: var(--cwa-ink); }
+.cwa--line .cwa-m-membrane { --t: #2a2a28; --f: #2a2a28; --s: #2a2a28; --c: var(--cwa-ink); }
+.cwa--line .cwa-m-wrb { --t: #dfe3ea; --f: #d3d8e0; --s: #c6ccd6; --c: #3d4757; }
+.cwa--line .cwa-m-metal { --t: #f1f1ef; --f: #e4e4e1; --s: #d6d6d2; --c: var(--cwa-ink); }
+.cwa--line .cwa-m-foam { --t: #fff; --f: #f6f6f3; --s: #ededea; --c: #fff; }
 .cwa--line .cwa-m-frit { --t: rgba(17,17,16,.35); --f: rgba(17,17,16,.2); --s: rgba(17,17,16,.35); }
 .cwa--line .cwa-m-seal { --t: #2a2a28; --f: #2a2a28; --s: #2a2a28; --c: var(--cwa-ink); }
 .cwa--line .cwa-m-void { --t: var(--cwa-ink); --f: var(--cwa-ink); --s: var(--cwa-ink); }
@@ -2507,9 +2509,18 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 
 /* material tints — SHADED variant: top light, front mid, side dark */
 .cwa--shaded { --cwa-glint: rgba(255,255,255,.8); --cwa-tx: .22; }
+.cwa--shaded .cwa-s { --t: #e6e4de; --f: #d2d0c8; --s: #bab8b0; --c: #cfcdc5; }   /* fallback for an unknown material key */
 .cwa--shaded .cwa-m-concrete { --t: #dcd8d0; --f: #c8c4bb; --s: #b0ada4; --c: #cbc7be; }
 .cwa--shaded .cwa-m-alu   { --t: #e4e6e8; --f: #c9cdd0; --s: #a8adb2; --c: #c2c6ca; }
-.cwa--shaded .cwa-m-steel { --t: #d3d7da; --f: #b9bfc3; --s: #9ca3a8; --c: #6e757a; }
+.cwa--shaded .cwa-m-steel, .cwa--shaded .cwa-m-stud { --t: #d3d7da; --f: #b9bfc3; --s: #9ca3a8; --c: #6e757a; }
+.cwa--shaded .cwa-m-brick { --t: #c98b72; --f: #b3705a; --s: #985a46; --c: #b9795f; }
+.cwa--shaded .cwa-m-cmu   { --t: #d4d3cf; --f: #bebdb8; --s: #a5a49e; --c: #b6b5b0; }
+.cwa--shaded .cwa-m-ply   { --t: #ebd5a6; --f: #d8bd86; --s: #c0a36b; --c: #dcc38e; }
+.cwa--shaded .cwa-m-foam  { --t: #d6ece6; --f: #bfded5; --s: #a4c8bd; --c: #c4e1d8; }
+.cwa--shaded .cwa-m-membrane { --t: #3a3a38; --f: #2b2b29; --s: #1f1f1d; --c: #121211; }
+.cwa--shaded .cwa-m-wrb   { --t: #8c9bab; --f: #76869a; --s: #5f6f84; --c: #4a5a70; }
+.cwa--shaded .cwa-m-metal { --t: #cdd1d5; --f: #adb3b9; --s: #8f969d; --c: #565d63; }
+.cwa--shaded .cwa-m-fibercement { --t: #e2e3db; --f: #cdcec4; --s: #b6b7ac; --c: #cbccc2; }
 .cwa--shaded .cwa-m-wool  { --t: #f0e197; --f: #e0cf7b; --s: #c8b75f; --c: #e6d683; }
 .cwa--shaded .cwa-m-seal  { --t: #5a554e; --f: #46423c; --s: #34312d; --c: #2a2723; }
 .cwa--shaded .cwa-m-glass { --t: rgba(196,226,231,.62); --f: rgba(196,226,231,.4); --s: rgba(150,192,200,.58); --c: rgba(140,184,192,.85); }
@@ -2520,6 +2531,10 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 .cwa--shaded .cwa-m-void  { --t: #26231f; --f: #1d1b18; --s: #151412; --c: #151412; }
 .cwa-tx { opacity: var(--cwa-tx, .22); mix-blend-mode: multiply; }
 .cwa-tx-glass, .cwa-tx-sglass { opacity: calc(var(--cwa-tx, .22) * .8); mix-blend-mode: normal; }
+/* coursing and grain need to read: masonry and wood textures sit stronger than the rest */
+.cwa-tx-brick { opacity: calc(var(--cwa-tx, .22) * 2.6); }
+.cwa-tx-cmu { opacity: calc(var(--cwa-tx, .22) * 2); }
+.cwa-tx-wood { opacity: calc(var(--cwa-tx, .22) * 1.6); }
 .cwa-glint { stroke: var(--cwa-glint); }
 .cwa-spand { stroke: rgba(17,17,16,.35); stroke-width: var(--cwa-hf, .02); }
 .cwa-gl { opacity: .9; }
@@ -2620,6 +2635,40 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 .cwa--rm .cwa-arrow { animation: none; }
 @media (prefers-reduced-motion: reduce) { .cwa-arrow { animation: none; } }
 .cwa--narrow .cwa-hint { padding-top: 6px; }
+
+/* ---- detail tabs (shown when more than one detail is registered) ---- */
+.cwa-tabs {
+  position: absolute; left: var(--cwa-pad); right: var(--cwa-pad); top: 4px; z-index: 4; height: 32px;
+  display: flex; align-items: stretch; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; white-space: nowrap;
+  scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+}
+.cwa-tabs::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.cwa-tab {
+  all: unset; box-sizing: border-box; flex: 0 0 auto; cursor: pointer; height: 32px; min-width: 32px;
+  display: flex; align-items: center; padding: 0 6px;
+  font: 400 9px/1.2 var(--font-mono, 'DM Mono', monospace); letter-spacing: .14em; text-transform: uppercase; color: var(--cwa-mid);
+  -webkit-tap-highlight-color: transparent; transition: color .2s;
+}
+.cwa-tab:first-child { padding-left: 0; }
+.cwa-tab + .cwa-tab::before { content: '\00b7'; margin-right: 12px; color: var(--cwa-light); }
+.cwa-tab-i { display: block; padding: 4px 0 3px; border-bottom: 1px solid transparent; transition: border-color .2s; }
+.cwa-tab:hover { color: var(--cwa-ink); }
+.cwa-tab.cwa-tab-on { color: var(--cwa-ink); }
+.cwa-tab.cwa-tab-on .cwa-tab-i { border-bottom-color: var(--cwa-acc); }
+.cwa-tab:focus-visible { outline: 2px solid var(--cwa-acc); outline-offset: -2px; }
+.cwa--tabs .cwa-fig, .cwa--tabs.cwa--narrow .cwa-fig, .cwa--tabs .cwa-fig--m { top: 36px; }
+
+.cwa-tabs[data-fade="l"] { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22px); mask-image: linear-gradient(90deg, transparent 0, #000 22px); }
+.cwa-tabs[data-fade="r"] { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 22px), transparent 100%); mask-image: linear-gradient(90deg, #000 calc(100% - 22px), transparent 100%); }
+.cwa-tabs[data-fade="lr"] { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%); }
+
+/* the hint is a button: tap to run the slider to the end it points at */
+button.cwa-hint { all: unset; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; min-height: 32px; padding-top: 10px; cursor: pointer; color: var(--cwa-acc);
+  font: 500 10px/1 var(--font-mono, 'DM Mono', monospace); letter-spacing: .16em; text-transform: uppercase; }
+.cwa--collapse button.cwa-hint { flex-direction: row-reverse; }
+button.cwa-hint:hover .cwa-hint-t { text-decoration: underline; text-underline-offset: 3px; }
+button.cwa-hint:focus-visible { outline: 2px solid var(--cwa-acc); outline-offset: 2px; }
 
 </style>
 </head>
@@ -4388,9 +4437,27 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 
 <script>
 /*!
- * CurtainWallAxon — interactive exploded axonometric of a curtain-wall bay at a slab edge.
- * Vanilla JS, no dependencies. window.CurtainWallAxon.mount(container, options) -> { setExplode(t), destroy() }
+ * CurtainWallAxon — interactive exploded axonometric of an architectural detail (default: a curtain-wall bay at a slab edge).
+ * Vanilla JS, no dependencies. window.CurtainWallAxon.mount(container, options) -> { setExplode(t), setDetail(id), isolate(n), destroy() }
+ * Details are plain objects registered in window.AxonDetails (see the detail format below). With more than one, a tab row switches them.
  * Illustrative assembly. Not a specific project or system.
+ *
+ * DETAIL FORMAT  (window.AxonDetails.push({...}))
+ *   id        'rainscreen'                       unique key (used by opts.detail / setDetail)
+ *   tab       'Rainscreen'                       tab label
+ *   title     'Rainscreen wall at slab edge'     figure title ("FIG. 02 — RAINSCREEN WALL AT SLAB EDGE")
+ *   aria      'a rainscreen wall ...'            optional phrase for the SVG aria-label (default: lower-cased title)
+ *   caption   'Optional extra caption line.'     optional
+ *   dims      { YC: 2.7, ... }                   constants for build(); YC = y of the section-cut plane (cut faces get heavy line + hatch)
+ *   layers    [ { id: 1, name, desc, short, off, dir: [dx,dy,dz], anchors: [[x,y,z], ...] }, ... ]
+ *               ids must be 1..n in order. off = explode distance in feet along dir (a model-space vector, normalised; default [1,0,0]; off may be negative).
+ *               anchors = candidate leader points in model feet. Index 0 is used by the narrow/callout layout, indices >= 1 by the right-column layout.
+ *   build     function (B, D) { B(layer, mat, x0,x1, y0,y1, z0,z1, opts); ... }     D = dims
+ *               x = outward from the building, y = along the wall, z = up. Boxes are axis-aligned. The face at y = YC is the cut face.
+ *               opts: prof (1 = heavier profile weight), brkX0 / brkZ0 / brkZ1 (zig-zag break line on that edge of the cut face),
+ *                     faces ('tfs' default = top, front(+x), side(+y); any subset).
+ *   pinTop    8 | null                           layer id pinned to the top of the right label column
+ *   presets   ['32522521', ...]                  right-column anchor sets (one digit per layer = anchor index); may be []
  */
 (function () {
   'use strict';
@@ -4398,110 +4465,141 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
   var NS = 'http://www.w3.org/2000/svg';
   var C30 = Math.cos(Math.PI / 6), S30 = 0.5;
   var IN = 1 / 12;
+  var VERSION = '0.2.0';
+
+  /* ---------- built-in detail: curtain wall at a slab edge (inside -> outside) ---------- */
   var YC = 2.70;            // y of the cut plane (the visible section face)
   var MW = 1.25 * IN;       // half width of a 2-1/2" mullion
   var MY = 2.5;             // mullion centerline offset (5'-0" bay)
   var CW = 0.145;           // half width of a cover cap
   var ZB = -2.6, ZT = 3.8;  // slice bottom / top
 
-  /* ---------- layers (inside -> outside) ---------- */
-  var LAYERS = [
-    { id: 1, name: 'Concrete slab edge', desc: 'carries the wall back to the structure', short: 'Slab', off: 0,
-      anchors: [[-1.6, -2.0, 0], [-2.2, YC, -0.33], [-1.2, YC, -0.33], [-3.0, YC, -0.33], [-0.6, YC, -0.45]] },
-    { id: 2, name: 'Anchor bracket', desc: 'takes dead and wind load, allows movement', short: 'Anchor', off: 0.5,
-      anchors: [[0.3, -MY, 0.15], [0.3, MY, 0.15], [0.03, MY + 0.125, -0.2], [0.41, MY, 0.17]] },
-    { id: 3, name: 'Fire safing + smoke seal', desc: 'stops fire and smoke at the slab edge', short: 'Safing', off: 1.0,
-      anchors: [[0.28, -2.3, 0.07], [0.28, YC, -0.17], [0.15, YC, -0.25], [0.42, YC, -0.1], [0.28, YC, -0.3], [0.45, YC, -0.3], [0.1, YC, -0.3]] },
-    { id: 4, name: 'Mullions + stack joint', desc: 'frame the wall, take floor movement', short: 'Mullions', off: 1.5,
-      anchors: [[0.75, -MY, ZT], [0.9, YC, 0.55], [0.9, YC, -2.0], [0.9, YC, 1.5], [0.9, YC, 0.32], [1.0, MY, 3.2], [1.0, MY, 2.2], [1.0, MY, -1.2]] },
-    { id: 5, name: 'Spandrel', desc: 'hides the slab, insulates, seals', short: 'Spandrel', off: 2.0,
-      anchors: [[1.0, -2.3, -1.0], [0.665, YC, -0.8], [0.665, YC, -1.5], [0.665, YC, 0.9], [0.665, YC, -0.2], [1.0, 1.2, 1.1], [1.0, 0.0, 1.1], [1.0, 1.2, -1.2]] },
-    { id: 6, name: 'Vision glass', desc: '1" insulating unit, low\u2011E', short: 'Glass', off: 2.5,
-      anchors: [[1.0, -2.3, 2.9], [0.98, YC, 2.9], [0.98, YC, 2.2], [0.98, YC, -2.4], [0.98, YC, 3.4], [1.0, 1.0, 3.2], [1.0, 0.0, 2.4], [1.0, 1.0, -2.4]] },
-    { id: 7, name: 'Cover caps', desc: 'exterior profile and sightline', short: 'Caps', off: 3.0,
-      anchors: [[1.1, -MY, 1.0], [1.05, YC, 1.5], [1.05, YC, -2.0], [1.05, YC, 0.6], [1.05, YC, 0.3], [1.1, MY, 3.3], [1.1, MY, 2.4], [1.1, MY, 1.0], [1.1, MY, -1.0]] },
-    { id: 8, name: 'Interior finish', desc: 'sill and soffit', short: 'Interior', off: -1.1,
-      anchors: [[0.0, -2.2, 1.70], [0.2, YC, 1.66], [-0.03, YC, 0.8], [-1.0, YC, -1.7], [0.4, YC, 1.66]] }
-  ];
+  var CURTAIN_WALL = {
+    id: 'curtain-wall', tab: 'Curtain wall', title: 'Curtain wall at slab edge',
+    aria: 'a curtain wall bay at a concrete slab edge',
+    dims: { YC: YC, MW: MW, MY: MY, CW: CW, ZB: ZB, ZT: ZT },
+    layers: [
+      { id: 1, name: 'Concrete slab edge', desc: 'carries the wall back to the structure', short: 'Slab', off: 0,
+        anchors: [[-1.6, -2.0, 0], [-2.2, YC, -0.33], [-1.2, YC, -0.33], [-3.0, YC, -0.33], [-0.6, YC, -0.45]] },
+      { id: 2, name: 'Anchor bracket', desc: 'takes dead and wind load, allows movement', short: 'Anchor', off: 0.5,
+        anchors: [[0.3, -MY, 0.15], [0.3, MY, 0.15], [0.03, MY + 0.125, -0.2], [0.41, MY, 0.17]] },
+      { id: 3, name: 'Fire safing + smoke seal', desc: 'stops fire and smoke at the slab edge', short: 'Safing', off: 1.0,
+        anchors: [[0.28, -2.3, 0.07], [0.28, YC, -0.17], [0.15, YC, -0.25], [0.42, YC, -0.1], [0.28, YC, -0.3], [0.45, YC, -0.3], [0.1, YC, -0.3]] },
+      { id: 4, name: 'Mullions + stack joint', desc: 'frame the wall, take floor movement', short: 'Mullions', off: 1.5,
+        anchors: [[0.75, -MY, ZT], [0.9, YC, 0.55], [0.9, YC, -2.0], [0.9, YC, 1.5], [0.9, YC, 0.32], [1.0, MY, 3.2], [1.0, MY, 2.2], [1.0, MY, -1.2]] },
+      { id: 5, name: 'Spandrel', desc: 'hides the slab, insulates, seals', short: 'Spandrel', off: 2.0,
+        anchors: [[1.0, -2.3, -1.0], [0.665, YC, -0.8], [0.665, YC, -1.5], [0.665, YC, 0.9], [0.665, YC, -0.2], [1.0, 1.2, 1.1], [1.0, 0.0, 1.1], [1.0, 1.2, -1.2]] },
+      { id: 6, name: 'Vision glass', desc: '1" insulating unit, low‑E', short: 'Glass', off: 2.5,
+        anchors: [[1.0, -2.3, 2.9], [0.98, YC, 2.9], [0.98, YC, 2.2], [0.98, YC, -2.4], [0.98, YC, 3.4], [1.0, 1.0, 3.2], [1.0, 0.0, 2.4], [1.0, 1.0, -2.4]] },
+      { id: 7, name: 'Cover caps', desc: 'exterior profile and sightline', short: 'Caps', off: 3.0,
+        anchors: [[1.1, -MY, 1.0], [1.05, YC, 1.5], [1.05, YC, -2.0], [1.05, YC, 0.6], [1.05, YC, 0.3], [1.1, MY, 3.3], [1.1, MY, 2.4], [1.1, MY, 1.0], [1.1, MY, -1.0]] },
+      { id: 8, name: 'Interior finish', desc: 'sill and soffit', short: 'Interior', off: -1.1,
+        anchors: [[0.0, -2.2, 1.70], [0.2, YC, 1.66], [-0.03, YC, 0.8], [-1.0, YC, -1.7], [0.4, YC, 1.66]] }
+    ],
+    pinTop: 8,
+    presets: ['32522521', '32572381', '31272381', '32522221', '11322341', '32552521'],
+    build: function (B, D) {
+      var YC = D.YC, MW = D.MW, MY = D.MY, CW = D.CW, ZB = D.ZB, ZT = D.ZT;
+      var bayPieces = [[-YC, -(MY + MW)], [-(MY - MW), MY - MW], [MY + MW, YC]];
+      var capPieces = [[-YC, -(MY + CW)], [-(MY - CW), MY - CW], [MY + CW, YC]];
+      var s, p, yc, y0, y1;
+
+      // 1 — slab edge, anchor channel
+      B(1, 'concrete', -4, 0, -YC, YC, -0.667, 0, { prof: 1, brkX0: 1 });
+      B(1, 'steel', -0.11, 0, -YC, YC, -0.27, -0.10, { faces: 'fs' });
+      B(1, 'void', -0.075, 0, -YC, YC, -0.225, -0.145, { faces: 'fs' });
+
+      // 8 — interior finish (ceiling return, knee-wall closure, stool)
+      B(8, 'gyp', -3.0, 0.48, -YC, YC, -1.72, -1.67, { prof: 1 });
+      B(8, 'gyp', 0.42, 0.48, -YC, YC, -1.67, -1.25);
+      B(8, 'gyp', -0.05, -0.005, -YC, YC, 0.0, 1.62);
+      B(8, 'wood', -0.16, 0.50, -YC, YC, 1.62, 1.70, { prof: 1 });
+
+      // 2 — anchor brackets (aluminum clip angle) at each mullion
+      for (s = -1; s <= 1; s += 2) {
+        yc = s * MY; y0 = yc - 0.125; y1 = yc + 0.125;
+        B(2, 'alu', 0, 0.06, y0, y1, -0.45, 0.15, { prof: 1 });
+        B(2, 'alu', 0.06, 0.50, y0, y1, 0.09, 0.15, { prof: 1 });
+        B(2, 'steel', 0.06, 0.10, yc - 0.045, yc + 0.045, -0.235, -0.155);        // T-bolt head at channel
+        B(2, 'steel', 0.38, 0.44, yc - 0.045, yc + 0.045, 0.15, 0.185);           // bolt to mullion
+      }
+
+      // 3 — perimeter fire barrier
+      B(3, 'steel', 0.06, 0.50, -YC, YC, -0.39, -0.34);                           // support angle
+      B(3, 'wool', 0.06, 0.50, -YC, YC, -0.34, 0.0, { prof: 1 });                 // 4" safing
+      B(3, 'seal', 0.06, 0.50, -YC, YC, 0.0, 0.07);                               // smoke seal
+
+      // 4 — mullions (verticals) and horizontals (transoms + split stack joint)
+      for (s = -1; s <= 1; s += 2) B(4, 'alu', 0.50, 1.00, s * MY - MW, s * MY + MW, ZB, ZT, { prof: 1, brkZ1: 1 });
+      var rails = [[-2.10, -1.90], [0.22, 0.42], [0.48, 0.68], [1.40, 1.60]];
+      for (p = 0; p < 3; p++) {
+        for (var r = 0; r < rails.length; r++) B(4, 'alu', 0.79, 1.00, bayPieces[p][0], bayPieces[p][1], rails[r][0], rails[r][1], { prof: 1 });
+        B(4, 'seal', 0.79, 0.84, bayPieces[p][0], bayPieces[p][1], 0.42, 0.48);   // gasket in the split
+      }
+
+      // 5 — spandrel: back pan, 3" mineral wool, opacified glass
+      for (p = 0; p < 3; p++) {
+        y0 = bayPieces[p][0]; y1 = bayPieces[p][1];
+        B(5, 'steel', 0.50, 0.54, y0, y1, -1.90, 1.40);
+        B(5, 'wool', 0.54, 0.79, y0, y1, -1.90, 1.40, { prof: 1 });
+        B(5, 'frit', 0.94, 0.955, y0, y1, -1.90, 0.22);
+        B(5, 'sglass', 0.955, 1.00, y0, y1, -1.90, 0.22, { prof: 1 });
+        B(5, 'frit', 0.94, 0.955, y0, y1, 0.68, 1.40);
+        B(5, 'sglass', 0.955, 1.00, y0, y1, 0.68, 1.40, { prof: 1 });
+      }
+
+      // 6 — vision glass: IGU (two lites + spacer) above, short piece of lower-floor glass below
+      for (p = 0; p < 3; p++) {
+        y0 = bayPieces[p][0]; y1 = bayPieces[p][1];
+        B(6, 'glass', 0.86, 0.90, y0, y1, 1.60, ZT, { prof: 1, brkZ1: 1 });
+        B(6, 'glass', 0.96, 1.00, y0, y1, 1.60, ZT, { prof: 1, brkZ1: 1 });
+        B(6, 'alu', 0.90, 0.96, y0, y1, 1.60, 1.67);
+        B(6, 'glass', 0.86, 0.90, y0, y1, ZB, -2.10, { prof: 1, brkZ0: 1 });
+        B(6, 'glass', 0.96, 1.00, y0, y1, ZB, -2.10, { prof: 1, brkZ0: 1 });
+        B(6, 'alu', 0.90, 0.96, y0, y1, -2.17, -2.10);
+      }
+
+      // 7 — exterior cover caps
+      for (s = -1; s <= 1; s += 2) B(7, 'alu', 1.00, 1.10, s * MY - CW, s * MY + CW, ZB, ZT, { prof: 1, brkZ1: 1 });
+      var caps = [[-2.17, -1.83], [0.17, 0.43], [0.47, 0.73], [1.35, 1.65]];
+      for (p = 0; p < 3; p++) for (var c = 0; c < caps.length; c++)
+        B(7, 'alu', 1.00, 1.10, capPieces[p][0], capPieces[p][1], caps[c][0], caps[c][1], { prof: 1 });
+    }
+  };
+
+  /* ---------- registry ---------- */
+  var REG = window.AxonDetails = window.AxonDetails || [];
+  function hasDetail(list, id) { for (var i = 0; i < list.length; i++) if (list[i] && list[i].id === id) return true; return false; }
+  if (!hasDetail(REG, CURTAIN_WALL.id)) REG.unshift(CURTAIN_WALL);   // the curtain wall is always the first tab
+
+  function validate(d) {
+    if (!d || typeof d !== 'object') return 'not an object';
+    if (!d.id) return 'missing id';
+    if (typeof d.build !== 'function') return 'missing build()';
+    if (!d.layers || !d.layers.length) return 'missing layers';
+    for (var i = 0; i < d.layers.length; i++) {
+      var l = d.layers[i];
+      if (l.id !== i + 1) return 'layer ids must be 1..n in order (layer #' + (i + 1) + ' has id ' + l.id + ')';
+      if (!l.anchors || l.anchors.length < 2) return 'layer ' + l.id + ' needs at least 2 anchors';
+    }
+    return '';
+  }
 
   /* ---------- 3D model ---------- */
-  function buildShapes() {
+  function buildShapes(det) {
     var S = [];
     function B(layer, mat, x0, x1, y0, y1, z0, z1, o) {
       S.push({ layer: layer, mat: mat, b: [x0, x1, y0, y1, z0, z1], o: o || {}, i: S.length });
     }
-    var bayPieces = [[-YC, -(MY + MW)], [-(MY - MW), MY - MW], [MY + MW, YC]];
-    var capPieces = [[-YC, -(MY + CW)], [-(MY - CW), MY - CW], [MY + CW, YC]];
-    var s, p, yc, y0, y1;
-
-    // 1 — slab edge, anchor channel
-    B(1, 'concrete', -4, 0, -YC, YC, -0.667, 0, { prof: 1, brkX0: 1 });
-    B(1, 'steel', -0.11, 0, -YC, YC, -0.27, -0.10, { faces: 'fs' });
-    B(1, 'void', -0.075, 0, -YC, YC, -0.225, -0.145, { faces: 'fs' });
-
-    // 8 — interior finish (ceiling return, knee-wall closure, stool)
-    B(8, 'gyp', -3.0, 0.48, -YC, YC, -1.72, -1.67, { prof: 1 });
-    B(8, 'gyp', 0.42, 0.48, -YC, YC, -1.67, -1.25);
-    B(8, 'gyp', -0.05, -0.005, -YC, YC, 0.0, 1.62);
-    B(8, 'wood', -0.16, 0.50, -YC, YC, 1.62, 1.70, { prof: 1 });
-
-    // 2 — anchor brackets (aluminum clip angle) at each mullion
-    for (s = -1; s <= 1; s += 2) {
-      yc = s * MY; y0 = yc - 0.125; y1 = yc + 0.125;
-      B(2, 'alu', 0, 0.06, y0, y1, -0.45, 0.15, { prof: 1 });
-      B(2, 'alu', 0.06, 0.50, y0, y1, 0.09, 0.15, { prof: 1 });
-      B(2, 'steel', 0.06, 0.10, yc - 0.045, yc + 0.045, -0.235, -0.155);        // T-bolt head at channel
-      B(2, 'steel', 0.38, 0.44, yc - 0.045, yc + 0.045, 0.15, 0.185);           // bolt to mullion
-    }
-
-    // 3 — perimeter fire barrier
-    B(3, 'steel', 0.06, 0.50, -YC, YC, -0.39, -0.34);                           // support angle
-    B(3, 'wool', 0.06, 0.50, -YC, YC, -0.34, 0.0, { prof: 1 });                 // 4" safing
-    B(3, 'seal', 0.06, 0.50, -YC, YC, 0.0, 0.07);                               // smoke seal
-
-    // 4 — mullions (verticals) and horizontals (transoms + split stack joint)
-    for (s = -1; s <= 1; s += 2) B(4, 'alu', 0.50, 1.00, s * MY - MW, s * MY + MW, ZB, ZT, { prof: 1, brkZ1: 1 });
-    var rails = [[-2.10, -1.90], [0.22, 0.42], [0.48, 0.68], [1.40, 1.60]];
-    for (p = 0; p < 3; p++) {
-      for (var r = 0; r < rails.length; r++) B(4, 'alu', 0.79, 1.00, bayPieces[p][0], bayPieces[p][1], rails[r][0], rails[r][1], { prof: 1 });
-      B(4, 'seal', 0.79, 0.84, bayPieces[p][0], bayPieces[p][1], 0.42, 0.48);   // gasket in the split
-    }
-
-    // 5 — spandrel: back pan, 3" mineral wool, opacified glass
-    for (p = 0; p < 3; p++) {
-      y0 = bayPieces[p][0]; y1 = bayPieces[p][1];
-      B(5, 'steel', 0.50, 0.54, y0, y1, -1.90, 1.40);
-      B(5, 'wool', 0.54, 0.79, y0, y1, -1.90, 1.40, { prof: 1 });
-      B(5, 'frit', 0.94, 0.955, y0, y1, -1.90, 0.22);
-      B(5, 'sglass', 0.955, 1.00, y0, y1, -1.90, 0.22, { prof: 1 });
-      B(5, 'frit', 0.94, 0.955, y0, y1, 0.68, 1.40);
-      B(5, 'sglass', 0.955, 1.00, y0, y1, 0.68, 1.40, { prof: 1 });
-    }
-
-    // 6 — vision glass: IGU (two lites + spacer) above, short piece of lower-floor glass below
-    for (p = 0; p < 3; p++) {
-      y0 = bayPieces[p][0]; y1 = bayPieces[p][1];
-      B(6, 'glass', 0.86, 0.90, y0, y1, 1.60, ZT, { prof: 1, brkZ1: 1 });
-      B(6, 'glass', 0.96, 1.00, y0, y1, 1.60, ZT, { prof: 1, brkZ1: 1 });
-      B(6, 'alu', 0.90, 0.96, y0, y1, 1.60, 1.67);
-      B(6, 'glass', 0.86, 0.90, y0, y1, ZB, -2.10, { prof: 1, brkZ0: 1 });
-      B(6, 'glass', 0.96, 1.00, y0, y1, ZB, -2.10, { prof: 1, brkZ0: 1 });
-      B(6, 'alu', 0.90, 0.96, y0, y1, -2.17, -2.10);
-    }
-
-    // 7 — exterior cover caps
-    for (s = -1; s <= 1; s += 2) B(7, 'alu', 1.00, 1.10, s * MY - CW, s * MY + CW, ZB, ZT, { prof: 1, brkZ1: 1 });
-    var caps = [[-2.17, -1.83], [0.17, 0.43], [0.47, 0.73], [1.35, 1.65]];
-    for (p = 0; p < 3; p++) for (var c = 0; c < caps.length; c++)
-      B(7, 'alu', 1.00, 1.10, capPieces[p][0], capPieces[p][1], caps[c][0], caps[c][1], { prof: 1 });
-
+    det.build(B, det.dims || {});
     return S;
   }
 
-  /* ---------- painter's ordering (box separation tests, topological sort) ---------- */
-  function aabbAt(sh, t, offs) {
-    var dx = offs[sh.layer] * t, b = sh.b;
-    return [b[0] + dx, b[1] + dx, b[2], b[3], b[4], b[5]];
+  /* ---------- painter's ordering (box separation tests on displaced boxes, topological sort) ----------
+     disp[layer] = [dx, dy, dz] is the layer's displacement at full explode (dir * off); at t it is disp * t. */
+  function aabbAt(sh, t, disp) {
+    var d = disp[sh.layer], b = sh.b;
+    return [b[0] + d[0] * t, b[1] + d[0] * t, b[2] + d[1] * t, b[3] + d[1] * t, b[4] + d[2] * t, b[5] + d[2] * t];
   }
   function sepOrder(a, b) { // -1: a is farther (draw first); 1: b farther; 0: overlapping
     var e = 1e-6;
@@ -4513,18 +4611,20 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     if (b[5] <= a[4] + e) return 1;
     return 0;
   }
-  function sortShapes(shapes, offs) {
+  function sortShapes(shapes, disp) {
     var n = shapes.length, i, j, k, ord = [], conflicts = 0;
     for (i = 0; i < n; i++) ord.push(new Int8Array(n));
-    [0, 1, 0.5].forEach(function (t) {
-      var bb = shapes.map(function (s) { return aabbAt(s, t, offs); });
+    // a pair is ordered by the first sample where its displaced boxes are separated; volumes that overlap at every sample keep insertion order
+    [0, 1, 0.5, 0.25, 0.75].forEach(function (t) {
+      var bb = shapes.map(function (s) { return aabbAt(s, t, disp); });
       for (i = 0; i < n; i++) for (j = i + 1; j < n; j++) {
         var o = sepOrder(bb[i], bb[j]);
-        if (o === 0) o = -1; // overlapping volumes: keep insertion order
+        if (o === 0) continue;
         if (ord[i][j] === 0) { ord[i][j] = o; ord[j][i] = -o; }
         else if (ord[i][j] !== o) conflicts++;
       }
     });
+    for (i = 0; i < n; i++) for (j = i + 1; j < n; j++) if (ord[i][j] === 0) { ord[i][j] = -1; ord[j][i] = 1; }
     var deg = new Int32Array(n), done = new Uint8Array(n), out = [];
     for (i = 0; i < n; i++) for (j = 0; j < n; j++) if (i !== j && ord[i][j] === 1) deg[i]++; // i must come after j
     for (k = 0; k < n; k++) {
@@ -4538,8 +4638,21 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     return out;
   }
 
+  function sortViolations(shapes, disp) { // debug: pairs drawn in the wrong order at some t in 0..1 (only pairs whose displaced boxes are separated)
+    var bad = {}, n = shapes.length, i, j, k, t;
+    for (k = 0; k <= 20; k++) {
+      t = k / 20;
+      var bb = shapes.map(function (s) { return aabbAt(s, t, disp); });
+      for (i = 0; i < n; i++) for (j = i + 1; j < n; j++) {   // shapes[i] is drawn before shapes[j]
+        if (sepOrder(bb[i], bb[j]) === 1) bad[shapes[i].i + '>' + shapes[j].i] = 1;
+      }
+    }
+    return Object.keys(bad);
+  }
+
   /* ---------- projection (unit scale; feet) ---------- */
   function P(x, y, z) { return [(y - x) * C30, (x + y) * S30 - z]; }
+  var P0 = P(0, 0, 0);
   function zig(a, b, n, amp, nx, nz) { // intermediate zig-zag points between a and b in (x,z)
     var pts = [], i;
     for (i = 1; i < n; i++) {
@@ -4558,13 +4671,13 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     if (o.brkX0) pts = pts.concat(zig([x0, z1], [x0, z0], 6, 0.09, 1, 0));
     return pts;
   }
-  function facesOf(sh) { // visible faces as unit-space polygons
+  function facesOf(sh, yc) { // visible faces as unit-space polygons; yc = y of the section-cut plane
     var b = sh.b, x0 = b[0], x1 = b[1], y0 = b[2], y1 = b[3], z0 = b[4], z1 = b[5];
     var f = sh.o.faces || 'tfs', out = [];
     if (f.indexOf('t') >= 0) out.push({ k: 'top', pts: [P(x0, y0, z1), P(x1, y0, z1), P(x1, y1, z1), P(x0, y1, z1)] });
     if (f.indexOf('f') >= 0) out.push({ k: 'front', pts: [P(x1, y0, z0), P(x1, y1, z0), P(x1, y1, z1), P(x1, y0, z1)] });
     if (f.indexOf('s') >= 0) {
-      var cut = Math.abs(y1 - YC) < 1e-6;
+      var cut = Math.abs(y1 - yc) < 1e-6;
       var pts = cut ? cutPolyXZ(sh).map(function (q) { return P(q[0], y1, q[1]); })
                     : [P(x0, y1, z0), P(x1, y1, z0), P(x1, y1, z1), P(x0, y1, z1)];
       out.push({ k: cut ? 'cut' : 'side', pts: pts });
@@ -4604,13 +4717,22 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     function o(p, q, r) { return (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]); }
     return o(a, b, c) * o(a, b, d) < 0 && o(c, d, a) * o(c, d, b) < 0;
   }
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  var NUMW = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
 
-  /* material -> hatch used on cut faces ('' = none, 'solid' = filled) */
+  /* material -> hatch used on cut faces ('' = none, 'solid' = filled by the material's cut tint) */
   var HATCH = { concrete: 'concrete', wool: 'wool', alu: 'alu', steel: 'solid', seal: 'solid', frit: 'solid', void: 'solid',
-                gyp: 'gyp', wood: 'wood', glass: '', sglass: '' };
-  var TEXMAP = { alu: 'aluminum', steel: 'steel', concrete: 'concrete', wool: 'wool', glass: 'glass', sglass: 'glass' };
+                gyp: 'gyp', wood: 'wood', glass: '', sglass: '',
+                brick: 'brick', cmu: 'cmu', ply: 'ply', foam: 'foam', fibercement: 'fibercement',
+                membrane: 'solid', wrb: 'solid', metal: 'solid', stud: 'solid' };
+  /* material -> key of opts.textures (shaded variant; a missing texture is skipped silently) */
+  /* texture tile size in feet (what one texture image covers in the model) */
+  var TEXTILE = { aluminum: 2, steel: 3, concrete: 4, wool: 2, glass: 6, brick: 3.2, cmu: 4, ply: 3, membrane: 4, metal: 3, fibercement: 4, wood: 2.5 };
+  var TEXMAP = { alu: 'aluminum', steel: 'steel', concrete: 'concrete', wool: 'wool', glass: 'glass', sglass: 'glass',
+                 brick: 'brick', cmu: 'cmu', ply: 'ply', membrane: 'membrane', metal: 'metal', fibercement: 'fibercement', wood: 'wood' };
 
   var uid = 0;
+  var TABX = 28;   // extra top padding (px) when the tab row is showing
 
   function mount(container, options) {
     var opts = options || {};
@@ -4618,75 +4740,78 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     var reduced = false;
     try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
     var id = 'cwa' + (++uid);
-    var offs = {}; LAYERS.forEach(function (l) { offs[l.id] = (opts.offsets && opts.offsets[l.id] != null) ? opts.offsets[l.id] : l.off; });
 
-    var shapes = sortShapes(buildShapes(), offs);
-    var chunkDefs = [];
-    shapes.forEach(function (s) {
-      var last = chunkDefs[chunkDefs.length - 1];
-      if (!last || last.layer !== s.layer) { last = { layer: s.layer, shapes: [] }; chunkDefs.push(last); }
-      last.shapes.push(s);
+    /* ---------- details ---------- */
+    var details = (opts.details || window.AxonDetails || []).filter(function (d) {
+      var err = validate(d);
+      if (err && window.console) console.warn('CurtainWallAxon: skipping detail "' + (d && d.id) + '": ' + err);
+      return !err;
     });
+    if (!details.length) details = [CURTAIN_WALL];
+    function indexOfDetail(did) { for (var i = 0; i < details.length; i++) if (details[i].id === did) return i; return -1; }
+    var curIdx = Math.max(0, indexOfDetail(opts.detail)), targetIdx = curIdx;
+    var tabbed = details.length > 1;
 
-    /* unit bounding box over t = 0 and 1 */
-    var ub = [1e9, 1e9, -1e9, -1e9];
-    shapes.forEach(function (s) {
-      facesOf(s).forEach(function (f) {
-        [0, 1].forEach(function (t) {
-          var dx = -C30 * offs[s.layer] * t, dy = S30 * offs[s.layer] * t;
-          f.pts.forEach(function (p) {
-            ub[0] = Math.min(ub[0], p[0] + dx); ub[1] = Math.min(ub[1], p[1] + dy);
-            ub[2] = Math.max(ub[2], p[0] + dx); ub[3] = Math.max(ub[3], p[1] + dy);
-          });
-        });
-      });
-    });
+    // per-detail model (rebuilt by setupDetail)
+    var det, D, LAYERS, offs, dirs, disp, shapes, chunkDefs, lb, chunkPaths = null;
 
-    var lb = {}; // per-layer unit bbox at t = 0
-    shapes.forEach(function (s) {
-      var q = lb[s.layer] || (lb[s.layer] = [1e9, 1e9, -1e9, -1e9]);
-      facesOf(s).forEach(function (f) { f.pts.forEach(function (p) {
-        q[0] = Math.min(q[0], p[0]); q[1] = Math.min(q[1], p[1]); q[2] = Math.max(q[2], p[0]); q[3] = Math.max(q[3], p[1]);
-      }); });
-    });
+    function dispU(lid, t) {   // screen delta of a layer at explode t: P(dir * off * t) - P(0)
+      var o = offs[lid] * t, d = dirs[lid], q = P(d[0] * o, d[1] * o, d[2] * o);
+      return [q[0] - P0[0], q[1] - P0[1]];
+    }
     function bboxAt(t) {
       var b = [1e9, 1e9, -1e9, -1e9];
       Object.keys(lb).forEach(function (k) {
-        var q = lb[k], dx = -C30 * offs[k] * t, dy = S30 * offs[k] * t;
-        b[0] = Math.min(b[0], q[0] + dx); b[1] = Math.min(b[1], q[1] + dy); b[2] = Math.max(b[2], q[2] + dx); b[3] = Math.max(b[3], q[3] + dy);
+        var q = lb[k], d = dispU(+k, t);
+        b[0] = Math.min(b[0], q[0] + d[0]); b[1] = Math.min(b[1], q[1] + d[1]); b[2] = Math.max(b[2], q[2] + d[0]); b[3] = Math.max(b[3], q[3] + d[1]);
       });
       return b;
     }
 
     /* ---------- DOM ---------- */
     container.innerHTML = '';
-    var root = el('div', 'cwa cwa--' + styleName + (reduced ? ' cwa--rm' : ''), container);
+    var root = el('div', 'cwa cwa--' + styleName + (reduced ? ' cwa--rm' : '') + (tabbed ? ' cwa--tabs' : ''), container);
     var stage = el('div', 'cwa-stage', root);
-    var svg = sv('svg', { 'class': 'cwa-svg', role: 'group', preserveAspectRatio: 'xMidYMid meet',
-      'aria-label': 'Exploded axonometric of a curtain wall bay at a concrete slab edge, with eight layers: ' +
-        LAYERS.map(function (l) { return l.name; }).join(', ') + '. Use the Explode slider to separate the layers.' }, stage);
+    var scene = el('div', 'cwa-scene', stage);
+    var svg = sv('svg', { 'class': 'cwa-svg', role: 'group', preserveAspectRatio: 'xMidYMid meet' }, scene);
     var defs = sv('defs', null, svg);
     var gDraw = sv('g', { 'class': 'cwa-draw' }, svg);
     var gLead = sv('g', { 'class': 'cwa-leaders' }, svg);
-    var labelsEl = el('div', 'cwa-labels', stage);
+    var labelsEl = el('div', 'cwa-labels', scene);
     var fig = el('div', 'cwa-fig', stage);
-    fig.innerHTML = '<span>Fig. 01<span class="cwa-figt"> &mdash; Curtain wall at slab edge</span></span><span class="cwa-nts">NTS</span>';
-    var renderImg = null, modes = null;
+    var figL = el('span', '', fig);
+    var figN = el('span', 'cwa-nts', fig); figN.textContent = 'NTS';
+    var renderImg = null, modes = null, modesEl = null, renderLoaded = false, renderOn = false;
+
+    var tabsEl = null, tabEls = [];
+    if (tabbed) {
+      tabsEl = el('div', 'cwa-tabs', stage);
+      tabsEl.setAttribute('role', 'tablist'); tabsEl.setAttribute('aria-label', 'Details');
+      details.forEach(function (d, i) {
+        var b = el('button', 'cwa-tab', tabsEl);
+        b.type = 'button'; b.id = id + '-tab-' + i; b.setAttribute('role', 'tab'); b.setAttribute('data-i', i);
+        b.setAttribute('aria-selected', 'false'); b.tabIndex = -1;
+        var inner = el('span', 'cwa-tab-i', b);
+        inner.textContent = pad2(i + 1) + ' ' + (d.tab || d.title || d.id);
+        tabEls.push(b);
+      });
+      scene.setAttribute('role', 'tabpanel');
+    }
 
     var controls = el('div', 'cwa-controls', root);
     // pink hint above the slider: names the action and points the way to drag
-    var hint = el('label', 'cwa-hint', controls); hint.setAttribute('for', id + '-r');
+    var hint = el('button', 'cwa-hint', controls); hint.type = 'button';
+    hint.setAttribute('aria-label', 'Explode fully');
     hint.innerHTML = '<span class="cwa-hint-t">Explode</span><svg class="cwa-arrow" viewBox="0 0 64 10" aria-hidden="true"><path d="M0 5 H61 M56 1 L62 5 L56 9" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>';
     var hintT = hint.firstChild;
     var row = el('div', 'cwa-row', controls);
     var e0 = el('span', 'cwa-end', row); e0.textContent = '0%';
-    var slider = el('input', 'cwa-range', row);
+    var slider = el('input', 'cwa-range', row); slider.setAttribute('aria-label', 'Explode');
     slider.type = 'range'; slider.min = 0; slider.max = 100; slider.step = 1; slider.id = id + '-r';
     var e1 = el('span', 'cwa-end', row); e1.textContent = '100%';
     var legend = el('ol', 'cwa-legend', controls);
-    var cap = el('p', 'cwa-caption', controls); cap.innerHTML = '<span>Illustrative assembly. Not a specific project or system.</span><span>Drawn in code with Claude. Material textures by Gemini.</span>';
+    var cap = el('p', 'cwa-caption', controls);
     var sr = el('ul', 'cwa-sr', root);
-    LAYERS.forEach(function (l) { var li = el('li', '', sr); li.textContent = l.id + '. ' + l.name + ' — ' + l.desc + '.'; });
 
     /* ---------- patterns ---------- */
     var hw = [];      // hatch strokes whose width follows 1/K
@@ -4694,6 +4819,10 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     function pat(idn, w, h, tf, inner) {
       var p = sv('pattern', { id: id + '-' + idn, width: w, height: h, patternUnits: 'userSpaceOnUse', patternTransform: tf }, defs);
       p.innerHTML = inner; return p;
+    }
+    function diag(h, flip) {   // one 45-degree line across an h x h tile, overshooting the corners so tiles join cleanly
+      var e = h * 0.25;
+      return flip ? 'M' + (-e) + ',' + (-e) + ' L' + (h + e) + ',' + (h + e) : 'M' + (-e) + ',' + (h + e) + ' L' + (h + e) + ',' + (-e);
     }
     var TFC = 'matrix(' + (-C30) + ' ' + S30 + ' 0 -1 0 0)';   // (x,z) cut plane
     var TFF = 'matrix(' + C30 + ' ' + S30 + ' 0 -1 0 0)';       // (y,z) front plane
@@ -4712,6 +4841,17 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
       pat('h-wool', 0.32, 0.12, TFC, '<path ' + L + ' d="M0,0.06 q0.04,-0.1 0.08,0 t0.08,0 t0.08,0 t0.08,0"/>');
       pat('h-gyp', 0.16, 0.16, TFC, '<path ' + L + ' d="M0,0.16 L0.16,0"/>');
       pat('h-wood', 0.4, 0.05, TFC, '<path ' + L + ' d="M0,0.025 q0.1,-0.025 0.2,0 t0.2,0"/>');
+      // brick: 45-degree lines at a close spacing
+      pat('h-brick', 0.12, 0.12, TFC, '<path ' + L + ' d="' + diag(0.12, false) + '"/>');
+      // cmu: 45-degree lines (opposite hand), wider spacing
+      pat('h-cmu', 0.24, 0.24, TFC, '<path ' + L + ' d="' + diag(0.24, true) + '"/>');
+      // plywood sheathing: sparse grain flecks (reads at either orientation)
+      pat('h-ply', 0.4, 0.4, TFC, '<path ' + L + ' d="M0.03,0.1 q0.06,-0.03 0.12,0 t0.12,0 M0.2,0.31 q0.05,-0.025 0.1,0 t0.1,0 M0.3,0.17 l0.0,0.07 M0.09,0.33 l0.0,0.05"/>');
+      // rigid board insulation: tight 45-degree crosshatch
+      pat('h-foam', 0.12, 0.12, TFC, '<path ' + L + ' d="' + diag(0.12, false) + ' ' + diag(0.12, true) + '"/>');
+      // fiber-cement panel: light dot stipple
+      pat('h-fibercement', 0.22, 0.22, TFC,
+        '<g class="cwa-hl-f"><circle cx="0.05" cy="0.06" r="0.012"/><circle cx="0.16" cy="0.12" r="0.012"/><circle cx="0.09" cy="0.18" r="0.012"/><circle cx="0.2" cy="0.03" r="0.009"/></g>');
       pat('glint', 3, 3, TFF, '<path class="cwa-glint" d="M0,0 L3,3 M1.5,0 L3,1.5 M0,1.5 L1.5,3" fill="none" stroke-width="0.02"/>');
       pat('spand', 0.2, 0.2, TFF, '<path class="cwa-spand" d="M0,0.2 L0.2,0" fill="none"/>');
       var gr = sv('linearGradient', { id: id + '-gg', x1: 0, y1: 0, x2: 0.6, y2: 1 }, defs);
@@ -4719,17 +4859,22 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
       sv('stop', { offset: 0.55, 'stop-color': '#fff', 'stop-opacity': 0.05 }, gr);
       sv('stop', { offset: 1, 'stop-color': '#9fc4cc', 'stop-opacity': 0.22 }, gr);
       var hlEls = defs.querySelectorAll('.cwa-hl'); for (var i = 0; i < hlEls.length; i++) hw.push(hlEls[i]);
+      // textures are laid onto each face plane (front = y,z; side/cut = x,z; top = y,x) at a real-world tile size in feet,
+      // so coursing and grain follow the axonometric instead of sitting flat to the screen
+      var TFT = 'matrix(' + C30 + ' ' + S30 + ' ' + (-C30) + ' ' + S30 + ' 0 0)';   // (y,x) top plane
       Object.keys(tex).forEach(function (m) {
         if (!tex[m].ok) return;
-        var p = sv('pattern', { id: id + '-t-' + m, patternUnits: 'userSpaceOnUse', width: 4, height: 4 }, defs);
-        var im = sv('image', { width: 4, height: 4, preserveAspectRatio: 'xMidYMid slice' }, p);
-        im.setAttribute('href', tex[m].url);
-        texPats.push({ p: p, im: im });
+        var ts = TEXTILE[m] || 3;
+        [['f', TFF], ['s', TFC], ['t', TFT]].forEach(function (pl) {
+          var p = sv('pattern', { id: id + '-t-' + m + '-' + pl[0], patternUnits: 'userSpaceOnUse', width: ts, height: ts, patternTransform: pl[1] }, defs);
+          var im = sv('image', { width: ts, height: ts, preserveAspectRatio: 'none' }, p);
+          im.setAttribute('href', tex[m].url);
+        });
       });
     }
 
     /* ---------- drawing ---------- */
-    var chunks = [];   // { g, layer, dx, dy }
+    var chunks = [];   // { g, layer, off }
     var focusables = {};
     function build() {
       buildDefs();
@@ -4745,7 +4890,7 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
         }
         cd.shapes.forEach(function (s) {
           var sg = sv('g', { 'class': 'cwa-s cwa-m-' + s.mat }, g);
-          facesOf(s).forEach(function (f) {
+          facesOf(s, D.YC).forEach(function (f) {
             var pts = f.pts.map(function (p) { return r4(p[0]) + ',' + r4(p[1]); }).join(' ');
             var wcls = f.k === 'cut' ? 'cwa-wc' : (s.o.prof ? 'cwa-wp' : 'cwa-we');
             sv('polygon', { points: pts, 'class': 'cwa-f cwa-fa-' + f.k + ' ' + wcls }, sg);
@@ -4753,7 +4898,7 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
             if (f.k === 'cut' && HATCH[s.mat] && HATCH[s.mat] !== 'solid')
               sv('polygon', { points: pts, 'class': 'cwa-ov', fill: 'url(#' + id + '-h-' + HATCH[s.mat] + ')' }, sg);
             if (TEXMAP[s.mat] && tex[TEXMAP[s.mat]] && tex[TEXMAP[s.mat]].ok && a > 0.35)
-              sv('polygon', { points: pts, 'class': 'cwa-ov cwa-tx cwa-tx-' + s.mat, fill: 'url(#' + id + '-t-' + TEXMAP[s.mat] + ')' }, sg);
+              sv('polygon', { points: pts, 'class': 'cwa-ov cwa-tx cwa-tx-' + s.mat, fill: 'url(#' + id + '-t-' + TEXMAP[s.mat] + '-' + (f.k === 'front' ? 'f' : f.k === 'top' ? 't' : 's') + ')' }, sg);
             if (styleName === 'shaded' && f.k === 'front' && s.mat === 'glass' && a > 0.6)
               sv('polygon', { points: pts, 'class': 'cwa-ov', fill: 'url(#' + id + '-gg)' }, sg);
             if (f.k === 'front' && s.mat === 'sglass' && styleName === 'line')
@@ -4771,25 +4916,71 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     var state = { t: 0, K: 20, K0: 20, K1: 20, cx: 0, cy: 0, ox: 0, oy: 0, W: 0, H: 0, iso: null, narrow: false, touched: false, view: 'draw' };
     var places = [];    // per layer: { rect, attach:[x,y] }
     var leadEls = [], labelEls = [], legendEls = [];
+    var sel = [];       // which anchor each leader uses (0 = narrow-layout end, 1.. = right-column candidates)
 
-    LAYERS.forEach(function (l, i) {
-      var ln = sv('polyline', { 'class': 'cwa-ld', 'data-layer': l.id, fill: 'none' }, gLead);
-      var dt = sv('circle', { 'class': 'cwa-dot', r: 2.6, 'data-layer': l.id }, gLead);
-      leadEls.push({ ln: ln, dt: dt });
-      var b = el('button', 'cwa-label', labelsEl);
-      b.type = 'button'; b.tabIndex = -1; b.setAttribute('data-layer', l.id); b.setAttribute('aria-hidden', 'true');
-      b.innerHTML = '<span class="cwa-n">' + l.id + '</span><span class="cwa-t"><b>' + l.name + '</b> ' + l.desc + '</span>';
-      labelEls.push(b);
-      var li = el('li', '', legend), lb = el('button', 'cwa-leg', li);
-      lb.type = 'button'; lb.tabIndex = -1; lb.setAttribute('data-layer', l.id); lb.setAttribute('aria-hidden', 'true');
-      lb.innerHTML = '<span class="cwa-n">' + l.id + '</span> ' + l.short;
-      legendEls.push(lb);
-    });
+    /* ---------- (re)build everything that depends on the active detail ---------- */
+    function describe() {
+      var n = LAYERS.length;
+      svg.setAttribute('aria-label', 'Exploded axonometric of ' + (det.aria || String(det.title || det.tab || det.id).toLowerCase()) +
+        ', with ' + (NUMW[n] || n) + ' layers: ' + LAYERS.map(function (l) { return l.name; }).join(', ') + '. Use the Explode slider to separate the layers.');
+      figL.innerHTML = '';
+      figL.appendChild(document.createTextNode('Fig. ' + pad2(curIdx + 1)));
+      var ft = el('span', 'cwa-figt', figL);
+      ft.textContent = ' — ' + (det.title || det.tab || det.id);
+      cap.innerHTML = '<span>Illustrative assembly. Not a specific project or system.</span><span>Drawn in code with Claude. Material textures by Gemini.</span>';
+      if (det.caption) { var cs = document.createElement('span'); cs.textContent = det.caption; cap.appendChild(cs); }
+      if (tabsEl) scene.setAttribute('aria-labelledby', id + '-tab-' + curIdx);
+    }
+    function setupDetail(d) {
+      det = d; D = d.dims || {}; LAYERS = d.layers;
+      var ov = opts.offsets && (opts.offsets[d.id] && typeof opts.offsets[d.id] === 'object' ? opts.offsets[d.id] : opts.offsets);
+      offs = {}; dirs = {}; disp = {};
+      LAYERS.forEach(function (l) {
+        offs[l.id] = (ov && typeof ov[l.id] === 'number') ? ov[l.id] : l.off;
+        var v = l.dir || [1, 0, 0], len = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]) || 1;
+        dirs[l.id] = [v[0] / len, v[1] / len, v[2] / len];
+        disp[l.id] = [dirs[l.id][0] * offs[l.id], dirs[l.id][1] * offs[l.id], dirs[l.id][2] * offs[l.id]];
+      });
+      shapes = sortShapes(buildShapes(d), disp);
+      chunkDefs = [];
+      shapes.forEach(function (s) {
+        var last = chunkDefs[chunkDefs.length - 1];
+        if (!last || last.layer !== s.layer) { last = { layer: s.layer, shapes: [] }; chunkDefs.push(last); }
+        last.shapes.push(s);
+      });
+      lb = {}; // per-layer unit bbox at t = 0
+      shapes.forEach(function (s) {
+        var q = lb[s.layer] || (lb[s.layer] = [1e9, 1e9, -1e9, -1e9]);
+        facesOf(s, D.YC).forEach(function (f) { f.pts.forEach(function (p) {
+          q[0] = Math.min(q[0], p[0]); q[1] = Math.min(q[1], p[1]); q[2] = Math.max(q[2], p[0]); q[3] = Math.max(q[3], p[1]);
+        }); });
+      });
+      chunkPaths = null; places = []; sel = LAYERS.map(function () { return 1; });
+      state.iso = null;
 
-    var sel = [1, 1, 1, 1, 1, 1, 1, 1];   // which anchor (0 = left end, 1 = cut face) each leader uses
+      gLead.innerHTML = ''; labelsEl.innerHTML = ''; legend.innerHTML = ''; sr.innerHTML = '';
+      leadEls = []; labelEls = []; legendEls = [];
+      LAYERS.forEach(function (l) {
+        var ln = sv('polyline', { 'class': 'cwa-ld', 'data-layer': l.id, fill: 'none' }, gLead);
+        var dt = sv('circle', { 'class': 'cwa-dot', r: 2.6, 'data-layer': l.id }, gLead);
+        leadEls.push({ ln: ln, dt: dt });
+        var b = el('button', 'cwa-label', labelsEl);
+        b.type = 'button'; b.tabIndex = -1; b.setAttribute('data-layer', l.id); b.setAttribute('aria-hidden', 'true');
+        b.innerHTML = '<span class="cwa-n">' + l.id + '</span><span class="cwa-t"><b>' + l.name + '</b> ' + l.desc + '</span>';
+        labelEls.push(b);
+        var li = el('li', '', legend), lb2 = el('button', 'cwa-leg', li);
+        lb2.type = 'button'; lb2.tabIndex = -1; lb2.setAttribute('data-layer', l.id); lb2.setAttribute('aria-hidden', 'true');
+        lb2.innerHTML = '<span class="cwa-n">' + l.id + '</span> ' + l.short;
+        legendEls.push(lb2);
+        var sli = el('li', '', sr); sli.textContent = l.id + '. ' + l.name + ' — ' + l.desc + '.';
+      });
+      describe();
+      syncRender();
+    }
+
     function anchorUnit(l, t, k) {
-      var a = l.anchors[k == null ? sel[l.id - 1] : k], q = P(a[0], a[1], a[2]);
-      return [q[0] - C30 * offs[l.id] * t, q[1] + S30 * offs[l.id] * t];
+      var a = l.anchors[k == null ? sel[l.id - 1] : k], q = P(a[0], a[1], a[2]), d = dispU(l.id, t);
+      return [q[0] + d[0], q[1] + d[1]];
     }
     function viewAt(t, K0, K1, cx, cy) {
       var u = Math.min(1, t / 0.4), e = u * u * (3 - 2 * u), K = K0 + (K1 - K0) * e, bb = bboxAt(t);
@@ -4816,7 +5007,7 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     /* ---------- per-frame: transforms only ---------- */
     function apply(t, force) {
       state.t = t;
-      var i, c, dx, dy;
+      var i, c, d;
       var v = viewAt(t, state.K0, state.K1, state.cx, state.cy);
       state.K = v.K; state.ox = v.ox; state.oy = v.oy;
       gDraw.setAttribute('transform', 'translate(' + v.ox.toFixed(2) + ' ' + v.oy.toFixed(2) + ') scale(' + v.K.toFixed(4) + ')');
@@ -4824,30 +5015,29 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
       for (i = 0; i < chunks.length; i++) {
         c = chunks[i];
         if (!c.off) continue;
-        dx = -C30 * c.off * t; dy = S30 * c.off * t;
-        c.g.setAttribute('transform', 'translate(' + dx.toFixed(4) + ' ' + dy.toFixed(4) + ')');
+        d = dispU(c.layer, t);
+        c.g.setAttribute('transform', 'translate(' + d[0].toFixed(4) + ' ' + d[1].toFixed(4) + ')');
       }
       var show = clamp((t - 0.3) / 0.12, 0, 1);
       var hideForRender = state.view === 'render';
       gLead.style.opacity = hideForRender ? 0 : show;
       labelsEl.style.opacity = hideForRender ? 0 : show;
       labelsEl.style.pointerEvents = show > 0.6 && !hideForRender ? 'auto' : 'none';
-      if (!state.narrow || true) {
-        for (i = 0; i < LAYERS.length; i++) {
-          var a = anchorPx(LAYERS[i], t), pl = places[i];
-          if (pl) {
-            // leader with a short horizontal shoulder into the label (drafting convention)
-            var ex = pl.attach[0] + pl.sh, ey = pl.attach[1];
-            leadEls[i].ln.setAttribute('points', a[0].toFixed(1) + ',' + a[1].toFixed(1) + ' ' + ex.toFixed(1) + ',' + ey.toFixed(1) + ' ' + pl.attach[0].toFixed(1) + ',' + ey.toFixed(1));
-          }
-          leadEls[i].dt.setAttribute('cx', a[0].toFixed(1)); leadEls[i].dt.setAttribute('cy', a[1].toFixed(1));
+      for (i = 0; i < LAYERS.length; i++) {
+        var a = anchorPx(LAYERS[i], t), pl = places[i];
+        if (pl) {
+          // leader with a short horizontal shoulder into the label (drafting convention)
+          var ex = pl.attach[0] + pl.sh, ey = pl.attach[1];
+          leadEls[i].ln.setAttribute('points', a[0].toFixed(1) + ',' + a[1].toFixed(1) + ' ' + ex.toFixed(1) + ',' + ey.toFixed(1) + ' ' + pl.attach[0].toFixed(1) + ',' + ey.toFixed(1));
         }
+        leadEls[i].dt.setAttribute('cx', a[0].toFixed(1)); leadEls[i].dt.setAttribute('cy', a[1].toFixed(1));
       }
-      if (opts.render && renderImg && opts.renderMode === 'crossfade') renderImg.style.opacity = t < 0.08 ? 1 : 0;
+      if (opts.render && renderImg && renderOn && opts.renderMode === 'crossfade') renderImg.style.opacity = t < 0.08 ? 1 : 0;
       var collapse = t >= 0.5;
       if (collapse !== root.classList.contains('cwa--collapse')) {
         root.classList.toggle('cwa--collapse', collapse);
         hintT.textContent = collapse ? 'Collapse' : 'Explode';
+        hint.setAttribute('aria-label', collapse ? 'Collapse fully' : 'Explode fully');
       }
       var pct = Math.round(t * 100);
       slider.value = pct;
@@ -4877,7 +5067,7 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     function onClick(e) {
       var n = e.target.closest ? e.target.closest('.cwa-chunk, .cwa-label, .cwa-leg') : null;
       if (n && root.contains(n)) { isolate(+n.getAttribute('data-layer')); }
-      else if (!e.target.closest('.cwa-controls') && !e.target.closest('.cwa-modes')) {
+      else if (!e.target.closest('.cwa-controls') && !e.target.closest('.cwa-modes') && !e.target.closest('.cwa-tabs')) {
         if (state.iso) { state.iso = null; applyIso(); }
       }
     }
@@ -4886,8 +5076,12 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
         e.preventDefault(); isolate(+e.target.getAttribute('data-layer'));
       } else if (e.key === 'Escape' && state.iso) { state.iso = null; applyIso(); }
     }
-    function onFocusIn(e) { if (e.target.classList && e.target.classList.contains('cwa-chunk')) root.setAttribute('data-hl', e.target.getAttribute('data-layer')); }
-    function onFocusOut() { root.removeAttribute('data-hl'); }
+    function setHl(layer) {
+      if (layer == null) root.removeAttribute('data-hl'); else root.setAttribute('data-hl', layer);
+      chunks.forEach(function (c) { c.g.classList.toggle('cwa-hlon', layer != null && c.layer === +layer); });
+    }
+    function onFocusIn(e) { if (e.target.classList && e.target.classList.contains('cwa-chunk')) setHl(e.target.getAttribute('data-layer')); }
+    function onFocusOut() { setHl(null); }
     root.addEventListener('click', onClick);
     root.addEventListener('keydown', onKey);
     root.addEventListener('focusin', onFocusIn);
@@ -4895,18 +5089,18 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
 
     /* ---------- layout: scale to fit, then place labels in free space ---------- */
     var M = 16;
-    var chunkPaths = null;
+    function topPadNow() { return 18 + (tabbed ? TABX : 0); }
     function getPaths() {
       if (chunkPaths) return chunkPaths;
       chunkPaths = chunkDefs.map(function (cd) {
         var p = new Path2D();
         cd.shapes.forEach(function (s) {
-          facesOf(s).forEach(function (f) {
+          facesOf(s, D.YC).forEach(function (f) {
             f.pts.forEach(function (q, i) { if (i) p.lineTo(q[0], q[1]); else p.moveTo(q[0], q[1]); });
             p.closePath();
           });
         });
-        return { path: p, off: offs[cd.layer] };
+        return { path: p, layer: cd.layer };
       });
       return chunkPaths;
     }
@@ -4923,13 +5117,14 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
       samples.forEach(function (t) {
         var v = vw(t), K = v.K, k = K / cs;
         paths.forEach(function (c) {
-          ctx.setTransform(k, 0, 0, k, (v.ox - C30 * c.off * t * K) / cs, (v.oy + S30 * c.off * t * K) / cs);
+          var d = dispU(c.layer, t);
+          ctx.setTransform(k, 0, 0, k, (v.ox + d[0] * K) / cs, (v.oy + d[1] * K) / cs);
           ctx.lineWidth = lw / K; ctx.lineJoin = 'round';
           ctx.fill(c.path); ctx.stroke(c.path);
         });
       });
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      (lw > 10 ? [fig].concat(modes ? [modes] : []) : []).forEach(function (n) {
+      (lw > 10 ? [fig].concat(tabsEl ? [tabsEl] : []).concat(modes ? [modes] : []) : []).forEach(function (n) {
         var r = relRect(n); ctx.fillRect((r.x - 6) / cs, (r.y - 4) / cs, (r.w + 12) / cs, (r.h + 8) / cs);
       });
       var data = ctx.getImageData(0, 0, cw, ch).data, iw = cw + 1;
@@ -4948,7 +5143,6 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
       var y0 = clamp(Math.floor(y / o.cs), 0, o.ch), y1 = clamp(Math.ceil((y + h) / o.cs), 0, o.ch);
       return o.ii[y1 * o.iw + x1] - o.ii[y0 * o.iw + x1] - o.ii[y1 * o.iw + x0] + o.ii[y0 * o.iw + x0];
     }
-    function nearest(a, r) { return [clamp(a[0], r.x, r.x + r.w), clamp(a[1], r.y, r.y + r.h)]; }
 
     function attachFor(sz, x, y, a, narrow, W) {
       if (narrow) {
@@ -4962,7 +5156,7 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
       return { o: raster(vw, W, H, [0.4, 0.5, 0.62, 0.75, 0.88, 1], 14), o7: raster(vw, W, H, [0.7], 6), o10: raster(vw, W, H, [1], 6) };
     }
     function tryPlace(vw, rs, sizes, order, relaxed) {
-      var W = state.W, H = state.H, narrow = state.narrow;
+      var W = state.W, H = state.H, narrow = state.narrow, topPad = topPadNow();
       var o = rs.o, o7 = rs.o7, o10 = rs.o10;
       var maxLen = 0.5 * Math.min(W, H * 0.9);
       var placed = [], total = 0, ok = true;
@@ -4971,7 +5165,8 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
       for (var oi = 0; oi < order.length; oi++) {
         var i = order[oi], sz = sizes[i], best = null, bestC = 1e12, x, y, xs = [];
         if (narrow) for (x = M; x <= W - M - sz.w; x += 6) xs.push(x); else xs = [M, W - M - sz.w];
-        for (y = M + 14; y <= H - M - sz.h; y += 6) for (var xi = 0; xi < xs.length * 2; xi++) {
+        // the callout search starts below the title strip (and the tab row, when showing)
+        for (y = M + (tabbed ? topPad - 4 : 14); y <= H - M - sz.h; y += 6) for (var xi = 0; xi < xs.length * 2; xi++) {
           x = xs[xi >> 1]; var ak = xi & 1;
           var occN = occupied(o, x, y, sz.w, sz.h);
           if (occN && !relaxed) continue;
@@ -5009,17 +5204,20 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     }
 
     /* ---------- right-column labels: fixed order, no crossing leaders ----------
-       Labels stack in a right-hand column, each placed level with its anchor so leaders run close to flat. Interior
-       finish is forced to the top and Fire safing to the bottom; the rest follow their anchors' heights. A local search
-       over each layer's anchor candidates removes crossings and near-touches at every explode value where labels show,
-       then the drawing is grown as large as it can be without running under a label. */
-    // Interior finish is pinned to the top of the column. Fire safing is not pinned to the bottom: it sits mid-drawing,
-    // and pinning it there forces crossings with the outer layers' leaders. The rest follow the geometry.
-    var RIGHT_FIRST = opts.forceTop === undefined ? 8 : opts.forceTop, RIGHT_LAST = opts.forceBottom === undefined ? -99 : opts.forceBottom;
-    var PRESET_PICKS = ['32522521', '32572381', '31272381', '32522221', '11322341', '32552521'];
+       Labels stack in a right-hand column, each placed level with its anchor so leaders run close to flat. The detail's pinTop
+       layer is forced to the top; the rest follow their anchors' heights. A local search over each layer's anchor
+       candidates removes crossings and near-touches at every explode value where labels show, then the drawing is grown
+       as large as it can be without running under a label. */
     function layoutRight(W, H, sizes, Lw) {
+      // pinTop is pinned to the top of the column; nothing is pinned to the bottom (that forces crossings with the outer layers' leaders)
+      var RIGHT_FIRST = opts.forceTop === undefined ? (det.pinTop || 0) : opts.forceTop, RIGHT_LAST = opts.forceBottom === undefined ? -99 : opts.forceBottom;
+      var PRESET_PICKS = (det.presets || []).filter(function (s) {
+        if (typeof s !== 'string' || s.length !== LAYERS.length) return false;
+        for (var q = 0; q < s.length; q++) { var dgt = +s.charAt(q); if (!(dgt >= 1 && dgt < LAYERS[q].anchors.length)) return false; }
+        return true;
+      });
       if (opts.tuneH) sizes = sizes.map(function () { return { w: Lw, h: opts.tuneH }; });
-      var topPad = 18, ub1 = bboxAt(1), ub0 = bboxAt(0), SH = 14, GAP = 10;
+      var topPad = topPadNow(), ub1 = bboxAt(1), ub0 = bboxAt(0), SH = 14, GAP = 10;
       var lx = W - M - Lw, DH = H - 2 * M - topPad, nL = LAYERS.length;
       var TS = [0.42, 0.55, 0.7, 0.85, 1], last = TS.length - 1;
       var yTop = M + topPad + 4, yBot = H - M;
@@ -5123,7 +5321,7 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
           })(0);
           bestT.evals = evals; best = bestT;
         } else {
-          // anchor sets found by an offline exhaustive search on common frame sizes; then a short local search
+          // anchor sets found by an offline exhaustive search (opts.tune) on common frame sizes; then a short local search
           best = { cost: 1e18 };
           PRESET_PICKS.forEach(function (str) {
             var r = packScore(str.split('').map(Number), best.cost);
@@ -5214,12 +5412,14 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
         narrow = true; state.narrow = true; M = 12; root.classList.add('cwa--narrow');
         sizes = labelEls.map(function (b) { b.style.width = ''; return { w: 22, h: 22 }; });
       }
-      var topPad = 18, ub1 = bboxAt(1), ub0 = bboxAt(0);
+      var topPad = topPadNow(), ub1 = bboxAt(1), ub0 = bboxAt(0);
       var Kmax = Math.min((W - 2 * M) / (ub1[2] - ub1[0]), (H - 2 * M - topPad) / (ub1[3] - ub1[1]));
       var fit0 = 0.94 * Math.min((W - 2 * M) / (ub0[2] - ub0[0]), (H - 2 * M - topPad) / (ub0[3] - ub0[1]));
       var cx = W / 2, cy = M + topPad + (H - 2 * M - topPad) / 2;
       state.cx = cx; state.cy = cy;
-      var orders = [[0, 1, 2, 3, 4, 5, 6, 7], [7, 6, 5, 4, 3, 2, 1, 0], [3, 4, 5, 6, 7, 0, 1, 2], [7, 0, 6, 1, 5, 2, 4, 3]];
+      var base = []; for (var li = 0; li < LAYERS.length; li++) base.push(li);
+      var orders = [base, base.slice().reverse(), base.slice(3).concat(base.slice(0, 3)), []];
+      for (var lo = 0, hi = base.length - 1; lo <= hi; lo++, hi--) { orders[3].push(hi); if (hi !== lo) orders[3].push(lo); }   // outside-in interleave
       var K = Kmax, res = null, n = 0, vw;
       function mk(K1) { var K0 = Math.max(K1, Math.min(fit0, 1.9 * K1)); return function (t) { return viewAt(t, K0, K1, cx, cy); }; }
       while (n++ < 26) {
@@ -5250,6 +5450,9 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     var lastHs = '';
 
     /* ---------- render image (variant B) and view toggle ---------- */
+    function renderWanted() {   // opts.render belongs to the curtain wall (or to the only detail)
+      return !!opts.render && (details.length === 1 || det.id === (opts.renderDetail || 'curtain-wall'));
+    }
     function setView(v) {
       state.view = v;
       root.classList.toggle('cwa--render', v === 'render');
@@ -5257,22 +5460,38 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
       if (modes) Array.prototype.forEach.call(modes.children, function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-v') === v ? 'true' : 'false'); });
       apply(state.t);
     }
+    function syncRender() {
+      renderOn = renderLoaded && renderWanted();
+      if (!renderOn) {
+        if (state.view === 'render') { state.view = 'draw'; root.classList.remove('cwa--render'); }
+        if (renderImg) renderImg.style.display = 'none';
+        if (modesEl) modesEl.style.display = 'none';
+        fig.classList.remove('cwa-fig--m');
+        modes = null;
+        return;
+      }
+      renderImg.style.display = '';
+      if (opts.renderMode === 'crossfade') { renderImg.style.opacity = state.t < 0.08 ? 1 : 0; return; }
+      if (!modesEl) {
+        modesEl = el('div', 'cwa-modes', fig);
+        modesEl.setAttribute('role', 'group'); modesEl.setAttribute('aria-label', 'View');
+        [['draw', 'Drawing'], ['render', 'Render']].forEach(function (m) {
+          var b = el('button', '', modesEl); b.type = 'button'; b.setAttribute('data-v', m[0]); b.textContent = m[1];
+          b.setAttribute('aria-pressed', m[0] === state.view ? 'true' : 'false');
+          b.addEventListener('click', function (e) { e.stopPropagation(); setView(m[0]); });
+        });
+      }
+      modesEl.style.display = ''; fig.classList.add('cwa-fig--m'); modes = modesEl;
+    }
+    var destroyed = false;
     if (opts.render) {
       var rim = new Image();
       rim.onload = function () {
         if (destroyed) return;
         renderImg = el('img', 'cwa-render', stage);
-        renderImg.src = opts.render; renderImg.alt = 'Rendered view of the assembled curtain wall at the slab edge'; renderImg.decoding = 'async';
-        if (opts.renderMode === 'crossfade') { renderImg.style.opacity = state.t < 0.08 ? 1 : 0; }
-        else {
-          modes = el('div', 'cwa-modes', fig); fig.classList.add('cwa-fig--m');
-          modes.setAttribute('role', 'group'); modes.setAttribute('aria-label', 'View');
-          [['draw', 'Drawing'], ['render', 'Render']].forEach(function (m) {
-            var b = el('button', '', modes); b.type = 'button'; b.setAttribute('data-v', m[0]); b.textContent = m[1];
-            b.setAttribute('aria-pressed', m[0] === state.view ? 'true' : 'false');
-            b.addEventListener('click', function (e) { e.stopPropagation(); setView(m[0]); });
-          });
-        }
+        renderImg.src = opts.render; renderImg.alt = opts.renderAlt || 'Rendered view of the assembled curtain wall at the slab edge'; renderImg.decoding = 'async';
+        renderLoaded = true;
+        syncRender();
         layout(true);
       };
       rim.onerror = function () {};
@@ -5280,7 +5499,6 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     }
 
     /* ---------- textures (variant B only; silently skipped when missing) ---------- */
-    var destroyed = false;
     if (styleName === 'shaded' && opts.textures) {
       var names = Object.keys(opts.textures).filter(function (k) { return opts.textures[k]; });
       texCount = names.length;
@@ -5296,6 +5514,67 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
       if (texLoaded >= texCount && !destroyed) { build(); }
     }
 
+    /* ---------- tabs: switching details ---------- */
+    function syncTabs() {
+      if (!tabsEl) return;
+      tabEls.forEach(function (b, i) {
+        var on = i === targetIdx;
+        b.setAttribute('aria-selected', on ? 'true' : 'false');
+        b.tabIndex = on ? 0 : -1;
+        b.classList.toggle('cwa-tab-on', on);
+      });
+      var tb = tabEls[targetIdx], l = tb.offsetLeft, r = l + tb.offsetWidth;   // keep the active tab in view on narrow widths
+      if (l < tabsEl.scrollLeft) tabsEl.scrollLeft = Math.max(0, l - 16);
+      else if (r > tabsEl.scrollLeft + tabsEl.clientWidth) tabsEl.scrollLeft = r - tabsEl.clientWidth + 16;
+      fadeTabs();
+    }
+    function fadeTabs() {   // soft edge where the tab row scrolls under the frame
+      var l = tabsEl.scrollLeft > 2, r = tabsEl.scrollLeft + tabsEl.clientWidth < tabsEl.scrollWidth - 2;
+      if (l && r) tabsEl.setAttribute('data-fade', 'lr'); else if (l) tabsEl.setAttribute('data-fade', 'l'); else if (r) tabsEl.setAttribute('data-fade', 'r'); else tabsEl.removeAttribute('data-fade');
+    }
+    var swapTimer = 0, swapAnims = [];
+    function commit(i) {
+      curIdx = i;
+      setupDetail(details[i]);
+      build();
+      layout(true);
+    }
+    function switchTo(i, instant) {
+      if (i < 0 || i >= details.length) return false;
+      if (i === targetIdx && !swapTimer) return true;
+      targetIdx = i; syncTabs();
+      if (swapTimer) return true;                    // a swap is already pending: it will commit the latest tab
+      var nodes = [scene, figL, legend, cap];
+      swapAnims.forEach(function (a) { a.cancel(); }); swapAnims = [];
+      if (instant || reduced || typeof scene.animate !== 'function') { commit(i); return true; }
+      swapAnims = nodes.map(function (n) { return n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 80, easing: 'ease-out', fill: 'forwards' }); });
+      swapTimer = setTimeout(function () {
+        swapTimer = 0;
+        if (destroyed) return;
+        commit(targetIdx);
+        swapAnims.forEach(function (a) { a.cancel(); });
+        swapAnims = nodes.map(function (n) { return n.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 100, easing: 'ease-in' }); });
+      }, 80);
+      return true;
+    }
+    if (tabsEl) {
+      tabsEl.addEventListener('scroll', fadeTabs, { passive: true });
+      tabsEl.addEventListener('click', function (e) {
+        var b = e.target.closest ? e.target.closest('.cwa-tab') : null;
+        if (b) switchTo(+b.getAttribute('data-i'));
+      });
+      tabsEl.addEventListener('keydown', function (e) {
+        var n = details.length, i = targetIdx, k = e.key;
+        if (k === 'ArrowRight' || k === 'ArrowDown') i = (i + 1) % n;
+        else if (k === 'ArrowLeft' || k === 'ArrowUp') i = (i + n - 1) % n;
+        else if (k === 'Home') i = 0;
+        else if (k === 'End') i = n - 1;
+        else return;
+        e.preventDefault();
+        switchTo(i); tabEls[i].focus();
+      });
+    }
+
     /* ---------- slider + scroll link ---------- */
     var scrollOn = !!opts.scrollLink && !reduced;
     var target = 0, cur = 0, raf = 0;
@@ -5304,6 +5583,24 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     slider.addEventListener('keydown', touch);
     slider.addEventListener('touchstart', touch, { passive: true });
     slider.addEventListener('input', function () { touch(); cur = target = slider.value / 100; apply(cur); });
+
+    // tap the pink hint: run the slider all the way to the matching end (eased, ~0.7 s; instant under reduced motion)
+    var runRaf = 0;
+    function runTo(goal) {
+      touch(); if (runRaf) cancelAnimationFrame(runRaf);
+      var from = state.t, t0 = 0, dur = 700 * Math.max(0.35, Math.abs(goal - from));
+      if (reduced || Math.abs(goal - from) < 0.001) { cur = target = goal; apply(goal); return; }
+      function step(now) {
+        if (destroyed) return;
+        if (!t0) t0 = now;
+        var u = Math.min(1, (now - t0) / dur), v = from + (goal - from) * easeInOut(u);
+        cur = target = v; apply(v);
+        runRaf = u < 1 ? requestAnimationFrame(step) : 0;
+      }
+      runRaf = requestAnimationFrame(step);
+    }
+    hint.addEventListener('click', function (e) { e.stopPropagation(); runTo(state.t >= 0.5 ? 0 : 1); });
+    slider.addEventListener('pointerdown', function () { if (runRaf) { cancelAnimationFrame(runRaf); runRaf = 0; } });
 
     function progress() {
       var r = container.getBoundingClientRect(), vh = window.innerHeight || document.documentElement.clientHeight;
@@ -5330,6 +5627,8 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     var t0 = reduced ? (opts.explode != null ? opts.explode : 0.6) : (opts.explode != null ? opts.explode : 0);
     if (scrollOn) { t0 = easeInOut(progress()); target = t0; }
     cur = target = t0; state.t = t0;
+    setupDetail(details[curIdx]);
+    syncTabs();
     build();
     var ro = null, pend = 0;
     function queueLayout() { if (pend) return; pend = requestAnimationFrame(function () { pend = 0; layout(); }); }
@@ -5337,37 +5636,526 @@ html.custom-cursor-active .cursor-ring { opacity: 1; }
     layout();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () {
       if (!destroyed && labelEls.map(function (b) { return b.offsetHeight; }).join(',') !== lastHs) layout(true);
+      if (!destroyed && tabsEl) syncTabs();
     });
+    if (window.ResizeObserver && tabsEl) new ResizeObserver(function () { fadeTabs(); }).observe(tabsEl);
 
     return {
       setExplode: function (t) { t = clamp(+t || 0, 0, 1); cur = target = t; apply(t); },
+      setDetail: function (did, instant) { var i = indexOfDetail(did); return i < 0 ? false : switchTo(i, instant); },
+      detail: function () { return details[targetIdx].id; },
       isolate: function (n) { state.iso = (n == null) ? null : n; applyIso(); },
       destroy: function () {
         destroyed = true;
         if (raf) cancelAnimationFrame(raf);
         if (pend) cancelAnimationFrame(pend);
+        if (swapTimer) clearTimeout(swapTimer);
         if (ro) ro.disconnect(); else window.removeEventListener('resize', queueLayout);
         window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll);
         root.removeEventListener('click', onClick); root.removeEventListener('keydown', onKey);
         root.removeEventListener('focusin', onFocusIn); root.removeEventListener('focusout', onFocusOut);
         if (root.parentNode) root.parentNode.removeChild(root);
       },
-      _debug: function () { return { order: state.rightOrder, evals: state.rightEvals, rightDbg: state.rightDbg, pick: sel.slice(), rightCost: state.rightCost, K: state.K, narrow: state.narrow, conflicts: shapes.conflicts, places: places, W: state.W, H: state.H }; }
+      _debug: function () { return { detail: det.id, order: state.rightOrder, evals: state.rightEvals, rightDbg: state.rightDbg, pick: sel.slice(), rightCost: state.rightCost, K: state.K, narrow: state.narrow, conflicts: shapes.conflicts, places: places, W: state.W, H: state.H, shapeOrder: shapes.map(function (s) { return s.i; }).join(','), orderViolations: sortViolations(shapes, disp) }; }
     };
   }
 
-  window.CurtainWallAxon = { mount: mount, version: '0.1.0' };
+  window.CurtainWallAxon = { mount: mount, version: VERSION, details: REG };
 })();
 
 </script>
 <script>
-/* About: exploded curtain wall axonometric (illustrative). Starts closed and opens as the section scrolls into view. */
+/* Detail 02 — Rainscreen at steel stud wall (illustrative assembly, not a product or project).
+   x = outward (+x exterior), y = along the wall (4'-0" bay), z = up. The y = YC face is the section cut.
+
+   Drawing conventions (read before changing numbers):
+   - The cut plane passes through the centerline of the stud / rail / clip line at the bay edge (y = YC = 2.0), so the cut
+     face shows the whole build-up at once: stud web, sheathing, barrier, insulation, clip, rail and cladding. Members on that
+     line are drawn as their near half (y <= YC). Stud and rail lines are 16" o.c.: y = -2.0, -0.667, 0.667, 2.0.
+   - Exaggerated for legibility (real values in brackets): air/water barrier 0.020 ft thick [fluid-applied, ~40 mils];
+     insulation joints 0.06 ft horizontal / 0.04 ft vertical [boards butt tight]; cladding joints 3/8" as specified;
+     steel stud / track metal 0.02 ft [18-20 ga ~ 0.04"]; clip arm 0.022 ft; isolator pad 0.022 ft.
+   - Clips sit in the horizontal insulation joints (arm in the joint, short leg + dark isolator pad against the barrier), so the
+     insulation never has to be notched and the clips slide out of the slot when exploded.
+   - Stud-cavity batt insulation, fasteners, punch-outs and flashing at the base are not shown. */
+(function () {
+  'use strict';
+  var YC = 2.0, ZB = 0, ZT = 5.5;
+  window.AxonDetails = window.AxonDetails || [];
+  window.AxonDetails.push({
+    id: 'rainscreen', tab: 'Rainscreen', title: 'Rainscreen at steel stud wall',
+    aria: 'a rainscreen wall on cold-formed steel studs with continuous mineral wool insulation and fiber cement cladding',
+    caption: 'Section cut along a stud line. Stud-cavity insulation and fasteners not shown; thin layers drawn slightly thick.',
+    dims: { YC: YC, ZB: ZB, ZT: ZT },
+    layers: [
+      { id: 1, name: 'Steel studs', desc: 'carry wind load back to the structure', short: 'Studs', off: 0,
+        anchors: [[-0.25, YC, 4.5], [-0.25, YC, 4.5], [-0.25, YC, 3.2], [-0.25, YC, 1.6]] },
+      { id: 2, name: 'Interior gypsum', desc: 'interior finish, part of the fire rating', short: 'Gypsum', off: 1.0, dir: [-1, 0, 0],
+        anchors: [[-0.526, YC, 4.7], [-0.526, YC, 4.9], [-0.526, YC, 3.6], [-0.526, YC, 2.2]] },
+      { id: 3, name: 'Exterior sheathing', desc: 'rigid backing for the air barrier', short: 'Sheathing', off: 0.5,
+        anchors: [[0.026, YC, 4.0], [0.026, YC, 4.3], [0.026, YC, 2.6], [0.026, YC, 1.0]] },
+      { id: 4, name: 'Air + water barrier', desc: 'stops air and water, lets vapor out', short: 'Barrier', off: 1.0,
+        anchors: [[0.062, YC, 3.4], [0.062, YC, 3.6], [0.062, YC, 2.0], [0.062, YC, 0.6]] },
+      { id: 5, name: 'Continuous insulation', desc: 'keeps the studs warm, cuts thermal bridging', short: 'Wool', off: 1.5,
+        anchors: [[0.2, YC, 3.8], [0.2, YC, 3.9], [0.2, YC, 2.0], [0.2, YC, 0.5]] },
+      { id: 6, name: 'Clips + rails', desc: 'hold the cladding, limit heat loss', short: 'Clips', off: 2.1,
+        anchors: [[0.4, YC, 3.4], [0.4, YC, 3.5], [0.4, YC, 2.2], [0.4, YC, 0.6]] },
+      { id: 7, name: 'Cladding panels', desc: 'sheds rain; open joints drain the cavity', short: 'Cladding', off: 2.8,
+        anchors: [[0.511, YC, 3.7], [0.511, YC, 4.6], [0.511, YC, 1.8], [0.511, YC, 0.4]] }
+    ],
+    pinTop: null,
+    presets: ['1132133', '1131313', '1121323', '1113123'],
+    build: function (B0, D) {
+      var YC = D.YC, ZB = D.ZB, ZT = D.ZT;
+      /* Boxes are queued, then handed to the engine back-to-front (depth = x + y + z, viewer at +x +y +z), layer by layer.
+         The engine's box-separation sort can see ties between non-overlapping boxes; a true depth order as insertion
+         order makes every tie-break land the right way. */
+      var Q = [];
+      function B(layer, mat, x0, x1, y0, y1, z0, z1, o) { Q.push([layer, mat, x0, x1, y0, y1, z0, z1, o, x0 + x1 + y0 + y1 + z0 + z1]); }
+      function flush() {
+        Q.sort(function (a, b) { return a[0] - b[0] || a[9] - b[9]; });
+        Q.forEach(function (q) { B0(q[0], q[1], q[2], q[3], q[4], q[5], q[6], q[7], q[8]); });
+      }
+      // lines of stud / rail / clip at 16" o.c.; dn = direction the C-section opens (-1 toward -y), cut = line lies on the cut plane
+      var LINES = [{ y: -2.0, dn: 1, edge: 1 }, { y: -0.667, dn: -1 }, { y: 0.667, dn: -1 }, { y: YC, dn: -1, cut: 1 }];
+      function web(L, t) { // [y0,y1] of a web of thickness t on a line
+        if (L.cut) return [YC - t, YC];
+        if (L.edge) return [L.y, L.y + t];
+        return [L.y - t / 2, L.y + t / 2];
+      }
+      function flange(L, t, w) { // [y0,y1] of a flange of length w opening away from the web
+        var wb = web(L, t);
+        return L.dn < 0 ? [wb[0] - w, wb[0]] : [wb[1], wb[1] + w];
+      }
+
+      /* 1 — cold-formed steel studs (6") with bottom and top track */
+      var T = 0.02, TH = 0.104, SB = ZB + TH, ST = ZT - TH;              // metal thickness, track height (1-1/4")
+      // tracks are drawn as solid 1-1/4" blocks: split U-shaped track pieces make the painter's sort ambiguous (see engine notes)
+      B(1, 'stud', -0.5, 0, -YC, YC, ZB, SB, { prof: 1 });                // bottom track
+      B(1, 'stud', -0.5, 0, -YC, YC, ST, ZT, { prof: 1 });                // top track
+      LINES.forEach(function (L) {
+        var w = web(L, T), f = flange(L, T, 0.145), lip = flange(L, T, 0.145);
+        B(1, 'stud', -0.5, 0, w[0], w[1], SB, ST, { prof: 1 });            // web
+        B(1, 'stud', -0.5, -0.5 + T, f[0], f[1], SB, ST);                  // flanges
+        B(1, 'stud', -T, 0, f[0], f[1], SB, ST);
+        var lp = L.dn < 0 ? [f[0], f[0] + T] : [f[1] - T, f[1]];          // return lips at the flange tips
+        B(1, 'stud', -0.5 + T, -0.43, lp[0], lp[1], SB, ST);
+        B(1, 'stud', -0.07, -T, lp[0], lp[1], SB, ST);
+      });
+
+      /* 2 — interior gypsum, 5/8" */
+      B(2, 'gyp', -0.552, -0.5, -YC, YC, ZB, ZT, { prof: 1, brkZ0: 1, brkZ1: 1 });
+
+      /* 3 — exterior sheathing, 5/8" glass-mat gypsum */
+      B(3, 'ply', 0, 0.052, -YC, YC, ZB, ZT, { prof: 1, brkZ0: 1, brkZ1: 1 });
+
+      /* 4 — fluid-applied air + water barrier (drawn ~0.020 ft thick) */
+      B(4, 'wrb', 0.052, 0.072, -YC, YC, ZB, ZT, { brkZ0: 1, brkZ1: 1 });
+
+      /* 5 — 3" mineral wool board in four courses; horizontal joints at 1', 3', 5' (where the clips are), staggered vertical joints */
+      var IX0 = 0.072, IX1 = 0.322, GH = 0.06, GV = 0.04;
+      var courses = [[ZB, 1.0, [0.0]], [1.0 + GH, 3.0, [-1.0]], [3.0 + GH, 5.0, [0.0]], [5.0 + GH, ZT, [-1.0]]];
+      courses.forEach(function (c, ci) {
+        var z0 = c[0], z1 = c[1], vj = c[2][0];
+        var o = { prof: 1 };
+        if (z0 === ZB) o.brkZ0 = 1;
+        if (z1 === ZT) o.brkZ1 = 1;
+        B(5, 'wool', IX0, IX1, -YC, vj - GV / 2, z0, z1, o);
+        B(5, 'wool', IX0, IX1, vj + GV / 2, YC, z0, z1, o);
+      });
+
+      /* 6 — thermally broken clips (in the insulation joints) + vertical aluminum rails */
+      var RX0 = IX1, RX1 = 0.49, RT = 0.03, RF = 0.15, FL = 0.02;
+      var CZ = [1.0, 3.0, 5.0];                                            // clip heights (2'-0" o.c.)
+      LINES.forEach(function (L) {
+        var w = web(L, RT), f = flange(L, RT, RF);
+        B(6, 'alu', RX0, RX1, w[0], w[1], ZB, ZT, { prof: 1, brkZ0: 1, brkZ1: 1 });          // rail web
+        B(6, 'alu', RX0, RX0 + FL, f[0], f[1], ZB, ZT, { brkZ0: 1, brkZ1: 1 });             // inner flange (against clip arms)
+        B(6, 'alu', RX1 - FL, RX1, f[0], f[1], ZB, ZT, { brkZ0: 1, brkZ1: 1 });             // outer flange (cladding)
+        var cy = L.cut ? [YC - 0.1, YC] : (L.edge ? [L.y, L.y + 0.1] : [L.y - 0.1, L.y + 0.1]);
+        CZ.forEach(function (z) {
+          B(6, 'seal', IX0, IX0 + 0.022, cy[0], cy[1], z, z + GH);                          // isolator pad
+          B(6, 'alu', IX0 + 0.022, IX0 + 0.042, cy[0], cy[1], z, z + GH, { prof: 1 });      // short leg on the wall
+          B(6, 'alu', IX0 + 0.042, RX0, cy[0], cy[1], z, z + 0.022, { prof: 1 });           // long leg (arm) to the rail
+        });
+      });
+
+      /* 7 — fiber cement panels, 1/2", open 3/8" joints: one horizontal (z 2.75), one vertical (y 0.667, on a rail line) */
+      var CX0 = RX1, CX1 = 0.532, JG = 0.0313, JZ = 2.75, JY = 0.667;
+      [[-YC, JY - JG / 2], [JY + JG / 2, YC]].forEach(function (yy) {
+        [[ZB, JZ - JG / 2, 'b'], [JZ + JG / 2, ZT, 't']].forEach(function (zz) {
+          var o = { prof: 1 };
+          if (zz[2] === 'b') o.brkZ0 = 1; else o.brkZ1 = 1;
+          B(7, 'fibercement', CX0, CX1, yy[0], yy[1], zz[0], zz[1], o);
+        });
+      });
+      flush();
+    }
+  });
+})();
+
+/* Detail 03 — low-slope roof at a CMU parapet (illustrative; not a product or project).
+   x = outward (+x exterior), y = along the wall, z = up. Roof field runs inward (-x). The face at y = YC is the section cut.
+   Every roof layer and the parapet-top parts explode straight UP (+z); each layer rises further than the one below it so nothing passes through anything.
+   Exaggerated for legibility (all noted where used): the insulation taper (1/2" per ft, real is usually 1/4"), the membrane (0.03 ft vs ~60 mil),
+   the vapor retarder, the cover board, and the metal gauge of the coping (0.035-0.045 ft vs ~24 ga). The coping slope is shown as four stepped plates. */
+(function () {
+  'use strict';
+  var YC = 2.0;
+  var X0 = -4;                    // far end of the roof slice (break line on the slab)
+  var NS = 10, SW = 0.4;          // tapered insulation: 10 steps of 0.4 ft = 4 ft, a stepped box stands for the sloped board
+  var ZB = 0.20;                  // bottom of the tapered layer = top of the flat polyiso layer
+  var TMIN = 0.06, TMAX = 0.22;   // tapered thickness at the far end / at the parapet (rise 0.16 over 4 ft = 1/2" per ft, exaggerated)
+  var CB = 0.04, TM = 0.03;       // cover board and membrane thickness (exaggerated)
+  var CW = 0.07;                  // cant step width = height (45 degrees, four steps)
+  var PT = 2.5;                   // parapet top
+
+  function stepX(i) { return X0 + SW * i; }
+  function insTop(i) { return ZB + TMIN + (TMAX - TMIN) * i / (NS - 1); }   // top of the insulation at step i
+  function stepAt(x) { return Math.max(0, Math.min(NS - 1, Math.floor((x - X0) / SW))); }
+  function boardMid(x) { return insTop(stepAt(x)) + CB / 2; }
+  function memMid(x) { return insTop(stepAt(x)) + CB + TM / 2; }
+  var ZC = insTop(NS - 1) + CB;                      // top of the cover board at the parapet = foot of the cant (0.46)
+  function cantTop(j) { return ZC + CW * (4 - j); }   // top of cant step j (j = 0 is against the wall); cantTop(4) = ZC
+
+  // coping geometry
+  var CP_X0 = -0.065, CP_X1 = 0.735;      // top plate from inside leg to outside leg
+  var CP_Z0 = 2.75, CP_T = 0.045, CP_RISE = 0.03;   // lowest plate z0, plate thickness, slope step (high on the outside, falls toward the roof)
+
+  window.AxonDetails = window.AxonDetails || [];
+  window.AxonDetails.push({
+    id: 'parapet', tab: 'Parapet', title: 'Low-slope roof at parapet',
+    aria: 'a low-slope roof build-up meeting a CMU parapet with a metal coping',
+    caption: 'Taper, membrane and metal gauge exaggerated for legibility.',
+    dims: { YC: YC },
+    layers: [
+      { id: 1, name: 'Deck + CMU parapet', desc: 'carries the roof; parapet at the edge', short: 'Deck', off: 0, dir: [0, 0, 1],
+        anchors: [[-2.6, 1.0, 0], [-3.4, YC, -0.33], [-2.4, YC, -0.33], [-1.4, YC, -0.33], [-0.5, YC, -0.45]] },
+      { id: 2, name: 'Vapor retarder', desc: 'keeps indoor moisture out of the roof', short: 'Retarder', off: 0.45, dir: [0, 0, 1],
+        anchors: [[-3.0, 1.0, 0.03], [-3.5, YC, 0.015], [-2.5, YC, 0.015], [-1.5, YC, 0.015], [-0.6, YC, 0.015]] },
+      { id: 3, name: 'Tapered insulation', desc: 'R-value; the taper slopes water to drains', short: 'Polyiso', off: 0.95, dir: [0, 0, 1],
+        anchors: [[-2.0, 1.0, 0.31], [-3.5, YC, 0.115], [-2.4, YC, 0.115], [-1.5, YC, 0.28], [-0.2, YC, 0.31], [-3.0, YC, 0.24]] },
+      { id: 4, name: 'Cover board', desc: 'firm, protective base for the membrane', short: 'Board', off: 1.45, dir: [0, 0, 1],
+        anchors: [[-1.2, 1.0, boardMid(-1.2)], [-3.5, YC, boardMid(-3.5)], [-2.7, YC, boardMid(-2.7)], [-1.7, YC, boardMid(-1.7)], [-0.7, YC, boardMid(-0.7)]] },
+      { id: 5, name: 'Membrane + flashing', desc: 'waterproofs; turns up the parapet', short: 'Membrane', off: 1.95, dir: [0, 0, 1],
+        anchors: [[-1.0, 1.0, memMid(-1.0)], [-3.5, YC, memMid(-3.5)], [-2.3, YC, memMid(-2.3)], [-0.015, YC, 1.6], [-0.015, YC, 2.2], [-1.0, YC, memMid(-1.0)]] },
+      { id: 6, name: 'Wood nailers', desc: 'anchor the coping and membrane edge', short: 'Nailers', off: 2.45, dir: [0, 0, 1],
+        anchors: [[0.33, YC, 2.56], [0.33, YC, 2.56], [0.33, YC, 2.69], [0.55, YC, 2.69], [0.12, YC, 2.56]] },
+      { id: 7, name: 'Metal coping', desc: 'caps the wall, sheds water to the roof', short: 'Coping', off: 2.95, dir: [0, 0, 1],
+        anchors: [[0.45, 1.0, 2.84], [0.45, YC, 2.835], [0.717, YC, 2.6], [-0.047, YC, 2.6], [0.3, YC, 2.79], [0.685, YC, 2.3]] }
+    ],
+    pinTop: null,
+    presets: ['4444214', '4443214', '4444243', '4432143', '4433114'],
+    build: function (B, D) {
+      var yc = D.YC, i, j, x0, x1, t, z, p;
+
+      /* ---- 1 — slab and 8" CMU parapet in 8" courses (top course cut to 6"), head joints staggered ---- */
+      B(1, 'concrete', X0, 0.667, -yc, yc, -0.667, 0, { prof: 1, brkX0: 1 });
+      // one wall: the CMU texture (laid on the face planes at 4 ft = 6 courses x 3 blocks) supplies the 8x16 coursing
+      B(1, 'cmu', 0, 0.667, -yc, yc, 0, PT, { prof: 1 });
+
+      /* ---- 2 — vapor retarder on the deck (0.03 ft here, much thinner in life) ---- */
+      B(2, 'wrb', X0, 0, -yc, yc, 0, 0.03);
+
+      /* ---- 3 — two layers of polyiso: flat base layer, then the tapered layer as ten stepped boxes ---- */
+      B(3, 'foam', X0, 0, -yc, yc, 0.03, ZB, { prof: 1 });
+      for (i = 0; i < NS; i++) B(3, 'foam', stepX(i), stepX(i + 1), -yc, yc, ZB, insTop(i), { prof: 1 });
+
+      /* ---- 4 — 1/2" gypsum cover board following the taper ---- */
+      for (i = 0; i < NS; i++) B(4, 'gyp', stepX(i), stepX(i + 1), -yc, yc, insTop(i), insTop(i) + CB);
+
+      /* ---- 5 — membrane in the field, wood cant, and the membrane turned up the inside face of the parapet ---- */
+      var zf = ZC;                                                   // membrane foot at the parapet (cover-board top)
+      for (i = 0; i < NS; i++) {
+        z = insTop(i) + CB;
+        x0 = stepX(i); x1 = stepX(i + 1);
+        if (i === NS - 1) x1 = -4 * CW - 0.03;                       // last field piece stops at the toe riser
+        B(5, 'membrane', x0, x1, -yc, yc, z, z + TM);
+      }
+      for (j = 0; j < 4; j++) {                                      // cant: four 45-degree steps
+        B(5, 'wood', -CW * (j + 1), -CW * j, -yc, yc, ZC, cantTop(j), { prof: 1 });
+      }
+      for (j = 0; j < 4; j++) {                                      // membrane treads over the cant
+        B(5, 'membrane', -CW * (j + 1), -CW * j - TM, -yc, yc, cantTop(j), cantTop(j) + TM);
+      }
+      for (j = 1; j <= 4; j++) {                                     // risers on the roof-side face of each cant step
+        B(5, 'membrane', -CW * j - TM, -CW * j, -yc, yc, cantTop(j), cantTop(j - 1) + TM);
+      }
+      B(5, 'membrane', -TM, 0, -yc, yc, cantTop(0), PT);              // base flashing, up the inside face to the top of the parapet
+
+      /* ---- 6 — two 2x10 nailers stacked flat on the parapet ---- */
+      B(6, 'wood', 0, 0.667, -yc, yc, PT, PT + 0.125, { prof: 1 });
+      B(6, 'wood', 0, 0.667, -yc, yc, PT + 0.125, PT + 0.25, { prof: 1 });
+
+      /* ---- 7 — metal coping: stepped plates read as a top that falls toward the roof, legs with drip kicks, continuous cleat ---- */
+      var np = 4, pw = (CP_X1 - CP_X0) / np;
+      for (p = 0; p < np; p++) {
+        z = CP_Z0 + CP_RISE * p;                                      // p = 0 is the roof side (lowest)
+        B(7, 'metal', CP_X0 + pw * p, CP_X0 + pw * (p + 1), -yc, yc, z, z + CP_T, { prof: 1 });
+      }
+      var zTopOut = CP_Z0 + CP_RISE * (np - 1);
+      B(7, 'metal', CP_X0, CP_X0 + 0.035, -yc, yc, 2.45, CP_Z0, { prof: 1 });                 // inside leg, laps the membrane termination
+      B(7, 'metal', CP_X0 - 0.035, CP_X0, -yc, yc, 2.42, 2.45);                              // inside drip kick
+      B(7, 'metal', CP_X1 - 0.035, CP_X1, -yc, yc, 2.30, zTopOut, { prof: 1 });              // outside leg
+      B(7, 'metal', CP_X1, CP_X1 + 0.05, -yc, yc, 2.27, 2.30);                               // outside drip kick
+      B(7, 'metal', 0.667, 0.70, -yc, yc, 2.18, 2.40, { prof: 1 });                          // continuous cleat on the outside face
+    }
+  });
+})();
+
+/* Detail 04 — Brick veneer cavity wall at a shelf angle (illustrative assembly, not a project or product).
+   Conventions: feet; x = outward (+x exterior), y = along the wall, z = up; the face at y = YC is the section cut.
+   Section build-up, inside to outside (x):  CMU backup 0 | air/water barrier 0-0.035 | flashing back leg 0.035-0.06 |
+   2" insulation 0.06-0.227 | 2" air cavity 0.227-0.393 | 3-5/8" brick 0.393-0.695.
+   Thin parts are drawn thicker than real so they read at drawing scale: barrier (~40 mils -> 0.035'), flashing (~30 mils -> 0.025'),
+   shelf angle (3/8" -> 0.05'), tie wire (3/16" -> 0.025').
+   Explode offsets follow physical removal order, so no layer passes through another: the flashing back leg sits behind the
+   insulation (so the flashing moves less than the insulation), the ties pull out of the insulation (so they move 0.7' more),
+   and the shelf angle / brick stub live below z = 0.02 and are free of everything above. */
+(function () {
+  'use strict';
+  var YC = 2.0;
+  var ZT = 5.0;              // slice top (break line)
+  var XI0 = 0.06, XI1 = 0.2267;   // insulation (2")
+  var XB0 = 0.3933, XB1 = 0.6953; // brick (3-5/8"), 2" cavity behind it
+  var ZF = 0.02;             // flashing thickness (exaggerated); brick and insulation sit on top of it
+  var TIE_Z = [0.667, 2.0, 3.333, 4.667];   // every other CMU bed joint = 16" o.c. vertically
+  var TIE_Y = [-2.0, 0.0, 2.0];             // 24" o.c. horizontally; the one at y = YC is cut in section
+  var WEEP_Y = [-1.0, 1.0];                 // open head joints at 24" o.c.
+
+  window.AxonDetails = window.AxonDetails || [];
+  window.AxonDetails.push({
+    id: 'brick', tab: 'Brick veneer', title: 'Brick veneer at shelf angle',
+    aria: 'a brick veneer cavity wall on a CMU backup, carried by a steel shelf angle at the slab edge',
+    caption: 'Barrier, flashing, angle and ties are drawn slightly thicker than real.',
+    dims: { YC: YC },
+    layers: [
+      { id: 1, name: 'Slab + CMU backup', desc: 'structure and backup for the brick', short: 'Backup', off: 0,
+        anchors: [[-1.8, -1.2, 0], [-1.7, YC, -0.33], [-0.33, YC, 1.3], [-0.33, YC, 3.0], [-0.33, YC, 4.4], [-2.4, YC, -0.33]] },
+      { id: 2, name: 'Air + water barrier', desc: 'seals the wall against air and water', short: 'Barrier', off: 0.3,
+        anchors: [[0.017, -1.0, ZT], [0.017, YC, 4.2], [0.017, YC, 2.8], [0.017, YC, 1.3], [0.017, YC, 3.6]] },
+      { id: 3, name: 'Cavity insulation', desc: 'continuous insulation in the cavity', short: 'Insul.', off: 1.2,
+        anchors: [[0.14, -1.0, ZT], [0.14, YC, 4.2], [0.14, YC, 2.7], [0.14, YC, 1.0], [0.14, YC, 3.7]] },
+      { id: 4, name: 'Veneer ties', desc: 'tie the brick to the backup against wind', short: 'Ties',  off: 1.9,
+        anchors: [[0.4, 0.0, 0.667], [0.3, YC, 2.0], [0.3, YC, 4.667], [0.3, YC, 3.333], [0.3, YC, 0.667]] },
+      { id: 5, name: 'Shelf angle', desc: 'carries the brick at each floor', short: 'Angle', off: 2.2,
+        anchors: [[0.4, -1.0, 0], [0.4, YC, -0.025], [0.105, YC, -0.2], [0.55, YC, -0.025], [0.105, YC, -0.3]] },
+      { id: 6, name: 'Flashing + weeps', desc: 'catches cavity water, sends it out the weeps', short: 'Flashing', off: 3.2,
+        anchors: [[0.4, -1.0, 0.02], [0.3, YC, 0.01], [0.5, YC, 0.01], [0.0475, YC, 0.3], [0.1, YC, 0.01]] },
+      { id: 7, name: 'Brick veneer', desc: 'outer rain screen and finish', short: 'Brick', off: 3.9,
+        anchors: [[0.6953, -1.0, 2.6], [0.54, YC, 3.0], [0.54, YC, 1.5], [0.54, YC, 4.4], [0.54, YC, 0.6]] }
+    ],
+    pinTop: null,
+    presets: ['4433124', '4133124', '4344414', '4114421'],
+    build: function (B, D) {
+      var yc = D.YC, i, j, z, y;
+
+      // 1 — concrete slab edge, cast-in embed plate, 8" CMU backup
+      B(1, 'concrete', -3, 0.08, -yc, yc, -0.667, 0, { prof: 1, brkX0: 1 });
+      B(1, 'steel', 0.02, 0.08, -yc, yc, -0.36, -0.04, { faces: 'fs' });                  // embed plate flush with the slab edge
+      B(1, 'cmu', -0.667, 0, -yc, yc, 0, ZT, { prof: 1, brkZ1: 1 });
+
+      // 2 — fluid-applied air + water barrier on the CMU face
+      B(2, 'wrb', 0, 0.035, -yc, yc, 0, ZT, { brkZ1: 1 });
+      B(2, 'membrane', 0.035, 0.06, -yc, yc, 0, 0.6);                                     // flashing back leg: the barrier laps onto it (stays behind the insulation)
+
+      // 6 — through-wall flashing: sheet over the angle and under the brick, drip edge past the brick face, end dam
+      B(6, 'membrane', 0.06, XI1, -yc, yc, 0, ZF, { faces: 'fs' });                       // sheet under the insulation (top hidden by it) ...
+      B(6, 'membrane', XI1, 0.68, -yc, yc, 0, ZF);                                        // ... across the cavity, over the angle, under the brick
+      B(6, 'metal', 0.68, 0.715, -yc, yc, 0, ZF);                                         // drip edge: past the brick face
+      B(6, 'metal', 0.69, 0.715, -yc, yc, -0.045, 0, { faces: 'fs' });                    // drip hem
+      B(6, 'membrane', 0.06, 0.68, -yc, -yc + 0.04, ZF, 0.22);                            // end dam at the end of the run
+
+      // 3 — rigid insulation (2"), resting on the flashing
+      B(3, 'foam', XI0, XI1, -yc, yc, 0, ZT, { prof: 1, brkZ1: 1 });
+
+      // 4 — adjustable ties (wire, drawn 3/8" thick): pintle across the cavity into the brick bed joint; the tie at y = YC is cut in
+      //     section and also shows its tail through the barrier and insulation into the CMU bed joint
+      for (i = 0; i < TIE_Z.length; i++) for (j = 0; j < TIE_Y.length; j++) {
+        z = TIE_Z[i]; y = TIE_Y[j];
+        var y0 = y - 0.025, y1 = y + 0.025;
+        if (y >= yc - 1e-6) { y0 = yc - 0.05; y1 = yc; } else if (y <= -yc + 1e-6) { y0 = -yc; y1 = -yc + 0.05; }
+        B(4, 'steel', y >= yc - 1e-6 ? -0.4 : XI1, 0.55, y0, y1, z - 0.0165, z + 0.0165);
+      }
+
+      // 5 — shelf angle (L6x4 style) bolted to the slab edge
+      B(5, 'steel', 0.08, 0.13, -yc, yc, -0.35, 0, { prof: 1 });                          // vertical leg on the slab edge
+      B(5, 'steel', 0.13, 0.62, -yc, yc, -0.05, 0, { prof: 1 });                          // horizontal leg carrying the brick
+
+      // 7 — brick veneer on the flashing, with open head-joint weeps in the first course
+      B(7, 'brick', XB0, XB1, -yc, yc, ZF, ZT, { prof: 1, brkZ1: 1 });
+      // veneer of the floor below (short piece, break line at the bottom). Its top tucks just under the angle; the soft joint
+      // (sealant + backer rod, 3/8") is a dark band on the front and cut faces, so no box separates the veneer from the angle
+      B(7, 'brick', XB0, XB1, -yc, yc, -0.6, -0.045, { prof: 1, brkZ0: 1 });
+      B(7, 'seal', XB0, XB1, -yc, yc, -0.1, -0.045, { faces: 's' });
+      B(7, 'seal', XB1 - 0.005, XB1 + 0.002, -yc, yc, -0.1, -0.045, { faces: 'f' });
+      WEEP_Y.forEach(function (yw) { B(7, 'void', XB1 - 0.005, XB1 + 0.002, yw - 0.045, yw + 0.045, ZF, ZF + 0.2222, { faces: 'f' }); });   // open head-joint weeps
+    }
+  });
+})();
+
+/* Rated door assembly — detail 05 for the exploded-axonometric module.
+   x = through the wall (push side -x, pull side +x), y = along the wall (hinge jamb at -y, latch jamb at +y), z = up. Feet.
+   The y = YC face is the section cut through the stud partition on the latch side (gypsum / stud web / gypsum).
+   ILLUSTRATIVE assembly. Not a product or a project.
+   Deliberate departures from a literal 1:1 drawing (all for legibility):
+     - hardware is exaggerated about 1.3-1.5x (hinge height, lever length, closer body, gasket, stops, threshold run);
+     - sheet-metal frame is drawn 3/8" thick (16 ga is about 1/16") so it shows;
+     - clearances around the door are drawn at 1/4" so the gap reads;
+     - the door sits toward the pull (swing) side of the throat, against a push-side stop, as in a real hollow metal frame;
+     - the mortise lock pocket is open to the pull face so the case can lift out without passing through the door;
+     - the push-side lever is not drawn: it sits behind the door in this view, and no explode direction can lift it without
+       passing through the wall or the door. The lockset layer is described as levers both sides. */
+(function () {
+  'use strict';
+  window.AxonDetails = window.AxonDetails || [];
+
+  var YC = 2.3;          // section cut plane (latch side of the opening)
+  var ZT = 8.1;          // top of the wall slice (break line)
+  var HZ = 7.0;          // underside of the frame head (opening height)
+  var JY = 1.5;          // jamb rabbet face, y = +/-1.5 (3'-0" opening)
+  var SD = 0.151;        // half depth of the 3-5/8" stud
+  var WF = 0.24;         // wall face (5-3/4" throat)
+  var FT = 0.03;         // frame sheet, exaggerated
+  var FW = 0.167;        // 2" frame face
+  // door
+  var DX0 = 0.094, DX1 = 0.2405, DY = 1.475, DZ0 = 0.075, DZ1 = 6.98;
+  var LZ0 = 2.83, LZ1 = 3.53, LY0 = 1.135;      // lock pocket in the latch stile
+  var HINGE_Z = [6.33, 3.71, 1.08];              // hinge centres (top 5" from head, bottom 10" from floor, middle between)
+  var HH = 0.25;                                 // half height of a hinge (4-1/2" drawn at 6")
+  var LEVZ = 3.17;                               // lever centre, 38" above floor
+  var LEVY = 1.30;                               // lever spindle line
+
+  window.AxonDetails.push({
+    id: 'door', tab: 'Door',
+    title: 'Rated door assembly',
+    aria: 'a fire-rated door in a hollow metal frame in a stud partition',
+    caption: 'Hardware is drawn up to 1.5 times full size. Door shown closed when the slider is at 0%.',
+    dims: { YC: YC },
+    layers: [
+      { id: 1, name: 'Partition + frame', desc: 'rated wall, hollow metal frame anchored to studs', short: 'Frame', off: 0,
+        anchors: [[0.24, 0.0, 7.7], [0.24, 1.9, 6.0], [0.0, YC, 4.0], [0.24, 0.0, 7.7]] },
+      { id: 2, name: 'Hinges', desc: 'three 4-1/2 in butt hinges carry the door', short: 'Hinges', off: 2.4, dir: [1, 0, 0],
+        anchors: [[0.27, -1.5, 3.71], [0.27, -1.47, 6.33], [0.27, -1.47, 3.71], [0.27, -1.47, 1.08]] },
+      { id: 3, name: 'Door leaf', desc: '1-3/4 in solid core, fire rated', short: 'Door', off: 1.6, dir: [1, 0, 0],
+        anchors: [[0.24, 0.0, 4.5], [0.24, 0.0, 5.5], [0.24, -0.7, 2.0], [0.24, 0.6, 1.0]] },
+      { id: 4, name: 'Mortise lockset', desc: 'case, latch and levers at 38 in above floor', short: 'Lockset', off: 3.6, dir: [1, 0, 0],
+        anchors: [[0.36, 1.0, 3.17], [0.37, 1.0, 3.17], [0.3, 1.3, 3.28], [0.27, 1.3, 3.45]] },
+      { id: 5, name: 'Surface closer', desc: 'closes and latches the door every time', short: 'Closer', off: 3.4, dir: [1, 0, 0],
+        anchors: [[0.34, -0.8, 6.8], [0.39, -0.8, 6.65], [0.39, 0.1, 6.63], [0.39, 0.4, 7.15]] },
+      { id: 6, name: 'Smoke gasketing', desc: 'smoke and sound seal at the stops', short: 'Gasket', off: 0.9, dir: [1, 0, 0],
+        anchors: [[0.094, 1.46, 5.0], [0.094, 1.46, 2.0], [0.094, 0.0, 6.95], [0.094, 1.46, 6.0]] },
+      { id: 7, name: 'Threshold', desc: 'beveled saddle, 1/2 in maximum', short: 'Threshold', off: 0.7, dir: [0, 0, -1],
+        anchors: [[0.2, 0.6, 0.0], [0.0, 1.5, 0.04], [0.0, 0.0, 0.04], [0.15, -0.6, 0.027]] }
+    ],
+    pinTop: null,
+    presets: ['3222322', '3221322', '2133221'],
+    build: function (B0, D) {
+      var YC = D.YC, i;
+      /* Painter's order. The engine sorts boxes by separating planes, which breaks into cycles around a framed opening when a box
+         sits partly in two wall slabs. So: the frame, the head piece and the hinge-side wall are single boxes (they overlap
+         everything in x and sort by y and z); only the latch-side wall, which carries the section cut, is built in x slabs. */
+      var calls = [];
+      function B() { calls.push(Array.prototype.slice.call(arguments)); }
+
+      /* ---------------- 1 — partition + frame ---------------- */
+      // hinge-side wall piece and the head piece above the frame: one box each, with a mineral wool patch drawn on the cut top
+      B(1, 'gyp', -WF, WF, -YC, -(JY + FW), 0, ZT, { prof: 1 });
+      B(1, 'wool', -SD, SD, -YC, -(JY + FW), ZT, ZT + 0.002, { faces: 't' });
+      B(1, 'gyp', -WF, WF, -(JY + FW), JY + FW, HZ + FW, ZT, { prof: 1 });
+      B(1, 'wool', -SD, SD, -(JY + FW), JY + FW, ZT, ZT + 0.002, { faces: 't' });
+      // latch-side wall, cut at y = YC: 5/8" Type X both sides, stud web between (the cut), king stud, mineral wool, bottom track
+      B(1, 'stud', -SD, SD, JY + FW, YC, 0, 0.03, { prof: 1 });
+      B(1, 'stud', -SD, SD, JY + FW, JY + FW + 0.13, 0.03, ZT, { prof: 1 });
+      B(1, 'wool', -SD, SD, JY + FW + 0.13, YC - 0.12, 0.03, ZT);
+      B(1, 'stud', -SD, SD, YC - 0.12, YC, 0.03, ZT, { prof: 1, brkZ1: 1 });
+      B(1, 'gyp', -WF, -SD, JY + FW, YC, 0, ZT, { prof: 1, brkZ1: 1 });
+      B(1, 'gyp', SD, WF, JY + FW, YC, 0, ZT, { prof: 1, brkZ1: 1 });
+      // hollow metal frame, drawn as three solid members (soffit and 2" pull-side face): hinge jamb, latch jamb, head
+      B(1, 'steel', -WF, WF + FT, -(JY + FW), -JY, 0, HZ + FW, { prof: 1 });
+      B(1, 'steel', -WF, WF + FT, JY, JY + FW, 0, HZ + FW, { prof: 1 });
+      B(1, 'steel', -WF, WF + FT, -JY, JY, HZ, HZ + FW, { prof: 1 });
+      // integral stops on the push side of the door (stop drawn 1" high)
+      B(1, 'steel', 0.024, 0.054, JY - 0.08, JY, 0.04, HZ, { prof: 1 });
+      B(1, 'steel', 0.024, 0.054, -JY, -JY + 0.08, 0.04, HZ, { prof: 1 });
+      B(1, 'steel', 0.024, 0.054, -JY + 0.08, JY - 0.08, HZ - 0.08, HZ, { prof: 1 });
+
+      /* ---------------- 2 — hinges ---------------- */
+      HINGE_Z.forEach(function (zc) {
+        B(2, 'steel', DX0, DX1, -1.496, -1.474, zc - HH, zc + HH, { prof: 1 });             // leaves (closed, in the clearance gap)
+        for (i = 0; i < 5; i++) B(2, 'steel', DX1 + 0.004, DX1 + 0.034, -JY, -JY + 0.065, zc - HH + i * 0.1, zc - HH + (i + 1) * 0.1 - (i % 2 ? 0.004 : 0), { prof: 1 });   // knuckles stand proud of the door face
+      });
+
+      /* ---------------- 3 — door leaf (1-3/4" solid core, wood veneer) ---------------- */
+      B(3, 'wood', DX0, DX1, -DY, LY0, DZ0, DZ1, { prof: 1 });                                // hinge-side body
+      B(3, 'wood', DX0, DX1, LY0, DY, DZ0, LZ0, { prof: 1 });                                 // latch stile, below the lock pocket
+      B(3, 'wood', DX0, DX1, LY0, DY, LZ1, DZ1, { prof: 1 });                                 // latch stile, above the pocket
+      B(3, 'wood', DX0, DX0 + 0.016, LY0, DY, LZ0, LZ1, { prof: 1 });                         // push-side skin behind the pocket
+      B(3, 'wood', DX1, DX1 + 0.004, -DY, DY, DZ0, DZ1, { faces: 'f', prof: 1 });             // one continuous pull face over the pieces (no seam at the lock pocket)
+
+      /* ---------------- 4 — mortise lockset: case, latch, pull-side lever ---------------- */
+      B(4, 'steel', DX0 + 0.017, DX1 - 0.005, 1.145, 1.466, LZ0 + 0.01, LZ1 + 0.001, { prof: 1 });   // case in the pocket
+      B(4, 'alu', DX0 + 0.017, DX1 - 0.005, 1.466, DY, LZ0 + 0.01, LZ1 + 0.001, { prof: 1 });        // faceplate in the door edge
+      B(4, 'steel', 0.155, 0.20, DY, 1.495, 3.20, 3.30);                                             // latch bolt
+      B(4, 'steel', 0.155, 0.195, DY, 1.495, 3.40, 3.50);                                            // deadbolt
+      B(4, 'alu', DX1 + 0.004, WF + FT, 1.145, 1.45, 2.85, 3.52, { prof: 1 });                               // escutcheon on the pull face
+      B(4, 'metal', WF + FT, 0.34, LEVY - 0.11, LEVY + 0.11, LEVZ - 0.11, LEVZ + 0.11, { prof: 1 }); // rose
+      B(4, 'alu', WF + FT, 0.34, LEVY - 0.035, LEVY + 0.035, 3.36, 3.43);                            // key cylinder
+      B(4, 'void', WF + FT, 0.34, LEVY - 0.008, LEVY + 0.008, 3.37, 3.42, { faces: 'f' });           // keyway
+      B(4, 'metal', 0.34, 0.39, 0.80, LEVY + 0.04, LEVZ - 0.05, LEVZ + 0.05, { prof: 1 });           // lever arm (drawn about 1.3x)
+      B(4, 'metal', 0.34, 0.39, 0.80, 0.90, LEVZ - 0.075, LEVZ + 0.075, { prof: 1 });                // grip end
+
+      /* ---------------- 5 — surface closer, regular arm on the pull side ---------------- */
+      B(5, 'alu', DX1 + 0.004, 0.34, -1.30, -0.35, 6.48, 6.80, { prof: 1 });                          // body
+      B(5, 'metal', 0.34, 0.39, -1.28, -0.37, 6.51, 6.77, { prof: 1 });                       // cover
+      B(5, 'steel', 0.34, 0.39, -0.35, -0.30, 6.60, 6.68);                                    // pinion
+      B(5, 'steel', 0.34, 0.39, -0.30, 0.38, 6.60, 6.66, { prof: 1 });                        // main arm
+      B(5, 'steel', 0.34, 0.39, 0.36, 0.46, 6.58, 6.68, { prof: 1 });                         // elbow
+      B(5, 'steel', 0.34, 0.39, 0.38, 0.44, 6.68, 7.04, { prof: 1 });                         // forearm to the frame
+      B(5, 'steel', WF + FT, 0.39, 0.20, 0.60, 7.04, 7.15, { prof: 1 });                      // arm shoe on the frame head
+
+      /* ---------------- 6 — smoke gasketing on the stops (drawn 1/2" thick) ---------------- */
+      B(6, 'seal', 0.054, 0.094, JY - 0.07, JY, 0.06, HZ - 0.08);
+      B(6, 'seal', 0.054, 0.094, -JY, -JY + 0.07, 0.06, HZ - 0.08);
+      B(6, 'seal', 0.054, 0.094, -JY + 0.07, JY - 0.07, HZ - 0.07, HZ - 0.002);
+      B(6, 'seal', 0.054, 0.094, -JY, -JY + 0.07, HZ - 0.08, HZ - 0.002);
+      B(6, 'seal', 0.054, 0.094, JY - 0.07, JY, HZ - 0.08, HZ - 0.002);
+
+      /* ---------------- 7 — threshold: aluminum saddle, 1/2" high, beveled both sides ---------------- */
+      B(7, 'alu', -0.10, 0.10, -JY, JY, 0, 0.04, { prof: 1 });
+      B(7, 'alu', 0.10, 0.17, -JY, JY, 0, 0.027, { prof: 1 });
+      B(7, 'alu', 0.17, WF, -JY, JY, 0, 0.013, { prof: 1 });
+      B(7, 'alu', -0.17, -0.10, -JY, JY, 0, 0.027, { prof: 1 });
+      B(7, 'alu', -WF, -0.17, -JY, JY, 0, 0.013, { prof: 1 });
+      [-1.0, 0.0, 1.0].forEach(function (y) { B(7, 'steel', -0.02, 0.02, y - 0.02, y + 0.02, 0.04, 0.046); });   // flat-head screws
+
+      /* Split every box at every x boundary used by any box, so any two boxes have identical or disjoint x intervals; the
+         engine's pairwise sort then never meets a cycle. Boxes on the cut face (y1 = YC) keep their wall-face splits only. */
+      var XS = [-WF, -SD, SD, WF, WF + FT], xs = XS.slice();
+      calls.forEach(function (c) { if (c[0] !== 1) [c[2], c[3]].forEach(function (x) { if (xs.indexOf(x) < 0) xs.push(x); }); });
+      xs.sort(function (a, b) { return a - b; });
+      calls.forEach(function (c) {
+        var G = c[0] === 1 ? XS : xs, x0 = c[2], x1 = c[3], cuts = [x0], k;
+        for (k = 0; k < G.length; k++) if (G[k] > x0 + 1e-9 && G[k] < x1 - 1e-9) cuts.push(G[k]);
+        cuts.push(x1);
+        for (k = 0; k < cuts.length - 1; k++) B0.apply(null, [c[0], c[1], cuts[k], cuts[k + 1]].concat(c.slice(4)));
+      });
+    }
+  });
+})();
+
+
+</script>
+<script>
+/* About: exploded axonometric detail set (illustrative): curtain wall, rainscreen, parapet, brick veneer, rated door. */
 (function () {
   var el = document.getElementById('aboutAxon');
   if (!el || !window.CurtainWallAxon) return;
   var T = 'images/axon/tex-';
-  CurtainWallAxon.mount(el, { style: 'shaded', scrollLink: true, labels: 'right',
-    textures: { aluminum: T + 'aluminum.webp', glass: T + 'glass.webp', concrete: T + 'concrete.webp', wool: T + 'wool.webp', steel: T + 'steel.webp' } });
+  var tex = {};
+  ['aluminum', 'steel', 'concrete', 'wool', 'glass', 'brick', 'cmu', 'ply', 'membrane', 'metal', 'fibercement', 'wood'].forEach(function (k) { tex[k] = T + k + '.webp'; });
+  // starts collapsed; visitors open it with the pink Explode button or the slider
+  CurtainWallAxon.mount(el, { style: 'shaded', labels: 'right', explode: 0, textures: tex });
 })();
 </script>
 </body>
